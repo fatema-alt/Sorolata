@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $enFile = __DIR__ . '/../lang/en.json';
 $bnFile = __DIR__ . '/../lang/bn.json';
 
@@ -11,85 +13,62 @@ if (!file_exists($enFile) || !file_exists($bnFile)) {
 $enContent = file_get_contents($enFile);
 $bnContent = file_get_contents($bnFile);
 
-$en = json_decode($enContent, true);
-$bn = json_decode($bnContent, true);
-
-if (json_last_error() !== JSON_ERROR_NONE) {
-    echo "ERROR: JSON syntax error in lang file: " . json_last_error_msg() . "\n";
-    exit(1);
-}
+$en = json_decode($enContent, true, 512, JSON_THROW_ON_ERROR);
+$bn = json_decode($bnContent, true, 512, JSON_THROW_ON_ERROR);
 
 echo "VALID: lang/en.json and lang/bn.json are valid JSON.\n";
 echo "Total EN keys: " . count($en) . "\n";
 echo "Total BN keys: " . count($bn) . "\n";
 
-// Scan views in Batch 1 & 2
-$batchFiles = [
-    __DIR__ . '/../resources/views/layouts/storefront.blade.php',
-    __DIR__ . '/../resources/views/storefront/index.blade.php',
-    __DIR__ . '/../resources/views/components/category-card.blade.php',
-    __DIR__ . '/../resources/views/components/collection-card.blade.php',
-    __DIR__ . '/../resources/views/components/district-card.blade.php',
-    __DIR__ . '/../resources/views/components/floating-search.blade.php',
-    __DIR__ . '/../resources/views/components/mobile-bottom-nav.blade.php',
-    __DIR__ . '/../resources/views/components/product-card.blade.php',
-    __DIR__ . '/../resources/views/components/shoppable-product-card.blade.php',
-    __DIR__ . '/../resources/views/components/testimonial-card.blade.php',
-    __DIR__ . '/../resources/views/shop/index.blade.php',
-    __DIR__ . '/../resources/views/categories/show.blade.php',
-    __DIR__ . '/../resources/views/collections/show.blade.php',
-    __DIR__ . '/../resources/views/districts/index.blade.php',
-    __DIR__ . '/../resources/views/districts/show.blade.php',
-    __DIR__ . '/../resources/views/artisans/index.blade.php',
-    __DIR__ . '/../resources/views/artisans/show.blade.php',
-    __DIR__ . '/../resources/views/stories/index.blade.php',
-    __DIR__ . '/../resources/views/stories/show.blade.php',
-    __DIR__ . '/../resources/views/products/show.blade.php',
-    // Batch 3
-    __DIR__ . '/../resources/views/cart/index.blade.php',
-    __DIR__ . '/../resources/views/checkout/index.blade.php',
-    __DIR__ . '/../resources/views/auth/customer-login.blade.php',
-    __DIR__ . '/../resources/views/auth/customer-register.blade.php',
-    __DIR__ . '/../resources/views/account/index.blade.php',
-    __DIR__ . '/../resources/views/pages/wishlist.blade.php',
-    __DIR__ . '/../resources/views/pages/track-order.blade.php',
-    // Batch 4
-    __DIR__ . '/../resources/views/payment/bkash_checkout.blade.php',
-    __DIR__ . '/../resources/views/payment/sslcommerz_checkout.blade.php',
-    __DIR__ . '/../resources/views/payment/manual_instruction.blade.php',
-    __DIR__ . '/../resources/views/pages/about.blade.php',
-    __DIR__ . '/../resources/views/pages/contact.blade.php',
-    __DIR__ . '/../resources/views/pages/search.blade.php',
-    __DIR__ . '/../resources/views/errors/404.blade.php',
-    __DIR__ . '/../resources/views/emails/order_confirmation.blade.php',
-    __DIR__ . '/../resources/views/builder/blocks/artisan_spotlight.blade.php',
-    __DIR__ . '/../resources/views/builder/blocks/editorial_narrative.blade.php',
-    __DIR__ . '/../resources/views/builder/blocks/generic_element.blade.php',
-    __DIR__ . '/../resources/views/builder/blocks/heritage_provenance.blade.php',
-    __DIR__ . '/../resources/views/builder/blocks/hero_cinematic.blade.php',
-    __DIR__ . '/../resources/views/builder/blocks/interactive_gallery.blade.php',
-    __DIR__ . '/../resources/views/builder/blocks/specs_anatomy.blade.php',
-    __DIR__ . '/../resources/views/builder/blocks/sticky_purchase_box.blade.php',
-    __DIR__ . '/../resources/views/builder/blocks/testimonial_editorial.blade.php',
-    __DIR__ . '/../resources/views/builder/landing.blade.php',
-];
-
 $missingKeys = [];
 $totalKeysChecked = 0;
 
-foreach ($batchFiles as $file) {
-    if (!file_exists($file)) continue;
+function scanDirForPhp(string $dir, array $excludeSubstrings = []): array
+{
+    $files = [];
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
+    foreach ($iterator as $file) {
+        if (!$file->isFile() || !in_array($file->getExtension(), ['php', 'blade'], true)) {
+            continue;
+        }
+        $path = str_replace('\\', '/', $file->getPathname());
+        $skip = false;
+        foreach ($excludeSubstrings as $exclude) {
+            if (str_contains($path, $exclude)) {
+                $skip = true;
+                break;
+            }
+        }
+        if (!$skip) {
+            $files[] = $path;
+        }
+    }
+    return $files;
+}
+
+// 1. Scan views (excluding admin and docs)
+$viewFiles = scanDirForPhp(__DIR__ . '/../resources/views', ['/admin/', '/docs/']);
+
+// 2. Scan app/ (excluding Admin and Api)
+$appFiles = scanDirForPhp(__DIR__ . '/../app', ['/Admin/', '/Api/']);
+
+$allFiles = array_merge($viewFiles, $appFiles);
+
+foreach ($allFiles as $file) {
     $content = file_get_contents($file);
-    
+
     // Match __('...') and __("...")
     if (preg_match_all("/__\(\s*(['\"])(.*?)\\1\s*(?:,\s*(\[.*?\]))?\s*\)/s", $content, $matches)) {
         foreach ($matches[2] as $rawKey) {
             $totalKeysChecked++;
-            // Unescape quote if needed
             $key = str_replace(['\\\'', '\\"'], ["'", '"'], $rawKey);
+            // Skip dynamic variables like __($variable)
+            if (str_starts_with($key, '$')) {
+                continue;
+            }
             if (!array_key_exists($key, $bn)) {
                 $missingKeys[] = [
-                    'file' => basename($file),
+                    'file' => str_replace(str_replace('\\', '/', realpath(__DIR__ . '/..')) . '/', '', $file),
                     'key' => $key
                 ];
             }
@@ -97,14 +76,52 @@ foreach ($batchFiles as $file) {
     }
 }
 
-echo "Checked {$totalKeysChecked} __() instances across Batch 1 views.\n";
+echo "Checked {$totalKeysChecked} __() instances across views and app code.\n";
 
-if (empty($missingKeys)) {
-    echo "SUCCESS: 0 missing keys in lang/bn.json for Batch 1 views!\n";
-} else {
-    echo "WARNING: " . count($missingKeys) . " keys missing in lang/bn.json:\n";
+// 3. Audit non-admin/api controllers for raw unlocalized flash messages
+$controllerAuditErrors = [];
+$controllerFiles = scanDirForPhp(__DIR__ . '/../app/Http/Controllers', ['/Admin/', '/Api/']);
+
+foreach ($controllerFiles as $file) {
+    $lines = file($file);
+    foreach ($lines as $lineNum => $line) {
+        // Check for ->with('success'|'error'|'info'|'warning'|'status', 'Raw string')
+        if (preg_match('/->with\(\s*[\'"](?:success|error|info|warning|status|coupon_error|coupon_success|review_success)[\'"]\s*,\s*([\'"][^\'\"]+[\'"])/', $line, $m)) {
+            // If string literal passed directly without __()
+            $controllerAuditErrors[] = [
+                'file' => basename($file),
+                'line' => $lineNum + 1,
+                'matched' => trim($line),
+            ];
+        }
+    }
+}
+
+$hasErrors = false;
+
+if (!empty($missingKeys)) {
+    $hasErrors = true;
+    echo "\nWARNING: " . count($missingKeys) . " keys missing in lang/bn.json:\n";
     foreach ($missingKeys as $m) {
         echo " - [{$m['file']}] {$m['key']}\n";
     }
+} else {
+    echo "SUCCESS: 0 missing keys in lang/bn.json across all scanned files!\n";
+}
+
+if (!empty($controllerAuditErrors)) {
+    $hasErrors = true;
+    echo "\nWARNING: Found " . count($controllerAuditErrors) . " raw English/unlocalized flash messages in controllers:\n";
+    foreach ($controllerAuditErrors as $err) {
+        echo " - [{$err['file']}:{$err['line']}] {$err['matched']}\n";
+    }
+} else {
+    echo "SUCCESS: 0 raw unlocalized flash messages found in non-admin controllers!\n";
+}
+
+if ($hasErrors) {
     exit(1);
 }
+
+echo "All i18n checks passed cleanly!\n";
+exit(0);
