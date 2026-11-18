@@ -106,11 +106,11 @@ class StaticPageController extends Controller
             return response()->json([
                 'status' => $status,
                 'count' => count($wishlist),
-                'message' => $status === 'added' ? 'পণ্যটি উইশলিস্টে যুক্ত করা হয়েছে।' : 'পণ্যটি উইশলিস্ট থেকে সরানো হয়েছে।',
+                'message' => $status === 'added' ? __('Product added to your wishlist.') : __('Product removed from your wishlist.'),
             ]);
         }
 
-        $msg = $status === 'added' ? 'পণ্যটি আপনার উইশলিস্টে যুক্ত করা হয়েছে।' : 'পণ্যটি আপনার উইশলিস্ট থেকে সরানো হয়েছে।';
+        $msg = $status === 'added' ? __('Product added to your wishlist.') : __('Product removed from your wishlist.');
         return back()->with('success', $msg);
     }
 
@@ -167,7 +167,7 @@ class StaticPageController extends Controller
         ]);
 
         if (in_array($order->status, [OrderStatus::SHIPPED, OrderStatus::DELIVERED, OrderStatus::CANCELLED], true)) {
-            return back()->with('error', 'এই অর্ডারটি আর বাতিল করা সম্ভব নয় কারণ এটি ইতোমধ্যে ডেলিভারির উদ্দেশ্যে পাঠানো হয়েছে।');
+            return back()->with('error', __('This order cannot be cancelled as it has already been dispatched for delivery.'));
         }
 
         OrderTimeline::create([
@@ -178,6 +178,6 @@ class StaticPageController extends Controller
             'customer_notified' => true,
         ]);
 
-        return back()->with('success', 'আপনার অর্ডার বাতিলের অনুরোধটি সফলভাবে গ্রহণ করা হয়েছে। আমাদের সাপোর্ট টিম দ্রুত এটি পর্যালোচনা করবে।');
+        return back()->with('success', __('Your cancellation request has been received. Our support team will review it shortly.'));
     }
 }

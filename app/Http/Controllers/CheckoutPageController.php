@@ -264,7 +264,7 @@ class CheckoutPageController extends Controller
         $discount = \App\Models\Discount::where('code', $code)->first();
 
         if (!$discount) {
-            return back()->with('coupon_error', 'প্রদত্ত কুপন কোডটি সঠিক নয়।');
+            return back()->with('coupon_error', __('The coupon code provided is invalid.'));
         }
 
         $bag = session()->get('sorolata_collector_bag', []);
@@ -282,9 +282,9 @@ class CheckoutPageController extends Controller
 
         if (!$discount->isValidForSubtotal((float) $subtotal)) {
             if ($discount->min_subtotal && $subtotal < $discount->min_subtotal) {
-                return back()->with('coupon_error', "এই কুপনটি ব্যবহার করতে কমপক্ষে ৳" . number_format((float)$discount->min_subtotal) . " এর অর্ডার প্রয়োজন।");
+                return back()->with('coupon_error', __('A minimum order of ৳:amount is required to use this coupon.', ['amount' => number_format((float)$discount->min_subtotal)]));
             }
-            return back()->with('coupon_error', 'কুপনটি মেয়াদোত্তীর্ণ অথবা সর্বোচ্চ ব্যবহারের সীমা অতিক্রম করেছে।');
+            return back()->with('coupon_error', __('The coupon is expired or has reached its maximum usage limit.'));
         }
 
         $discountAmount = $discount->calculateDiscount((float) $subtotal);
@@ -296,12 +296,12 @@ class CheckoutPageController extends Controller
             'amount' => $discountAmount,
         ]);
 
-        return back()->with('coupon_success', "কুপন '{$discount->code}' সফলভাবে যুক্ত হয়েছে! আপনি ৳" . number_format($discountAmount, 2) . " ছাড় পেয়েছেন।");
+        return back()->with('coupon_success', __("Coupon ':code' applied successfully! You received a discount of ৳:amount.", ['code' => $discount->code, 'amount' => number_format($discountAmount, 2)]));
     }
 
     public function removeCoupon(): RedirectResponse
     {
         session()->forget('checkout_coupon');
-        return back()->with('info', 'কুপন কোড সরানো হয়েছে।');
+        return back()->with('info', __('Coupon code removed.'));
     }
 }

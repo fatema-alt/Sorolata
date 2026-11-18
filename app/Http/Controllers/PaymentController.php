@@ -52,7 +52,7 @@ class PaymentController extends Controller
 
         if (!$verification->successful) {
             return redirect()->route('checkout.index')
-                ->with('error', 'bKash Payment Failed: ' . ($verification->errorMessage ?? 'Transaction cancelled'));
+                ->with('error', __('bKash Payment Failed: :error', ['error' => $verification->errorMessage ?? __('Transaction cancelled')]));
         }
 
         $paidAmount = $verification->amount > 0 ? $verification->amount : (float) $request->input('amount', $orderModel->total_amount);
@@ -88,8 +88,14 @@ class PaymentController extends Controller
         ]);
 
         $message = $isAdvancePayment
-            ? "অগ্রিম ডেলিভারি চার্জ ৳{$paidAmount} সফলভাবে পরিশোধ হয়েছে! আপনার অর্ডার #{$orderModel->order_number} কনফার্ম করা হলো। বাকি ৳" . number_format($dueAmount, 2) . " ডেলিভারির সময় ক্যাশ অন ডেলিভারিতে প্রদান করবেন।"
-            : "bKash পেমেন্ট সফল হয়েছে! অর্ডার #{$orderModel->order_number} সম্পন্ন হয়েছে।";
+            ? __('Advance delivery charge of ৳:paid successfully received! Your order #:order has been confirmed. The remaining ৳:due is payable on delivery.', [
+                'paid' => number_format((float) $paidAmount, 2),
+                'order' => $orderModel->order_number,
+                'due' => number_format((float) $dueAmount, 2),
+            ])
+            : __('bKash payment successful! Order #:order has been confirmed.', [
+                'order' => $orderModel->order_number,
+            ]);
 
         return redirect()->route('track.order', ['order_number' => $orderModel->order_number])
             ->with('success', $message);
@@ -138,14 +144,14 @@ class PaymentController extends Controller
         }
 
         if (!$orderModel) {
-            return redirect()->route('checkout.index')->with('error', 'Order not found for this transaction.');
+            return redirect()->route('checkout.index')->with('error', __('Order not found for this transaction.'));
         }
 
         $gateway = $this->paymentManager->driver('sslcommerz');
         $verification = $gateway->verifyPayment($request);
 
         if (!$verification->successful) {
-            return redirect()->route('checkout.index')->with('error', 'SSLCommerz transaction validation failed.');
+            return redirect()->route('checkout.index')->with('error', __('SSLCommerz transaction validation failed.'));
         }
 
         $paidAmount = $verification->amount > 0 ? $verification->amount : (float) $request->input('amount', $orderModel->total_amount);
@@ -178,7 +184,7 @@ class PaymentController extends Controller
         ]);
 
         return redirect()->route('track.order', ['order_number' => $orderModel->order_number])
-            ->with('success', "SSLCommerz পেমেন্ট সফল হয়েছে! অর্ডার #{$orderModel->order_number} নিশ্চিত করা হয়েছে।");
+            ->with('success', __('SSLCommerz payment successful! Order #:order has been confirmed.', ['order' => $orderModel->order_number]));
     }
 
     /**
@@ -188,7 +194,7 @@ class PaymentController extends Controller
     {
         Log::warning('SSLCommerz payment failed', $request->all());
         return redirect()->route('checkout.index')
-            ->with('error', 'SSLCommerz পেমেন্ট ব্যর্থ হয়েছে। অনুগ্রহ করে পুনরায় চেষ্টা করুন বা বিকাশ/ক্যাশ অন ডেলিভারি নির্বাচন করুন।');
+            ->with('error', __('SSLCommerz payment failed. Please try again or select bKash / Cash on Delivery.'));
     }
 
     /**
@@ -197,7 +203,7 @@ class PaymentController extends Controller
     public function sslcommerzCancel(Request $request): RedirectResponse
     {
         return redirect()->route('checkout.index')
-            ->with('info', 'পেমেন্ট বাতিল করা হয়েছে। আপনি চাইলে অন্য কোনো মাধ্যম নির্বাচন করতে পারেন।');
+            ->with('info', __('Payment was cancelled. You may choose another payment method.'));
     }
 
     /**
@@ -267,7 +273,7 @@ class PaymentController extends Controller
         ]);
 
         return redirect()->route('track.order', ['order_number' => $orderModel->order_number])
-            ->with('success', "আপনার পেমেন্ট ট্রানজেকশন আইডি (#{$validated['transaction_id']}) সফলভাবে গৃহীত হয়েছে! আমাদের টিম যাচাই করে দ্রুত অর্ডারটি কনফার্ম করবে।");
+            ->with('success', __('Your payment transaction ID (#:trx) has been submitted successfully! Our team will verify and confirm your order shortly.', ['trx' => $validated['transaction_id']]));
     }
 
     /**

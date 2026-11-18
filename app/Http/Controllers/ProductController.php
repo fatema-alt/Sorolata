@@ -127,6 +127,6 @@ class ProductController extends Controller
             'likes_count' => 0,
         ]);
 
-        return back()->with('review_success', 'আপনার রিভিউ ও রেটিং সফলভাবে যুক্ত করা হয়েছে। ধন্যবাদ আপনার মূল্যায়নের জন্য!');
+        return back()->with('review_success', __('Your review and rating have been added successfully. Thank you for your feedback!'));
     }
 }

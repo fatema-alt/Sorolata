@@ -60,7 +60,7 @@ class CartController extends Controller
             $totalCount = array_sum(session()->get('sorolata_collector_bag', []));
             return response()->json([
                 'success' => true,
-                'message' => "Added {$quantity} × {$product->title} to your Collector Bag.",
+                'message' => __('Added :quantity × :title to your Collector Bag.', ['quantity' => $quantity, 'title' => $product->title]),
                 'cart_count' => $totalCount,
                 'product' => [
                     'id' => $product->id,
@@ -70,7 +70,7 @@ class CartController extends Controller
             ]);
         }
 
-        return back()->with('success', "Added {$quantity} × {$product->title} to your Collector Bag.");
+        return back()->with('success', __('Added :quantity × :title to your Collector Bag.', ['quantity' => $quantity, 'title' => $product->title]));
     }
 
     public function remove(int $productId): RedirectResponse
@@ -79,6 +79,6 @@ class CartController extends Controller
         unset($cart[$productId]);
         session()->put('sorolata_collector_bag', $cart);
 
-        return back()->with('success', 'Item removed from your Collector Bag.');
+        return back()->with('success', __('Item removed from your Collector Bag.'));
     }
 }

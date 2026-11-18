@@ -17,7 +17,7 @@ class AccountPageController extends Controller
     {
         if (!Auth::check()) {
             return redirect()->route('login')
-                ->with('info', 'আপনার অর্ডার ইতিহাস ও সংরক্ষিত পণ্য দেখতে অনুগ্রহ করে লগইন করুন।');
+                ->with('info', __('Please log in to view your order history and saved heirlooms.'));
         }
 
         $user = Auth::user();
@@ -89,6 +89,6 @@ class AccountPageController extends Controller
             );
         }
 
-        return back()->with('success', 'আপনার প্রোফাইল তথ্য সফলভাবে আপডেট হয়েছে।');
+        return back()->with('success', __('Your profile details have been updated successfully.'));
     }
 }

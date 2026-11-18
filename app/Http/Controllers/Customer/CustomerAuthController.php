@@ -42,7 +42,7 @@ class CustomerAuthController extends Controller
             return back()
                 ->withInput($request->only('login'))
                 ->withErrors([
-                    'login' => "অতিরিক্ত ভুল প্রচেষ্টার কারণে সাময়িকভাবে লগইন বন্ধ রয়েছে। অনুগ্রহ করে {$seconds} সেকেন্ড পর আবার চেষ্টা করুন।",
+                    'login' => __('Too many login attempts. Please try again in :seconds seconds.', ['seconds' => $seconds]),
                 ]);
         }
 
@@ -60,7 +60,7 @@ class CustomerAuthController extends Controller
             $request->session()->regenerate();
 
             return redirect()->intended(route('account.index'))
-                ->with('success', 'স্বাগতম! আপনি সফলভাবে লগইন করেছেন।');
+                ->with('success', __('Welcome! You have logged in successfully.'));
         }
 
         RateLimiter::hit($throttleKey, 300);
@@ -68,7 +68,7 @@ class CustomerAuthController extends Controller
         return back()
             ->withInput($request->only('login'))
             ->withErrors([
-                'login' => 'প্রদত্ত তথ্য আমাদের রেকর্ডের সাথে মিলছে না। অনুগ্রহ করে পুনরায় যাচাই করুন।',
+                'login' => __('These credentials do not match our records. Please verify and try again.'),
             ]);
     }
 
@@ -106,7 +106,7 @@ class CustomerAuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->route('account.index')
-            ->with('success', 'অভিনন্দন! আপনার অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।');
+            ->with('success', __('Congratulations! Your account has been created successfully.'));
     }
 
     public function logout(Request $request): RedirectResponse
@@ -115,6 +115,6 @@ class CustomerAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'আপনি সফলভাবে লগআউট হয়েছেন।');
+        return redirect('/')->with('success', __('You have been logged out successfully.'));
     }
 }
