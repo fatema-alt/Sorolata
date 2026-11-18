@@ -213,10 +213,17 @@
 
             <form method="POST" action="{{ route('admin.pages.store') }}" class="space-y-4">
                 @csrf
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Page Title *</label>
-                    <input type="text" name="title" required placeholder="e.g. Boishakh Heritage Festival 2026" 
-                           class="w-full bg-[#12141a] border border-[#282d37] rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-[#214E34]">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Page Title (EN) *</label>
+                        <input type="text" name="title" required placeholder="e.g. Boishakh Heritage Festival 2026" 
+                               class="w-full bg-[#12141a] border border-[#282d37] rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-[#214E34]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Page Title (বাংলা / BN)</label>
+                        <input type="text" name="title_bn" placeholder="যেমনঃ বৈশাখী ঐতিহ্যবাহী উৎসব ২০২৬" 
+                               class="w-full bg-[#12141a] border border-[#282d37] rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-[#214E34]">
+                    </div>
                 </div>
 
                 <div>

@@ -17,11 +17,19 @@
         @csrf
 
         <div class="space-y-4">
-            <div>
-                <label class="block text-xs font-semibold text-gray-300 mb-1">Artifact Title</label>
-                <input type="text" name="title" value="{{ old('title') }}" required 
-                       placeholder="e.g. Royal Sonargaon Khadi Shawl"
-                       class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Artifact Title (EN)</label>
+                    <input type="text" name="title" value="{{ old('title') }}" required 
+                           placeholder="e.g. Royal Sonargaon Khadi Shawl"
+                           class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Artifact Title (বাংলা / BN)</label>
+                    <input type="text" name="title_bn" value="{{ old('title_bn') }}" 
+                           placeholder="যেমনঃ রাজকীয় সোনারগাঁও খাদি শাল"
+                           class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">
+                </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -64,11 +72,19 @@
                 </div>
             </div>
 
-            <div>
-                <label class="block text-xs font-semibold text-gray-300 mb-1">Short Story / Provenance Introduction</label>
-                <textarea name="short_description" rows="3" 
-                          placeholder="Brief editorial introducing the craft traditions and materials..."
-                          class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">{{ old('short_description') }}</textarea>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Short Story / Provenance Introduction (EN)</label>
+                    <textarea name="short_description" rows="3" 
+                              placeholder="Brief editorial introducing the craft traditions and materials..."
+                              class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">{{ old('short_description') }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Short Story / Provenance Introduction (বাংলা / BN)</label>
+                    <textarea name="short_description_bn" rows="3" 
+                              placeholder="ঐতিহ্যবাহী কারুশিল্প ও উপাদানের সংক্ষিপ্ত পরিচিতি..."
+                              class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">{{ old('short_description_bn') }}</textarea>
+                </div>
             </div>
         </div>
 

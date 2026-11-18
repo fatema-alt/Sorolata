@@ -68,6 +68,9 @@ class AdminProductController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_bn' => 'nullable|string|max:255',
+            'subtitle' => 'nullable|string|max:255',
+            'subtitle_bn' => 'nullable|string|max:255',
             'sku' => 'required|string|unique:products,sku|max:100',
             'price' => 'required|numeric|min:0',
             'compare_at_price' => 'nullable|numeric|min:0',
@@ -76,6 +79,7 @@ class AdminProductController extends Controller
             'artisan_id' => 'nullable|exists:artisans,id',
             'district_id' => 'nullable|exists:districts,id',
             'short_description' => 'nullable|string',
+            'short_description_bn' => 'nullable|string',
             'handmade_duration' => 'nullable|string',
         ]);
 
@@ -83,6 +87,9 @@ class AdminProductController extends Controller
             'uuid' => (string) Str::uuid(),
             'slug' => Str::slug($validated['title']) . '-' . Str::random(5),
             'title' => $validated['title'],
+            'title_bn' => $validated['title_bn'] ?? null,
+            'subtitle' => $validated['subtitle'] ?? null,
+            'subtitle_bn' => $validated['subtitle_bn'] ?? null,
             'sku' => strtoupper($validated['sku']),
             'price' => (float) $validated['price'],
             'compare_at_price' => !empty($validated['compare_at_price']) ? (float) $validated['compare_at_price'] : null,
@@ -91,6 +98,7 @@ class AdminProductController extends Controller
             'artisan_id' => $validated['artisan_id'] ?? null,
             'district_id' => $validated['district_id'] ?? null,
             'short_description' => $validated['short_description'] ?? null,
+            'short_description_bn' => $validated['short_description_bn'] ?? null,
             'handmade_duration' => $validated['handmade_duration'] ?? null,
             'status' => ProductStatus::PUBLISHED,
         ]);
@@ -130,7 +138,13 @@ class AdminProductController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_bn' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string',
+            'subtitle_bn' => 'nullable|string',
+            'short_description' => 'nullable|string',
+            'short_description_bn' => 'nullable|string',
+            'long_description' => 'nullable|string',
+            'long_description_bn' => 'nullable|string',
             'sku' => "required|string|max:100|unique:products,sku,{$product->id}",
             'price' => 'required|numeric|min:0',
             'sale_price' => 'nullable|numeric|min:0',

@@ -187,16 +187,22 @@
                 <div class="overflow-y-auto p-6 sm:p-8 space-y-4 flex-grow">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block font-semibold text-gray-300 mb-1">Collection Title (নাম) *</label>
+                            <label class="block font-semibold text-gray-300 mb-1">Collection Title (English) *</label>
                             <input type="text" name="title" required placeholder="e.g. Royal Jamdani Loom Heritage" 
                                    @input="autoSlug = generateSlug($event.target.value)"
                                    class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2.5 text-white focus:border-[#214E34] focus:outline-none">
                         </div>
                         <div>
-                            <label class="block font-semibold text-gray-300 mb-1">Slug (URL কী)</label>
-                            <input type="text" name="slug" :value="autoSlug" placeholder="e.g. royal-jamdani-loom"
-                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2.5 text-gray-300 font-mono focus:border-[#214E34] focus:outline-none">
+                            <label class="block font-semibold text-gray-300 mb-1">Collection Title (Bangla / বাংলা)</label>
+                            <input type="text" name="title_bn" placeholder="যেমন: রাজকীয় জামদানি তাঁত ঐতিহ্য"
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2.5 text-white focus:border-[#214E34] focus:outline-none">
                         </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-300 mb-1">Slug (URL কী)</label>
+                        <input type="text" name="slug" :value="autoSlug" placeholder="e.g. royal-jamdani-loom"
+                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2.5 text-gray-300 font-mono focus:border-[#214E34] focus:outline-none">
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -217,10 +223,17 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block font-semibold text-gray-300 mb-1">Description (বর্ণনা)</label>
-                        <textarea name="description" rows="2" placeholder="কালেকশনের ইতিহাস ও প্রেক্ষাপট লিখুন..." 
-                                  class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2 text-white focus:border-[#214E34] focus:outline-none"></textarea>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-gray-300 mb-1">Description (English)</label>
+                            <textarea name="description" rows="2" placeholder="Collection background and editorial thesis..." 
+                                      class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2 text-white focus:border-[#214E34] focus:outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-300 mb-1">Description (Bangla / বাংলা)</label>
+                            <textarea name="description_bn" rows="2" placeholder="কালেকশনের ইতিহাস ও প্রেক্ষাপট লিখুন..." 
+                                      class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2 text-white focus:border-[#214E34] focus:outline-none"></textarea>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -291,15 +304,21 @@
                 <div class="overflow-y-auto p-6 sm:p-8 space-y-4 flex-grow">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block font-semibold text-gray-300 mb-1">Collection Title *</label>
+                            <label class="block font-semibold text-gray-300 mb-1">Collection Title (English) *</label>
                             <input type="text" name="title" x-model="editCollection.title" required 
                                    class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2.5 text-white focus:border-[#214E34] focus:outline-none">
                         </div>
                         <div>
-                            <label class="block font-semibold text-gray-300 mb-1">Slug</label>
-                            <input type="text" name="slug" x-model="editCollection.slug" required
-                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2.5 text-gray-300 font-mono focus:border-[#214E34] focus:outline-none">
+                            <label class="block font-semibold text-gray-300 mb-1">Collection Title (Bangla / বাংলা)</label>
+                            <input type="text" name="title_bn" x-model="editCollection.title_bn" placeholder="যেমন: রাজকীয় জামদানি তাঁত ঐতিহ্য"
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2.5 text-white focus:border-[#214E34] focus:outline-none">
                         </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-300 mb-1">Slug</label>
+                        <input type="text" name="slug" x-model="editCollection.slug" required
+                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2.5 text-gray-300 font-mono focus:border-[#214E34] focus:outline-none">
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -320,10 +339,17 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block font-semibold text-gray-300 mb-1">Description</label>
-                        <textarea name="description" x-model="editCollection.description" rows="2" 
-                                  class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2 text-white focus:border-[#214E34] focus:outline-none"></textarea>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-gray-300 mb-1">Description (English)</label>
+                            <textarea name="description" x-model="editCollection.description" rows="2" 
+                                      class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2 text-white focus:border-[#214E34] focus:outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-300 mb-1">Description (Bangla / বাংলা)</label>
+                            <textarea name="description_bn" x-model="editCollection.description_bn" rows="2" 
+                                      class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3.5 py-2 text-white focus:border-[#214E34] focus:outline-none"></textarea>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

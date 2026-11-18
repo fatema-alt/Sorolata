@@ -63,14 +63,53 @@
         <div x-show="activeTab === 'general'" class="p-6 rounded-2xl bg-[#161922] border border-[#252a36] space-y-5">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">Artifact Title</label>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Artifact Title (EN)</label>
                     <input type="text" name="title" value="{{ old('title', $product->title) }}" required 
                            class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">Subtitle / Archival Hook</label>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Artifact Title (বাংলা / BN)</label>
+                    <input type="text" name="title_bn" value="{{ old('title_bn', $product->title_bn) }}" 
+                           class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Subtitle / Archival Hook (EN)</label>
                     <input type="text" name="subtitle" value="{{ old('subtitle', $product->subtitle) }}" 
                            class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Subtitle / Archival Hook (বাংলা / BN)</label>
+                    <input type="text" name="subtitle_bn" value="{{ old('subtitle_bn', $product->subtitle_bn) }}" 
+                           class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Short Description (EN)</label>
+                    <textarea name="short_description" rows="3" 
+                              class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">{{ old('short_description', $product->short_description) }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Short Description (বাংলা / BN)</label>
+                    <textarea name="short_description_bn" rows="3" 
+                              class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">{{ old('short_description_bn', $product->short_description_bn) }}</textarea>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Long Description / Editorial (EN)</label>
+                    <textarea name="long_description" rows="4" 
+                              class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">{{ old('long_description', $product->long_description) }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Long Description / Editorial (বাংলা / BN)</label>
+                    <textarea name="long_description_bn" rows="4" 
+                              class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2.5 focus:border-[#214E34] focus:outline-none">{{ old('long_description_bn', $product->long_description_bn) }}</textarea>
                 </div>
             </div>
 

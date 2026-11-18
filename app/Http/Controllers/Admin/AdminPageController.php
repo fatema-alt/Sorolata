@@ -49,6 +49,7 @@ class AdminPageController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_bn' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255|unique:pages,slug',
             'page_type' => 'required|string|in:landing,home,standard,campaign,story,festival',
             'status' => 'required|string|in:draft,published',
@@ -59,6 +60,7 @@ class AdminPageController extends Controller
         $page = Page::create([
             'uuid' => (string) Str::uuid(),
             'title' => $validated['title'],
+            'title_bn' => $validated['title_bn'] ?? null,
             'slug' => $slug,
             'page_type' => $validated['page_type'],
             'status' => $validated['status'],

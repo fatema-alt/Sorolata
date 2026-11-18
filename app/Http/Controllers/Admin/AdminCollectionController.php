@@ -49,9 +49,11 @@ class AdminCollectionController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_bn' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255|unique:collections,slug',
             'type' => 'required|string|in:manual,seasonal,featured,rule_based',
             'description' => 'nullable|string|max:2000',
+            'description_bn' => 'nullable|string|max:2000',
             'cover_image' => 'nullable|string|max:500',
             'cover_image_file' => 'nullable|image|max:5120',
             'banner_url' => 'nullable|string|max:500',
@@ -80,8 +82,10 @@ class AdminCollectionController extends Controller
             'uuid' => (string) Str::uuid(),
             'slug' => $slug,
             'title' => $validated['title'],
+            'title_bn' => $validated['title_bn'] ?? null,
             'type' => $validated['type'],
             'description' => $validated['description'] ?? null,
+            'description_bn' => $validated['description_bn'] ?? null,
             'cover_image' => $coverImage,
             'banner_url' => $validated['banner_url'] ?? null,
             'is_featured' => $request->boolean('is_featured'),
@@ -110,9 +114,11 @@ class AdminCollectionController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_bn' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255|unique:collections,slug,' . $collection->id,
             'type' => 'required|string|in:manual,seasonal,featured,rule_based',
             'description' => 'nullable|string|max:2000',
+            'description_bn' => 'nullable|string|max:2000',
             'cover_image' => 'nullable|string|max:500',
             'cover_image_file' => 'nullable|image|max:5120',
             'banner_url' => 'nullable|string|max:500',
@@ -131,9 +137,11 @@ class AdminCollectionController extends Controller
 
         $collection->update([
             'title' => $validated['title'],
+            'title_bn' => $validated['title_bn'] ?? null,
             'slug' => $slug,
             'type' => $validated['type'],
             'description' => $validated['description'] ?? null,
+            'description_bn' => $validated['description_bn'] ?? null,
             'cover_image' => $coverImage,
             'banner_url' => $validated['banner_url'] ?? $collection->banner_url,
             'is_featured' => $request->boolean('is_featured'),
