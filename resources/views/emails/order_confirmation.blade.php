@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <title>Order Confirmation #{{ $order->order_number }}</title>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="meta-col">
                     <div class="meta-label">{{ __('Status') }}</div>
-                    <div class="meta-val">{{ $order->status->label() }}</div>
+                    <div class="meta-val">{{ $order->status?->label() ?? __('Pending Review') }}</div>
                 </div>
             </div>
 

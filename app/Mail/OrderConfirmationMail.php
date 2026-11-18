@@ -22,7 +22,7 @@ class OrderConfirmationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Your Sorolata Heirloom Order Confirmed — #{$this->order->order_number}",
+            subject: __('Your Sorolata Heirloom Order Confirmed — #:order_number', ['order_number' => $this->order->order_number]),
         );
     }
 

@@ -122,4 +122,16 @@ class Order extends Model
     {
         return $this->belongsTo(ShippingRate::class);
     }
+
+    public function getLocaleAttribute(): string
+    {
+        return $this->shipping_address['locale'] ?? (session('locale') ?? config('app.locale', 'en'));
+    }
+
+    public function setLocaleAttribute(string $value): void
+    {
+        $address = $this->shipping_address ?? [];
+        $address['locale'] = $value;
+        $this->shipping_address = $address;
+    }
 }

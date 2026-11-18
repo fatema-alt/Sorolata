@@ -159,6 +159,7 @@ class CheckoutPageController extends Controller
                 'district' => $validated['city_district'],
                 'is_dhaka' => $isDhaka,
                 'gift_note' => $validated['gift_note'] ?? null,
+                'locale' => app()->getLocale(),
             ],
             'notes' => $validated['gift_note'] ?? null,
         ]);
@@ -221,7 +222,7 @@ class CheckoutPageController extends Controller
 
         try {
             if (!empty($order->customer_email) && filter_var($order->customer_email, FILTER_VALIDATE_EMAIL)) {
-                Mail::to($order->customer_email)->send(new OrderConfirmationMail($order));
+                Mail::to($order->customer_email)->locale($order->locale)->send(new OrderConfirmationMail($order));
             }
         } catch (\Throwable $e) {
             Log::warning("Order confirmation email failed: " . $e->getMessage());

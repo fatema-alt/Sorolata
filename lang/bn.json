@@ -837,5 +837,6 @@
     "Product added to your wishlist.": "পণ্যটি আপনার উইশলিস্টে যুক্ত করা হয়েছে।",
     "Product removed from your wishlist.": "পণ্যটি আপনার উইশলিস্ট থেকে সরানো হয়েছে।",
     "This order cannot be cancelled as it has already been dispatched for delivery.": "এই অর্ডারটি আর বাতিল করা সম্ভব নয় কারণ এটি ইতোমধ্যে ডেলিভারির উদ্দেশ্যে পাঠানো হয়েছে।",
-    "Your cancellation request has been received. Our support team will review it shortly.": "আপনার অর্ডার বাতিলের অনুরোধটি সফলভাবে গ্রহণ করা হয়েছে। আমাদের সাপোর্ট টিম দ্রুত এটি পর্যালোচনা করবে।"
+    "Your cancellation request has been received. Our support team will review it shortly.": "আপনার অর্ডার বাতিলের অনুরোধটি সফলভাবে গ্রহণ করা হয়েছে। আমাদের সাপোর্ট টিম দ্রুত এটি পর্যালোচনা করবে।",
+    "Your Sorolata Heirloom Order Confirmed — #:order_number": "আপনার সরলতা অর্ডার নিশ্চিতকরণ — #:order_number"
 }
