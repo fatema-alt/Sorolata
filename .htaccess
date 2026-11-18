@@ -5,11 +5,15 @@
 
     RewriteEngine On
 
-    # Handle Authorization Header
+    # 1. Force remove /public/ or /sorolata/ from browser address bar
+    RewriteCond %{THE_REQUEST} \s/+(public|sorolata)/?([^\s?]*) [NC]
+    RewriteRule ^ /%2 [R=301,L]
+
+    # 2. Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Send Requests To public/ Directory transparently (no URL redirect)
+    # 3. Transparently rewrite to public/ folder internally without changing URL
     RewriteCond %{REQUEST_URI} !^/public/
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
