@@ -15,11 +15,11 @@ enum ReturnStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::PENDING => 'Review Pending',
-            self::APPROVED => 'Return Approved (Ship to Atelier)',
-            self::REJECTED => 'Request Declined',
-            self::ITEM_RECEIVED => 'Artifact Inspected at Guild',
-            self::REFUNDED => 'Refund Executed',
+            self::PENDING => __('Review Pending'),
+            self::APPROVED => __('Return Approved (Ship to Atelier)'),
+            self::REJECTED => __('Request Declined'),
+            self::ITEM_RECEIVED => __('Artifact Inspected at Guild'),
+            self::REFUNDED => __('Refund Executed'),
         };
     }
 }

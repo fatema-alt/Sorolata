@@ -20,16 +20,21 @@ enum ArtisanCraftType: string
     public function title(): string
     {
         return match ($this) {
-            self::JAMDANI_WEAVING => 'Heritage Jamdani Weaving',
-            self::MUSLIN_HANDSPUN => 'Fine Handspun Muslin',
-            self::NAKSHI_KANTHA => 'Hand-Embroidered Nakshi Kantha',
-            self::CLAY_POTTERY => 'Terracotta & Glazed Pottery',
-            self::BRASS_BELL_METAL => 'Hand-Forged Brass & Bell Metal',
-            self::SHATRANJI_FLATWEAVE => 'Heritage Shatranji Weaving',
-            self::CANE_BAMBOO => 'Hand-Split Cane & Bamboo',
-            self::RAJSHAHI_SILK => 'Mulberry Sericulture & Silk',
-            self::WOOD_CARVING => 'Architectural Woodcarving',
-            self::LEATHER_CRAFT => 'Vegetable-Tanned Artisan Leather',
+            self::JAMDANI_WEAVING => __('Heritage Jamdani Weaving'),
+            self::MUSLIN_HANDSPUN => __('Fine Handspun Muslin'),
+            self::NAKSHI_KANTHA => __('Hand-Embroidered Nakshi Kantha'),
+            self::CLAY_POTTERY => __('Terracotta & Glazed Pottery'),
+            self::BRASS_BELL_METAL => __('Hand-Forged Brass & Bell Metal'),
+            self::SHATRANJI_FLATWEAVE => __('Heritage Shatranji Weaving'),
+            self::CANE_BAMBOO => __('Hand-Split Cane & Bamboo'),
+            self::RAJSHAHI_SILK => __('Mulberry Sericulture & Silk'),
+            self::WOOD_CARVING => __('Architectural Woodcarving'),
+            self::LEATHER_CRAFT => __('Vegetable-Tanned Artisan Leather'),
         };
+    }
+
+    public function label(): string
+    {
+        return $this->title();
     }
 }

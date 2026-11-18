@@ -20,17 +20,22 @@ enum PaymentGateway: string
     public function displayName(): string
     {
         return match ($this) {
-            self::BKASH => 'bKash Mobile Banking (বিকাশ)',
-            self::NAGAD => 'Nagad Mobile Banking (নগদ)',
-            self::ROCKET => 'DBBL Rocket (রকেট)',
-            self::BRAC_BANK => 'BRAC Bank Transfer (ব্র্যাক ব্যাংক)',
-            self::DBBL => 'Dutch-Bangla Bank (ডাচ-বাংলা ব্যাংক)',
-            self::SSLCOMMERZ => 'SSLCommerz Gateway (Cards & Net Banking)',
-            self::STRIPE => 'International Card (Stripe Global)',
-            self::PAYPAL => 'PayPal Global Express',
-            self::COD => 'Cash On Delivery (ক্যাশ অন ডেলিভারি - অগ্রিম ডিসি সহ)',
-            self::BANK_TRANSFER => 'Direct Bank Wire (ব্যাংক ট্রান্সফার)',
+            self::BKASH => __('bKash Mobile Banking'),
+            self::NAGAD => __('Nagad Mobile Banking'),
+            self::ROCKET => __('DBBL Rocket'),
+            self::BRAC_BANK => __('BRAC Bank Transfer'),
+            self::DBBL => __('Dutch-Bangla Bank'),
+            self::SSLCOMMERZ => __('SSLCommerz Gateway (Cards & Net Banking)'),
+            self::STRIPE => __('International Card (Stripe Global)'),
+            self::PAYPAL => __('PayPal Global Express'),
+            self::COD => __('Cash On Delivery (COD)'),
+            self::BANK_TRANSFER => __('Direct Bank Wire'),
         };
+    }
+
+    public function label(): string
+    {
+        return $this->displayName();
     }
 
     public function isLocalBangladesh(): bool

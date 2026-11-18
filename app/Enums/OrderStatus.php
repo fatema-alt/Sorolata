@@ -22,35 +22,23 @@ enum OrderStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::PENDING => 'Pending Review',
-            self::PAYMENT_PROCESSING => 'Payment Processing',
-            self::CONFIRMED => 'Order Confirmed',
-            self::CRAFTING_IN_PROGRESS => 'Handcrafting In Progress',
-            self::PACKED => 'Hand-Packed with Archival Seal',
-            self::QUALITY_CHECKED => 'Curator Quality Verified',
-            self::DISPATCHED, self::SHIPPED => 'Dispatched with Courier',
-            self::DELIVERED => 'Delivered to Collector',
-            self::COMPLETED => 'Order Completed',
-            self::CANCELLED => 'Cancelled',
-            self::REFUNDED => 'Refunded',
+            self::PENDING => __('Pending Review'),
+            self::PAYMENT_PROCESSING => __('Payment Processing'),
+            self::CONFIRMED => __('Order Confirmed'),
+            self::CRAFTING_IN_PROGRESS => __('Handcrafting In Progress'),
+            self::PACKED => __('Hand-Packed with Archival Seal'),
+            self::QUALITY_CHECKED => __('Curator Quality Verified'),
+            self::DISPATCHED, self::SHIPPED => __('Dispatched with Courier'),
+            self::DELIVERED => __('Delivered to Collector'),
+            self::COMPLETED => __('Order Completed'),
+            self::CANCELLED => __('Cancelled'),
+            self::REFUNDED => __('Refunded'),
         };
     }
 
     public function labelBn(): string
     {
-        return match ($this) {
-            self::PENDING => 'অর্ডার গৃহীত (যাচাই চলছে)',
-            self::PAYMENT_PROCESSING => 'পেমেন্ট প্রসেসিং চলছে',
-            self::CONFIRMED => 'অর্ডার নিশ্চিত (Confirmed)',
-            self::CRAFTING_IN_PROGRESS => 'তাঁতে প্রস্তুত হচ্ছে',
-            self::PACKED => 'নিরাপদ প্যাকেজিং সম্পন্ন',
-            self::QUALITY_CHECKED => 'কোয়ালিটি চেক ভেরিফাইড',
-            self::DISPATCHED, self::SHIPPED => 'কুরিয়ারে হস্তান্তর (On the Way)',
-            self::DELIVERED => 'ডেলিভারি সম্পন্ন (Delivered)',
-            self::COMPLETED => 'অর্ডার সম্পূর্ণ',
-            self::CANCELLED => 'অর্ডার বাতিল',
-            self::REFUNDED => 'টাকা রিফান্ড করা হয়েছে',
-        };
+        return $this->label();
     }
 
     public function stepNumber(): int

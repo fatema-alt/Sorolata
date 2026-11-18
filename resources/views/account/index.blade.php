@@ -102,7 +102,7 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="px-3 py-1 rounded-full text-xs font-bold border {{ $ord->status->badgeClass() }}">
-                                    {{ $ord->status->labelBn() }}
+                                    {{ $ord->status->label() }}
                                 </span>
                                 <span class="px-3 py-1 rounded-full text-xs font-bold border {{ $ord->payment_status->badgeClass() }}">
                                     {{ $ord->payment_status->label() }}

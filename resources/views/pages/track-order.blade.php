@@ -89,7 +89,7 @@
                     <div class="flex items-center gap-2">
                         <!-- Order Status Badge -->
                         <span class="px-3.5 py-1.5 rounded-full text-xs font-bold border {{ $order->status->badgeClass() }}">
-                            {{ $order->status->labelBn() }}
+                            {{ $order->status->label() }}
                         </span>
                         <!-- Payment Status Badge -->
                         <span class="px-3.5 py-1.5 rounded-full text-xs font-bold border {{ $order->payment_status->badgeClass() }}">

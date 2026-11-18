@@ -15,11 +15,11 @@ enum ProductType: string
     public function label(): string
     {
         return match ($this) {
-            self::PHYSICAL => 'Physical Heritage Artifact',
-            self::DIGITAL => 'Digital Archival Asset',
-            self::GIFT_CARD => 'Collector Gift Card',
-            self::BUNDLE => 'Curated Heritage Set',
-            self::SERVICE => 'Bespoke Atelier Commission',
+            self::PHYSICAL => __('Physical Heritage Artifact'),
+            self::DIGITAL => __('Digital Archival Asset'),
+            self::GIFT_CARD => __('Collector Gift Card'),
+            self::BUNDLE => __('Curated Heritage Set'),
+            self::SERVICE => __('Bespoke Atelier Commission'),
         };
     }
 }

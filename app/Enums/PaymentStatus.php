@@ -39,13 +39,13 @@ enum PaymentStatus: string
     public function displayName(): string
     {
         return match ($this) {
-            self::UNPAID => 'Unpaid / Pending',
-            self::AUTHORIZED => 'Payment Authorized',
-            self::PAID => 'Paid in Full',
-            self::PARTIALLY_PAID => 'Advance Delivery Fee Paid (COD Due)',
-            self::FAILED => 'Payment Failed',
-            self::REFUNDED => 'Refunded',
-            self::CHARGEBACK => 'Chargeback Initiated',
+            self::UNPAID => __('Unpaid / Pending'),
+            self::AUTHORIZED => __('Payment Authorized'),
+            self::PAID => __('Paid in Full'),
+            self::PARTIALLY_PAID => __('Advance Delivery Fee Paid (COD Due)'),
+            self::FAILED => __('Payment Failed'),
+            self::REFUNDED => __('Refunded'),
+            self::CHARGEBACK => __('Chargeback Initiated'),
         };
     }
 }
