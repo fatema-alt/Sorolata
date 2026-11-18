@@ -1,8 +1,15 @@
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /sorolata/
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
 
-    # Redirect all non-public requests to public/ subfolder
-    RewriteCond %{REQUEST_URI} !^/sorolata/public/
-    RewriteRule ^(.*)$ public/$1 [L,R=301]
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Send Requests To public/ Directory transparently (no URL redirect)
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
