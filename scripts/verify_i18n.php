@@ -45,6 +45,14 @@ $batchFiles = [
     __DIR__ . '/../resources/views/stories/index.blade.php',
     __DIR__ . '/../resources/views/stories/show.blade.php',
     __DIR__ . '/../resources/views/products/show.blade.php',
+    // Batch 3
+    __DIR__ . '/../resources/views/cart/index.blade.php',
+    __DIR__ . '/../resources/views/checkout/index.blade.php',
+    __DIR__ . '/../resources/views/auth/customer-login.blade.php',
+    __DIR__ . '/../resources/views/auth/customer-register.blade.php',
+    __DIR__ . '/../resources/views/account/index.blade.php',
+    __DIR__ . '/../resources/views/pages/wishlist.blade.php',
+    __DIR__ . '/../resources/views/pages/track-order.blade.php',
 ];
 
 $missingKeys = [];

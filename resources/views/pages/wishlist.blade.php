@@ -10,14 +10,14 @@
         
         <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#E8E8E8] pb-6 gap-4">
             <div>
-                <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">Curator Board</span>
+                <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('Curator Board') }}</span>
                 <h1 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-1">
-                    Your Saved Heirlooms
+                    {{ __('Your Saved Heirlooms') }}
                 </h1>
             </div>
             <div class="flex gap-3">
-                <x-button variant="secondary" size="sm" onclick="navigator.clipboard.writeText(window.location.href); alert('Wishlist link copied to clipboard!');">
-                    Share Board 🔗
+                <x-button variant="secondary" size="sm" onclick="navigator.clipboard.writeText(window.location.href); alert(@json(__('Wishlist link copied to clipboard!'), JSON_UNESCAPED_UNICODE));">
+                    {{ __('Share Board 🔗') }}
                 </x-button>
             </div>
         </div>
@@ -34,13 +34,13 @@
                 <div class="w-16 h-16 mx-auto rounded-full bg-[#F5F2EB] flex items-center justify-center text-3xl">
                     🤍
                 </div>
-                <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">আপনার উইশলিস্ট বর্তমানে খালি</h3>
+                <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">{{ __('Your Wishlist is currently empty') }}</h3>
                 <p class="text-xs text-[#666666] max-w-md mx-auto">
-                    আমাদের মাস্টার কারিগরদের ঐতিহ্যবাহী জামদানি, কাঁসা-পিতল ও শতবর্ষী শিল্পকর্ম থেকে আপনার প্রিয় আইটেমটি সংরক্ষণ করুন।
+                    {{ __('Save your favorite items from our master artisans across Dhakai Jamdani, brassware, and living heritage crafts.') }}
                 </p>
                 <div class="pt-2">
                     <a href="{{ route('shop.index') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#214E34] hover:bg-[#163824] text-white text-xs font-semibold tracking-wide transition-all shadow-md">
-                        <span>হেরিটেজ ক্যাটালগ এক্সপ্লোর করুন</span>
+                        <span>{{ __('Explore Heritage Catalog') }}</span>
                         <span>→</span>
                     </a>
                 </div>

@@ -103,7 +103,7 @@ class CustomerStorefrontProductionSuiteTest extends TestCase
         $response->assertDontSee('private@example.com');
         $response->assertDontSee('01888888888');
         $response->assertDontSee('Secret Home, Gulshan-2');
-        $response->assertSee('অর্ডার ট্র্যাকিং ও ডেলিভারি স্ট্যাটাস');
+        $response->assertSee(__('Order Tracking & Delivery Status'));
     }
 
     /** @test */

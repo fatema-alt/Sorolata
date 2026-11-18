@@ -36,12 +36,12 @@
 
         <div class="flex flex-wrap items-center gap-3">
             <button type="button" @click="showEditModal = true" class="px-5 py-2.5 rounded-full border border-[#D5D5D5] hover:border-[#214E34] text-xs font-semibold text-gray-700 hover:text-[#214E34] transition">
-                প্রোফাইল এডিট
+                {{ __('Edit Profile') }}
             </button>
             <form method="POST" action="{{ route('customer.logout') }}" class="inline">
                 @csrf
                 <button type="submit" class="px-5 py-2.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition border border-rose-200">
-                    লগআউট
+                    {{ __('Sign Out') }}
                 </button>
             </form>
         </div>
@@ -51,33 +51,33 @@
     <div x-show="showEditModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
         <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6" @click.away="showEditModal = false">
             <div class="flex items-center justify-between">
-                <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">প্রোফাইল আপডেট করুন</h3>
+                <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">{{ __('Update Profile') }}</h3>
                 <button type="button" @click="showEditModal = false" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
             </div>
 
             <form method="POST" action="{{ route('account.profile.update') }}" class="space-y-4">
                 @csrf
                 <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-gray-700 uppercase">আপনার নাম *</label>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase">{{ __('Your Name *') }}</label>
                     <input type="text" name="name" value="{{ old('name', $user->name) }}" required 
                            class="w-full text-xs p-3.5 rounded-xl border border-gray-300 bg-gray-50 focus:bg-white focus:border-[#214E34] focus:outline-none">
                 </div>
 
                 <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-gray-700 uppercase">মোবাইল ফোন নম্বর</label>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase">{{ __('Active Phone Number') }}</label>
                     <input type="tel" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="01XXXXXXXXX"
                            class="w-full text-xs p-3.5 rounded-xl border border-gray-300 bg-gray-50 focus:bg-white focus:border-[#214E34] focus:outline-none">
                 </div>
 
                 <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-gray-700 uppercase">ইমেইল (অপরিবর্তনযোগ্য)</label>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase">{{ __('Email Address (Unchangeable)') }}</label>
                     <input type="email" value="{{ $user->email }}" disabled 
                            class="w-full text-xs p-3.5 rounded-xl border border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed">
                 </div>
 
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" @click="showEditModal = false" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-xl">বাতিল</button>
-                    <button type="submit" class="px-5 py-2.5 bg-[#214E34] hover:bg-[#183a27] text-white text-xs font-bold rounded-xl shadow transition">সংরক্ষণ করুন</button>
+                    <button type="button" @click="showEditModal = false" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-xl">{{ __('Cancel') }}</button>
+                    <button type="submit" class="px-5 py-2.5 bg-[#214E34] hover:bg-[#183a27] text-white text-xs font-bold rounded-xl shadow transition">{{ __('Save Changes') }}</button>
                 </div>
             </form>
         </div>
@@ -88,7 +88,7 @@
         <!-- Left: Orders History -->
         <div class="lg:col-span-8 space-y-6">
             <h2 class="font-editorial-heading text-3xl font-light text-[#1D1D1D]">
-                অর্ডার ইতিহাস ও প্রোভিন্যান্স স্ট্যাটাস (Your Acquisitions)
+                {{ __('Order History & Provenance Status') }}
             </h2>
 
             <div class="space-y-4">
@@ -96,7 +96,7 @@
                     <div class="bg-white rounded-[32px] p-6 border border-[#E8E8E8] shadow-soft-xs space-y-4 hover:border-emerald-200 transition">
                         <div class="flex flex-wrap items-center justify-between pb-3 border-b border-[#E8E8E8] text-xs gap-2">
                             <div>
-                                <span class="text-[#888888]">অর্ডার নম্বর:</span>
+                                <span class="text-[#888888]">{{ __('Order Number:') }}</span>
                                 <strong class="text-[#1D1D1D] font-mono">#{{ $ord->order_number }}</strong>
                                 <span class="text-[#888888] ml-2">({{ $ord->created_at->format('d M, Y') }})</span>
                             </div>
@@ -118,7 +118,7 @@
                                              alt="{{ $item->product_title }}" class="w-12 h-12 rounded-xl object-cover bg-gray-50 border">
                                         <div>
                                             <h4 class="font-editorial-heading text-base text-[#1D1D1D] font-semibold">{{ $item->product_title }}</h4>
-                                            <span class="text-xs text-gray-500">পরিমাণ: {{ $item->quantity }} • একক মূল্য: ৳{{ number_format((float)$item->unit_price, 2) }}</span>
+                                            <span class="text-xs text-gray-500">{{ __('Qty: :qty • Unit Price: ৳:price', ['qty' => $item->quantity, 'price' => number_format((float)$item->unit_price, 2)]) }}</span>
                                         </div>
                                     </div>
                                     <span class="text-sm font-bold text-gray-900">৳{{ number_format((float)$item->subtotal, 2) }}</span>
@@ -127,9 +127,9 @@
                         </div>
 
                         <div class="pt-3 border-t border-[#E8E8E8] flex flex-wrap items-center justify-between text-xs gap-2">
-                            <span class="text-[#888888]">সর্বমোট মূল্য: <strong class="text-[#1D1D1D] font-bold">৳{{ number_format((float)$ord->total_amount, 2) }}</strong></span>
+                            <span class="text-[#888888]">{{ __('Total Price:') }} <strong class="text-[#1D1D1D] font-bold">৳{{ number_format((float)$ord->total_amount, 2) }}</strong></span>
                             <a href="{{ route('track.order', ['order_number' => $ord->order_number]) }}" class="text-[#214E34] font-bold hover:underline flex items-center gap-1">
-                                <span>লাইভ ট্র্যাকিং টাইমলাইন দেখুন</span>
+                                <span>{{ __('View Live Tracking Timeline') }}</span>
                                 <span>→</span>
                             </a>
                         </div>
@@ -137,10 +137,10 @@
                 @empty
                     <div class="bg-white rounded-[32px] p-12 text-center text-[#888888] border border-[#E8E8E8] space-y-3">
                         <span class="text-3xl">🛍️</span>
-                        <h4 class="text-base font-bold text-gray-700">এখনো কোনো অর্ডার নেই</h4>
-                        <p class="text-xs text-gray-500">ঐতিহ্যবাহী ঢাকাই জামদানি, মসলিন ও ঐতিহ্যিক কারুশিল্প অন্বেষণ করুন।</p>
+                        <h4 class="text-base font-bold text-gray-700">{{ __('No orders placed yet') }}</h4>
+                        <p class="text-xs text-gray-500">{{ __('Explore authentic Dhakai Jamdani, Muslin, and living heritage crafts.') }}</p>
                         <a href="{{ route('shop.index') }}" class="inline-block mt-2 px-6 py-2.5 rounded-full bg-[#214E34] text-white text-xs font-bold hover:bg-[#183a27] transition">
-                            আর্কাইভ কালেকশন দেখুন
+                            {{ __('Explore Archive Collection') }}
                         </a>
                     </div>
                 @endforelse
@@ -156,7 +156,7 @@
         <!-- Right: Saved Wishlist Pieces -->
         <div class="lg:col-span-4 space-y-6">
             <h2 class="font-editorial-heading text-3xl font-light text-[#1D1D1D]">
-                সংরক্ষিত পণ্য (Wishlist)
+                {{ __('Saved Heirlooms (Wishlist)') }}
             </h2>
 
             <div class="space-y-4">
@@ -167,7 +167,7 @@
                             <h4 class="font-editorial-heading text-sm text-[#1D1D1D] line-clamp-1 font-semibold">{{ $saved->title }}</h4>
                             <p class="text-xs text-gray-600 font-bold mt-0.5">৳{{ number_format((float)$saved->price, 2) }}</p>
                         </div>
-                        <a href="{{ route('products.show', $saved->slug) }}" class="text-xs text-[#214E34] font-bold hover:underline shrink-0">দেখুন →</a>
+                        <a href="{{ route('products.show', $saved->slug) }}" class="text-xs text-[#214E34] font-bold hover:underline shrink-0">{{ __('View →') }}</a>
                     </div>
                 @endforeach
             </div>
