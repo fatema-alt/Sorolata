@@ -1,0 +1,83 @@
+@extends('layouts.storefront')
+
+@section('seo_meta')
+    <title>{{ $district->name_en }} — Heritage GI Crafts & Master Artisans | Sorolata</title>
+    <meta name="description" content="{{ $district->historical_narrative ?? 'Discover heritage crafts and master artisans rooted in ' . $district->name_en }}">
+    <link rel="canonical" href="{{ route('district.show', $district->slug ?? $district->uuid) }}">
+@endsection
+
+@section('content')
+    <!-- District Hero -->
+    <section class="py-20 bg-white border-b border-[#E8E8E8]">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="max-w-3xl space-y-4">
+                <div class="flex items-center gap-2 text-xs text-[#888888] uppercase tracking-wider">
+                    <a href="{{ url('/') }}" class="hover:text-[#214E34]">Home</a>
+                    <span>/</span>
+                    <a href="{{ route('districts.index') }}" class="hover:text-[#214E34]">Districts</a>
+                    <span>/</span>
+                    <span class="text-[#1D1D1D] font-semibold">{{ $district->name_en }}</span>
+                </div>
+                <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#214E34] font-bold">
+                    <span>{{ $district->division->value }}</span>
+                    <span>•</span>
+                    <span class="font-editorial-bangla">{{ $district->name_bn }}</span>
+                </div>
+                <h1 class="font-editorial-heading text-4xl sm:text-6xl font-light text-[#1D1D1D]">
+                    {{ $district->name_en }}
+                </h1>
+                <p class="font-editorial-body text-lg text-[#555555] leading-relaxed">
+                    {{ $district->historical_narrative }}
+                </p>
+                <div class="pt-2 text-xs text-[#888888]">
+                    <span>River Basin: <strong class="text-[#1D1D1D]">{{ $district->river_basin ?? 'Bengal Floodplain' }}</strong></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Artisans in this District -->
+    @if($artisans->isNotEmpty())
+        <section class="py-16 bg-[#F8F6F2] border-b border-[#E8E8E8]">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12 space-y-8">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">Living Pedigree</span>
+                    <h2 class="font-editorial-heading text-3xl font-light text-[#1D1D1D]">
+                        Master Artisans of {{ $district->name_en }}
+                    </h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($artisans as $artisan)
+                        <div class="bg-white rounded-[32px] p-6 shadow-soft-xs flex items-center gap-5 border border-[#E8E8E8]">
+                            <img src="{{ $artisan->portrait_url }}" alt="{{ $artisan->full_name }}" class="w-16 h-16 rounded-full object-cover">
+                            <div>
+                                <h4 class="font-editorial-heading text-xl text-[#1D1D1D]">{{ $artisan->full_name }}</h4>
+                                <span class="text-xs text-[#888888] block">{{ $artisan->craft_type->title() }}</span>
+                                <a href="{{ route('artisan.show', $artisan->slug ?? $artisan->uuid) }}" class="text-xs text-[#214E34] font-semibold mt-1 inline-block">View Studio Profile →</a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- Featured Artifacts from this District -->
+    <section class="py-20 max-w-7xl mx-auto px-6 lg:px-12 space-y-8">
+        <div>
+            <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">GI Certified</span>
+            <h2 class="font-editorial-heading text-3xl sm:text-4xl font-light text-[#1D1D1D]">
+                Pieces Originating from {{ $district->name_en }}
+            </h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            @forelse($products as $product)
+                <x-product-card :product="$product" />
+            @empty
+                <div class="col-span-4 text-center py-16 text-[#888888]">
+                    New archival lots currently being woven in {{ $district->name_en }} looms.
+                </div>
+            @endforelse
+        </div>
+    </section>
+@endsection

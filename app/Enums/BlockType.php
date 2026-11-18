@@ -1,0 +1,77 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Enums;
+
+enum BlockType: string
+{
+    // Full Pre-built Architectural Blocks
+    case HERO_CINEMATIC = 'hero_cinematic';
+    case ARTISAN_SPOTLIGHT = 'artisan_spotlight';
+    case HERITAGE_PROVENANCE = 'heritage_provenance';
+    case INTERACTIVE_GALLERY = 'interactive_gallery';
+    case SPECS_ANATOMY = 'specs_anatomy';
+    case STICKY_PURCHASE_BOX = 'sticky_purchase_box';
+    case EDITORIAL_NARRATIVE = 'editorial_narrative';
+    case TESTIMONIAL_EDITORIAL = 'testimonial_editorial';
+    case ACCORDION_DETAILS = 'accordion_details';
+    case CURATED_PAIRING = 'curated_pairing';
+
+    // Shajgoj Content-to-Commerce Magazine Blocks
+    case MAGAZINE_HERO_GRID = 'magazine_hero_grid';
+    case TOPIC_BUBBLES = 'topic_bubbles';
+    case EDITORIAL_FEED_SIDEBAR = 'editorial_feed_sidebar';
+    case SHOPPABLE_PRODUCT_SHELF = 'shoppable_product_shelf';
+    case VIDEO_REELS_SHOWCASE = 'video_reels_showcase';
+    case HERITAGE_CLUB_NEWSLETTER = 'heritage_club_newsletter';
+
+    // Atomic Modular Elements (Elementor Widgets)
+    case ELEMENT_HEADING = 'element_heading';
+    case ELEMENT_PARAGRAPH = 'element_paragraph';
+    case ELEMENT_IMAGE = 'element_image';
+    case ELEMENT_VIDEO = 'element_video';
+    case ELEMENT_BUTTON = 'element_button';
+    case ELEMENT_PRODUCT_CARD = 'element_product_card';
+    case ELEMENT_ARTISAN_QUOTE = 'element_artisan_quote';
+    case ELEMENT_DIVIDER = 'element_divider';
+
+    public function defaultTitle(): string
+    {
+        return match ($this) {
+            self::HERO_CINEMATIC => 'Cinematic Hero Showcase',
+            self::ARTISAN_SPOTLIGHT => 'Meet the Master Artisan',
+            self::HERITAGE_PROVENANCE => 'Geographical Indication & Regional Heritage',
+            self::INTERACTIVE_GALLERY => 'Curated Visual Gallery & Macro Details',
+            self::SPECS_ANATOMY => 'Craft Anatomy & Material Composition',
+            self::STICKY_PURCHASE_BOX => 'Editorial Purchase & Collector Box',
+            self::EDITORIAL_NARRATIVE => 'Editorial Story & Cultural Context',
+            self::TESTIMONIAL_EDITORIAL => 'Collector Impressions & Authenticity',
+            self::ACCORDION_DETAILS => 'Heritage Care & Provenance FAQ',
+            self::CURATED_PAIRING => 'Curated Complementary Pieces',
+
+            // Shajgoj Content-to-Commerce Magazine Blocks
+            self::MAGAZINE_HERO_GRID => 'Editorial Magazine Hero Showcase',
+            self::TOPIC_BUBBLES => 'Topic & Craft Circle Highlights',
+            self::EDITORIAL_FEED_SIDEBAR => 'Editorial Stories & Category Directory',
+            self::SHOPPABLE_PRODUCT_SHELF => 'In-Story Shoppable Artifact Shelf',
+            self::VIDEO_REELS_SHOWCASE => 'Artisan In-Motion Video Reels',
+            self::HERITAGE_CLUB_NEWSLETTER => 'Guild Gazette & Newsletter Invitation',
+
+            // Element Titles
+            self::ELEMENT_HEADING => 'Heading Element',
+            self::ELEMENT_PARAGRAPH => 'Paragraph Text Element',
+            self::ELEMENT_IMAGE => 'Image Element (Upload)',
+            self::ELEMENT_VIDEO => 'Video Player Element',
+            self::ELEMENT_BUTTON => 'Action Button Element',
+            self::ELEMENT_PRODUCT_CARD => 'Shoppable Product Card',
+            self::ELEMENT_ARTISAN_QUOTE => 'Artisan Quote & Atelier Seal',
+            self::ELEMENT_DIVIDER => 'Ornamental Divider & Spacer',
+        };
+    }
+
+    public function isElement(): bool
+    {
+        return str_starts_with($this->value, 'element_');
+    }
+}

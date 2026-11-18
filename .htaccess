@@ -1,0 +1,8 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /sorolata/
+
+    # Redirect all non-public requests to public/ subfolder
+    RewriteCond %{REQUEST_URI} !^/sorolata/public/
+    RewriteRule ^(.*)$ public/$1 [L,R=301]
+</IfModule>

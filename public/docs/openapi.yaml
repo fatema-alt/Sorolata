@@ -1,0 +1,219 @@
+openapi: 3.0.3
+info:
+  title: Sorolata Heritage Commerce Platform REST API
+  description: >
+    Production-ready, API-first architecture for Sorolata supporting Web, iOS/Android apps,
+    headless frontends (Next.js/Nuxt), and third-party integrations (bKash, Nagad, Stripe, DHL).
+  version: 1.0.0
+  contact:
+    name: Sorolata Engineering Team
+    email: api@sorolata.com
+servers:
+  - url: http://localhost/sorolata/public/api/v1
+    description: Localhost XAMPP Server
+  - url: http://localhost:8080/api/v1
+    description: Development Server
+paths:
+  /auth/register:
+    post:
+      summary: Register new customer account
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password, password_confirmation]
+              properties:
+                name: { type: string, example: "Tahmina Chowdhury" }
+                email: { type: string, format: email, example: "tahmina@example.com" }
+                phone: { type: string, example: "+8801711223344" }
+                password: { type: string, format: password, example: "secret1234" }
+                password_confirmation: { type: string, example: "secret1234" }
+      responses:
+        201:
+          description: Account created successfully with Sanctum Bearer token
+
+  /auth/login:
+    post:
+      summary: Authenticate customer and get Bearer token
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, example: "admin@sorolata.com" }
+                password: { type: string, example: "password" }
+                device_name: { type: string, example: "iPhone 15 Pro" }
+      responses:
+        200:
+          description: Authenticated successfully
+
+  /auth/me:
+    get:
+      summary: Get authenticated profile and metrics
+      tags: [Authentication]
+      security:
+        - sanctumAuth: []
+      responses:
+        200:
+          description: User profile and patron metrics
+
+  /products:
+    get:
+      summary: Filtered and paginated product catalog
+      tags: [Products]
+      parameters:
+        - in: query
+          name: search
+          schema: { type: string }
+          description: Keyword search on title, sku, artisan, district
+        - in: query
+          name: category_slug
+          schema: { type: string }
+        - in: query
+          name: district_name
+          schema: { type: string }
+        - in: query
+          name: min_price
+          schema: { type: number }
+        - in: query
+          name: max_price
+          schema: { type: number }
+        - in: query
+          name: sort
+          schema: { type: string, enum: [newest, price_asc, price_desc, popular] }
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 16 }
+      responses:
+        200:
+          description: Paginated product list
+
+  /products/{uuidOrSlug}:
+    get:
+      summary: Single product details with variants, content, provenance and specs
+      tags: [Products]
+      parameters:
+        - in: path
+          name: uuidOrSlug
+          required: true
+          schema: { type: string }
+      responses:
+        200:
+          description: Complete product detail payload
+
+  /cart:
+    get:
+      summary: Get active shopping cart
+      tags: [Cart]
+      parameters:
+        - in: header
+          name: X-Session-ID
+          schema: { type: string }
+          description: Guest session identifier (if unauthenticated)
+      responses:
+        200:
+          description: Cart items and total amount
+
+  /cart/items:
+    post:
+      summary: Add item to cart
+      tags: [Cart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [product_id]
+              properties:
+                product_id: { type: integer, example: 1 }
+                variant_id: { type: integer, nullable: true }
+                quantity: { type: integer, default: 1 }
+                custom_options: { type: object }
+      responses:
+        201:
+          description: Item added
+
+  /checkout/calculate:
+    post:
+      summary: Calculate order totals (shipping, discounts, taxes)
+      tags: [Checkout]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cart_uuid]
+              properties:
+                cart_uuid: { type: string }
+                shipping_rate_id: { type: integer }
+                coupon_code: { type: string }
+      responses:
+        200:
+          description: Calculated order totals
+
+  /checkout/process:
+    post:
+      summary: Execute checkout and place order
+      tags: [Checkout]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cart_uuid, customer_name, customer_email, customer_phone, shipping_address, payment_gateway]
+              properties:
+                cart_uuid: { type: string }
+                customer_name: { type: string }
+                customer_email: { type: string }
+                customer_phone: { type: string }
+                shipping_address:
+                  type: object
+                  properties:
+                    address: { type: string }
+                    city: { type: string }
+                    district: { type: string }
+                payment_gateway: { type: string, enum: [bkash, nagad, stripe, sslcommerz, cod] }
+      responses:
+        201:
+          description: Order placed successfully
+
+  /homepage/sections:
+    get:
+      summary: Aggregated mobile layout sections
+      tags: [CMS]
+      responses:
+        200:
+          description: Hero, banners, collections, artisans, and trust badges
+
+  /search:
+    get:
+      summary: Multi-entity search across products, districts, artisans, and stories
+      tags: [Search]
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema: { type: string }
+      responses:
+        200:
+          description: Matched records across catalog and heritage domains
+
+components:
+  securitySchemes:
+    sanctumAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum Token
