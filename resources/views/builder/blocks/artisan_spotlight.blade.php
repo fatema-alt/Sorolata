@@ -36,23 +36,23 @@
                 </div>
 
                 <h2 class="font-editorial-heading text-3xl sm:text-4xl lg:text-5xl font-light text-[#1D1D1D] leading-tight">
-                    {{ $artisan?->full_name ?? __('Master Craftsman of Bengal') }}
+                    {{ $artisan?->getLocalized('full_name') ?? __('Master Craftsman of Bengal') }}
                 </h2>
 
                 <p class="text-xs uppercase tracking-widest text-[#888888]">
-                    {{ __('Specialty:') }} {{ $artisan?->craft_type?->title() ?? __('Heritage Handloom Weaving') }} • {{ $district?->name_en ?? __('Tangail') }}, {{ __('Bangladesh') }}
+                    {{ __('Specialty:') }} {{ $artisan?->craft_type?->title() ?? __('Heritage Handloom Weaving') }} • {{ $district?->getLocalized('name') ?? __('Tangail') }}, {{ __('Bangladesh') }}
                 </p>
 
                 <!-- Editorial Pull Quote -->
-                @if(!empty($artisan?->quote))
+                @if(!empty($artisan?->getLocalized('quote')))
                     <blockquote class="pl-6 border-l-2 border-[#C96A3D] italic font-editorial-heading text-xl sm:text-2xl text-[#1D1D1D] my-6 leading-relaxed">
-                        "{{ $artisan->quote }}"
+                        "{{ $artisan->getLocalized('quote') }}"
                     </blockquote>
                 @endif
 
                 <div class="text-[#555555] text-base leading-relaxed space-y-4 font-editorial-body">
                     <p>
-                        {{ $artisan?->biography ?? __('Carrying forward an uninterrupted lineage of artisan mastery. Every piece represents weeks of patient handcrafting using indigenous techniques passed down through generations of guild masters.') }}
+                        {{ $artisan?->getLocalized('biography') ?? __('Carrying forward an uninterrupted lineage of artisan mastery. Every piece represents weeks of patient handcrafting using indigenous techniques passed down through generations of guild masters.') }}
                     </p>
                 </div>
 

@@ -18,7 +18,7 @@
         <a href="{{ route('products.show', $product->slug) }}" class="block w-full h-full">
             <img 
                 src="{{ $imageUrl }}" 
-                alt="{{ $product->title }}" 
+                alt="{{ $product->getLocalized('title') }}" 
                 class="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
                 loading="lazy"
             >
@@ -80,13 +80,13 @@
         <!-- Title -->
         <h3 class="font-editorial-heading text-xl sm:text-2xl font-light text-[#1D1D1D] group-hover:text-[#214E34] transition-colors line-clamp-1">
             <a href="{{ route('products.show', $product->slug) }}">
-                {{ $product->title }}
+                {{ $product->getLocalized('title') }}
             </a>
         </h3>
 
         <!-- Artisan Attribution -->
         <p class="text-xs text-[#888888] font-light">
-            {{ __('By') }} <span class="text-[#555555] font-medium">{{ $product->artisan?->full_name ?? __('Master Artisan Guild') }}</span>
+            {{ __('By') }} <span class="text-[#555555] font-medium">{{ $product->artisan?->getLocalized('full_name') ?? __('Master Artisan Guild') }}</span>
         </p>
 
         <!-- Price & Cart CTA Row -->

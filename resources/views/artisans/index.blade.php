@@ -24,12 +24,12 @@
             @foreach($artisans as $artisan)
                 <div class="bg-white rounded-[32px] p-6 shadow-soft-xs hover:shadow-soft-hover transition-luxury flex flex-col justify-between space-y-4 border border-[#E8E8E8]">
                     <div class="aspect-square rounded-[24px] overflow-hidden bg-[#F8F6F2]">
-                        <img src="{{ $artisan->portrait_url }}" alt="{{ $artisan->full_name }}" class="w-full h-full object-cover">
+                        <img src="{{ $artisan->portrait_url }}" alt="{{ $artisan->getLocalized('full_name') }}" class="w-full h-full object-cover">
                     </div>
                     <div class="space-y-1">
                         <span class="text-[10px] uppercase tracking-widest text-[#214E34] font-bold">{{ $artisan->craft_type->title() }}</span>
-                        <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">{{ $artisan->full_name }}</h3>
-                        <p class="text-xs text-[#888888]">{{ $artisan->atelier_name }} • {{ $artisan->district?->name_en }}</p>
+                        <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">{{ $artisan->getLocalized('full_name') }}</h3>
+                        <p class="text-xs text-[#888888]">{{ $artisan->getLocalized('atelier_name') }} • {{ $artisan->district?->getLocalized('name') }}</p>
                     </div>
                     <div class="pt-2 border-t border-[#E8E8E8] flex items-center justify-between text-xs">
                         <span class="text-[#888888]">{{ __(':count Years Mastery', ['count' => $artisan->years_of_mastery]) }}</span>

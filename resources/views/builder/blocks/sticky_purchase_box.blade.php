@@ -5,7 +5,7 @@
             <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[#E8E8E8] pb-8 gap-4">
                 <div>
                     <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Immediate Acquisition') }}</span>
-                    <h2 class="font-editorial-heading text-3xl sm:text-4xl text-[#1D1D1D] mt-1">{{ $product->title }}</h2>
+                    <h2 class="font-editorial-heading text-3xl sm:text-4xl text-[#1D1D1D] mt-1">{{ $product->getLocalized('title') }}</h2>
                     <p class="text-xs text-[#888888] mt-1">{{ __('Single Batch Archive Edition • Hand-inspected by Chief Curator') }}</p>
                 </div>
                 <div class="text-left sm:text-right">

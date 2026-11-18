@@ -277,7 +277,7 @@
                         <div class="aspect-square rounded-[24px] overflow-hidden bg-[#E8E8E8]">
                             <img 
                                 src="{{ $artisan->portrait_url }}" 
-                                alt="{{ $artisan->full_name }}" 
+                                alt="{{ $artisan->getLocalized('full_name') }}" 
                                 class="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
                                 loading="lazy"
                             >
@@ -288,15 +288,15 @@
                                 {{ $artisan->craft_type->title() }}
                             </span>
                             <h4 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">
-                                {{ $artisan->full_name }}
+                                {{ $artisan->getLocalized('full_name') }}
                             </h4>
                             <p class="text-xs text-[#888888]">
-                                {{ $artisan->atelier_name }} • {{ $artisan->district?->name_en }}
+                                {{ $artisan->getLocalized('atelier_name') }} • {{ $artisan->district?->getLocalized('name') }}
                             </p>
                         </div>
 
                         <p class="text-xs text-[#555555] line-clamp-2 italic font-editorial-heading text-sm">
-                            "{{ $artisan->quote }}"
+                            "{{ $artisan->getLocalized('quote') }}"
                         </p>
 
                         <div class="pt-2 border-t border-[#E8E8E8] flex items-center justify-between text-xs">

@@ -23,7 +23,7 @@
     <div class="pt-3 border-t border-[#E8E8E8]">
         <span class="text-[10px] uppercase tracking-widest text-[#888888] block mb-1">{{ __('GI Specialty') }}</span>
         <p class="text-xs text-[#555555] line-clamp-2 leading-relaxed">
-            {{ $district->gi_specialty ?? __('Heritage Artisan Cradle') }}
+            {{ $district->getLocalized('gi_specialty') ?? __('Heritage Artisan Cradle') }}
         </p>
     </div>
 

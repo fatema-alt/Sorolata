@@ -57,7 +57,7 @@
                             </a>
                             @foreach($categories as $cat)
                                 <a href="{{ route('shop.index', ['category' => $cat->slug]) }}" class="flex items-center justify-between py-1 hover:text-[#214E34] {{ $activeCategory === $cat->slug ? 'text-[#214E34] font-bold' : '' }}">
-                                    <span>{{ $cat->name }}</span>
+                                    <span>{{ $cat->getLocalized('name') }}</span>
                                     <span class="text-[#888888]">({{ $cat->products_count }})</span>
                                 </a>
                             @endforeach
@@ -70,7 +70,7 @@
                         <div class="space-y-1.5 text-xs text-[#555555]">
                             @foreach($districts as $dist)
                                 <a href="{{ route('shop.index', ['district' => $dist->id]) }}" class="flex items-center justify-between py-1 hover:text-[#214E34] {{ $activeDistrict == $dist->id ? 'text-[#214E34] font-bold' : '' }}">
-                                    <span>{{ $dist->name_en }}</span>
+                                    <span>{{ $dist->getLocalized('name') }}</span>
                                     <span class="text-[#888888]">({{ $dist->products_count }})</span>
                                 </a>
                             @endforeach

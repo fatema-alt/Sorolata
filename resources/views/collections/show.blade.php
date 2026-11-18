@@ -1,8 +1,8 @@
 @extends('layouts.storefront')
 
 @section('seo_meta')
-    <title>{{ $collection->title }} — Curated Thematic Drop | Sorolata</title>
-    <meta name="description" content="{{ $collection->description ?? 'Explore limited edition curated heritage drops.' }}">
+    <title>{{ $collection->getLocalized('title') }} — Curated Thematic Drop | Sorolata</title>
+    <meta name="description" content="{{ $collection->getLocalized('description') ?? 'Explore limited edition curated heritage drops.' }}">
     <link rel="canonical" href="{{ route('collection.show', $collection->slug) }}">
 @endsection
 
@@ -15,10 +15,10 @@
                     {{ __('Archival Seasonal Collection') }}
                 </span>
                 <h1 class="font-editorial-heading text-5xl sm:text-7xl font-light text-[#F8F6F2] leading-tight">
-                    {{ $collection->title }}
+                    {{ $collection->getLocalized('title') }}
                 </h1>
                 <p class="font-editorial-body text-lg sm:text-xl text-[#F8F6F2]/80 leading-relaxed font-light">
-                    {{ $collection->description ?? __('A curated selection of living artifacts brought together across distinct Bengal districts.') }}
+                    {{ $collection->getLocalized('description') ?? __('A curated selection of living artifacts brought together across distinct Bengal districts.') }}
                 </p>
             </div>
         </div>

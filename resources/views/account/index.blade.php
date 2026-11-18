@@ -162,9 +162,9 @@
             <div class="space-y-4">
                 @foreach($savedArtifacts as $saved)
                     <div class="bg-white rounded-[24px] p-4 border border-[#E8E8E8] shadow-soft-xs flex items-center gap-4 hover:border-emerald-200 transition">
-                        <img src="{{ $saved->media->first()?->file_path }}" alt="{{ $saved->title }}" class="w-16 h-16 rounded-[14px] object-cover bg-[#F8F6F2]">
+                        <img src="{{ $saved->media->first()?->file_path }}" alt="{{ $saved->getLocalized('title') }}" class="w-16 h-16 rounded-[14px] object-cover bg-[#F8F6F2]">
                         <div class="flex-grow">
-                            <h4 class="font-editorial-heading text-sm text-[#1D1D1D] line-clamp-1 font-semibold">{{ $saved->title }}</h4>
+                            <h4 class="font-editorial-heading text-sm text-[#1D1D1D] line-clamp-1 font-semibold">{{ $saved->getLocalized('title') }}</h4>
                             <p class="text-xs text-gray-600 font-bold mt-0.5">৳{{ number_format((float)$saved->price, 2) }}</p>
                         </div>
                         <a href="{{ route('products.show', $saved->slug) }}" class="text-xs text-[#214E34] font-bold hover:underline shrink-0">{{ __('View →') }}</a>

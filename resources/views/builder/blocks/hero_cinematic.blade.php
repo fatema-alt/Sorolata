@@ -12,12 +12,12 @@
 
                 <!-- Product Title & Subtitle -->
                 <h1 class="font-editorial-heading text-4xl sm:text-5xl lg:text-6xl font-light text-[#1D1D1D] leading-[1.12]">
-                    {{ $product->title }}
+                    {{ $product->getLocalized('title') }}
                 </h1>
 
-                @if(!empty($product->subtitle))
+                @if(!empty($product->getLocalized('subtitle')))
                     <p class="font-editorial-body text-lg text-[#555555] font-light leading-relaxed">
-                        {{ $product->subtitle }}
+                        {{ $product->getLocalized('subtitle') }}
                     </p>
                 @endif
 
@@ -25,11 +25,11 @@
                 <div class="pt-4 border-t border-[#E8E8E8] grid grid-cols-2 gap-4 text-xs text-[#555555]">
                     <div>
                         <span class="block uppercase tracking-wider text-[10px] text-[#888888]">{{ __('Master Artisan') }}</span>
-                        <span class="font-medium text-[#1D1D1D]">{{ $artisan?->full_name ?? __('Generational Guild') }}</span>
+                        <span class="font-medium text-[#1D1D1D]">{{ $artisan?->getLocalized('full_name') ?? __('Generational Guild') }}</span>
                     </div>
                     <div>
                         <span class="block uppercase tracking-wider text-[10px] text-[#888888]">{{ __('Origin & District') }}</span>
-                        <span class="font-medium text-[#1D1D1D]">{{ $district?->name_en ?? __('Bengal Heritage Basin') }}</span>
+                        <span class="font-medium text-[#1D1D1D]">{{ $district?->getLocalized('name') ?? __('Bengal Heritage Basin') }}</span>
                     </div>
                 </div>
 
@@ -53,7 +53,7 @@
                     @endphp
                     <img 
                         src="{{ $imageUrl }}" 
-                        alt="{{ $product->title }}" 
+                        alt="{{ $product->getLocalized('title') }}" 
                         class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700 ease-out"
                         loading="eager"
                         fetchpriority="high"

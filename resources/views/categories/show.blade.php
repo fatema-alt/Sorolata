@@ -1,8 +1,8 @@
 @extends('layouts.storefront')
 
 @section('seo_meta')
-    <title>{{ $category->name }} — Bengal Heritage Guild | Sorolata</title>
-    <meta name="description" content="{{ $category->description ?? 'Discover authentic Bengali handcrafted heirlooms.' }}">
+    <title>{{ $category->getLocalized('name') }} — Bengal Heritage Guild | Sorolata</title>
+    <meta name="description" content="{{ $category->getLocalized('description') ?? 'Discover authentic Bengali handcrafted heirlooms.' }}">
     <link rel="canonical" href="{{ route('category.show', $category->slug) }}">
 @endsection
 
@@ -16,13 +16,13 @@
                     <span>/</span>
                     <a href="{{ route('shop.index') }}" class="hover:text-[#214E34]">{{ __('Catalog') }}</a>
                     <span>/</span>
-                    <span class="text-[#1D1D1D] font-semibold">{{ $category->name }}</span>
+                    <span class="text-[#1D1D1D] font-semibold">{{ $category->getLocalized('name') }}</span>
                 </div>
                 <h1 class="font-editorial-heading text-4xl sm:text-6xl font-light text-[#1D1D1D]">
-                    {{ $category->name }}
+                    {{ $category->getLocalized('name') }}
                 </h1>
                 <p class="font-editorial-body text-lg text-[#555555] leading-relaxed">
-                    {{ $category->description ?? __('Centuries of generational guild mastery, hand-knotted and cast in authentic Bengali ateliers.') }}
+                    {{ $category->getLocalized('description') ?? __('Centuries of generational guild mastery, hand-knotted and cast in authentic Bengali ateliers.') }}
                 </p>
             </div>
         </div>
@@ -35,7 +35,7 @@
                 <span class="text-[#888888] uppercase font-semibold">{{ __('Sub-guilds:') }}</span>
                 @foreach($subcategories as $sub)
                     <a href="{{ route('category.show', $sub->slug) }}" class="px-4 py-1.5 rounded-full bg-white border border-[#E8E8E8] text-[#555555] hover:text-[#214E34] whitespace-nowrap">
-                        {{ $sub->name }}
+                        {{ $sub->getLocalized('name') }}
                     </a>
                 @endforeach
             </div>
@@ -68,7 +68,7 @@
 
             <div class="divide-y divide-[#E8E8E8] text-sm">
                 <div class="py-4 space-y-2">
-                    <h4 class="font-semibold text-[#1D1D1D]">{{ __('How is GI provenance verified for :category?', ['category' => $category->name]) }}</h4>
+                    <h4 class="font-semibold text-[#1D1D1D]">{{ __('How is GI provenance verified for :category?', ['category' => $category->getLocalized('name')]) }}</h4>
                     <p class="text-[#555555] leading-relaxed">
                         {{ __('Every single piece is inspected and assigned a unique registration number tracking its exact district coordinates and registered artisan guild certificate.') }}
                     </p>

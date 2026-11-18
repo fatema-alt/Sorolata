@@ -1,9 +1,9 @@
 @extends('layouts.storefront')
 
 @section('seo_meta')
-    <title>{{ $page->seo_meta['title'] ?? $page->title }} — Sorolata</title>
+    <title>{{ $page->seo_meta['title'] ?? $page->getLocalized('title') }} — Sorolata</title>
     <meta name="description" content="{{ $page->seo_meta['description'] ?? 'Curated Bengali heritage handcrafted landing page.' }}">
-    <meta property="og:title" content="{{ $page->seo_meta['title'] ?? $page->title }}">
+    <meta property="og:title" content="{{ $page->seo_meta['title'] ?? $page->getLocalized('title') }}">
     <meta property="og:description" content="{{ $page->seo_meta['description'] ?? '' }}">
 @endsection
 
@@ -48,7 +48,7 @@
                             </span>
                         @endif
                         <h1 class="font-editorial-heading {{ $headlineSize }} tracking-tight mb-6" style="color: {{ $textColor }};">
-                            {{ $parsedHeadline ?: $page->title }}
+                            {{ $parsedHeadline ?: $page->getLocalized('title') }}
                         </h1>
                         @if ($parsedSubheadline)
                             <p class="text-base sm:text-xl text-[#555555] font-light leading-relaxed mb-8 max-w-2xl">
