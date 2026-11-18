@@ -17,10 +17,10 @@
                 {{ __('The Heritage Gazette') }}
             </span>
             <h1 class="font-editorial-heading text-4xl sm:text-6xl font-light text-[#1D1D1D]">
-                {{ $locale === 'bn' ? 'বাংলার ঐতিহ্যের আখ্যান ও গল্প' : 'Chronicles of Bengal Craft' }}
+                {{ __('Chronicles of Bengal Craft') }}
             </h1>
             <p class="font-editorial-body text-base text-[#555555] leading-relaxed max-w-2xl mx-auto">
-                {{ $locale === 'bn' ? 'শতবর্ষের তাঁতের খটখট শব্দ, নদী অববাহিকার জীবনযাত্রা এবং বাংলার অমর কারুশিল্পের নিবিড় সাংবাদিকতা।' : 'Slow journalism dedicated to the philosophy, material science, and living custodians of traditional South Asian handcraft.' }}
+                {{ __('Slow journalism dedicated to the philosophy, material science, and living custodians of traditional South Asian handcraft.') }}
             </p>
         </div>
     </section>
@@ -45,7 +45,7 @@
                             @if($story->products_count ?? $story->products->count())
                                 <span>•</span>
                                 <span class="text-[#214E34] font-medium bg-[#214E34]/10 px-2 py-0.5 rounded-full">
-                                    🛍️ {{ $locale === 'bn' ? 'শপেবল গল্প' : 'Shoppable' }}
+                                    🛍️ {{ __('Shoppable') }}
                                 </span>
                             @endif
                         </div>
@@ -59,7 +59,7 @@
                         </p>
                         <div class="pt-2">
                             <a href="{{ route('stories.show', $story->slug) }}" class="text-xs font-semibold uppercase tracking-wider text-[#214E34] hover:underline">
-                                {{ $locale === 'bn' ? 'গল্পটি পড়ুন' : 'Read Chronicle' }} →
+                                {{ __('Read Chronicle') }} →
                             </a>
                         </div>
                     </div>

@@ -64,14 +64,14 @@
                 <div class="flex items-center justify-between mb-8">
                     <div>
                         <span class="text-[11px] font-bold tracking-widest uppercase text-[#C96A3D] block mb-1">
-                            {{ $locale === 'bn' ? 'আর্টিকেল কালেকশন' : 'STORY CURATION' }}
+                            {{ __('Story Curation') }}
                         </span>
                         <h2 class="font-editorial-heading text-2xl sm:text-3xl text-[#1D1D1D]">
                             {{ __('Featured in this Story') }}
                         </h2>
                     </div>
                     <span class="text-xs text-[#888888] hidden sm:inline">
-                        {{ $featuredProducts->count() }} {{ $locale === 'bn' ? 'টি হস্তশিল্প উল্লেখিত' : 'pieces featured' }}
+                        {{ __(':count pieces featured', ['count' => $featuredProducts->count()]) }}
                     </span>
                 </div>
 
@@ -120,7 +120,7 @@
         @if($relatedStories->isNotEmpty())
             <section class="mt-16 pt-10 border-t border-[#E8E8E8] not-prose">
                 <h3 class="font-editorial-heading text-xl text-[#1D1D1D] mb-6">
-                    {{ $locale === 'bn' ? 'আরও পড়ুন' : 'Continue Reading' }}
+                    {{ __('Continue Reading') }}
                 </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     @foreach($relatedStories as $rel)

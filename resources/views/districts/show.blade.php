@@ -12,9 +12,9 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="max-w-3xl space-y-4">
                 <div class="flex items-center gap-2 text-xs text-[#888888] uppercase tracking-wider">
-                    <a href="{{ url('/') }}" class="hover:text-[#214E34]">Home</a>
+                    <a href="{{ url('/') }}" class="hover:text-[#214E34]">{{ __('Home') }}</a>
                     <span>/</span>
-                    <a href="{{ route('districts.index') }}" class="hover:text-[#214E34]">Districts</a>
+                    <a href="{{ route('districts.index') }}" class="hover:text-[#214E34]">{{ __('Districts') }}</a>
                     <span>/</span>
                     <span class="text-[#1D1D1D] font-semibold">{{ $district->name_en }}</span>
                 </div>
@@ -30,7 +30,7 @@
                     {{ $district->historical_narrative }}
                 </p>
                 <div class="pt-2 text-xs text-[#888888]">
-                    <span>River Basin: <strong class="text-[#1D1D1D]">{{ $district->river_basin ?? 'Bengal Floodplain' }}</strong></span>
+                    <span>{{ __('River Basin:') }} <strong class="text-[#1D1D1D]">{{ $district->river_basin ?? __('Bengal Floodplain') }}</strong></span>
                 </div>
             </div>
         </div>
@@ -41,9 +41,9 @@
         <section class="py-16 bg-[#F8F6F2] border-b border-[#E8E8E8]">
             <div class="max-w-7xl mx-auto px-6 lg:px-12 space-y-8">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">Living Pedigree</span>
+                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Living Pedigree') }}</span>
                     <h2 class="font-editorial-heading text-3xl font-light text-[#1D1D1D]">
-                        Master Artisans of {{ $district->name_en }}
+                        {{ __('Master Artisans of :district', ['district' => $district->name_en]) }}
                     </h2>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -53,7 +53,7 @@
                             <div>
                                 <h4 class="font-editorial-heading text-xl text-[#1D1D1D]">{{ $artisan->full_name }}</h4>
                                 <span class="text-xs text-[#888888] block">{{ $artisan->craft_type->title() }}</span>
-                                <a href="{{ route('artisan.show', $artisan->slug ?? $artisan->uuid) }}" class="text-xs text-[#214E34] font-semibold mt-1 inline-block">View Studio Profile →</a>
+                                <a href="{{ route('artisan.show', $artisan->slug ?? $artisan->uuid) }}" class="text-xs text-[#214E34] font-semibold mt-1 inline-block">{{ __('View Studio Profile →') }}</a>
                             </div>
                         </div>
                     @endforeach
@@ -65,9 +65,9 @@
     <!-- Featured Artifacts from this District -->
     <section class="py-20 max-w-7xl mx-auto px-6 lg:px-12 space-y-8">
         <div>
-            <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">GI Certified</span>
+            <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('GI Certified') }}</span>
             <h2 class="font-editorial-heading text-3xl sm:text-4xl font-light text-[#1D1D1D]">
-                Pieces Originating from {{ $district->name_en }}
+                {{ __('Pieces Originating from :district', ['district' => $district->name_en]) }}
             </h2>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -75,7 +75,7 @@
                 <x-product-card :product="$product" />
             @empty
                 <div class="col-span-4 text-center py-16 text-[#888888]">
-                    New archival lots currently being woven in {{ $district->name_en }} looms.
+                    {{ __('New archival lots currently being woven in :district looms.', ['district' => $district->name_en]) }}
                 </div>
             @endforelse
         </div>

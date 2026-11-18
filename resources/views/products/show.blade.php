@@ -79,9 +79,9 @@
 
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#E8E8E8] pb-8">
                     <div>
-                        <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">Provenance & Feedback</span>
+                        <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('Provenance & Feedback') }}</span>
                         <h2 class="font-editorial-heading text-3xl sm:text-4xl font-light text-[#1D1D1D] mt-1">
-                            সংগ্রাহকদের মূল্যায়ন (Collector Reviews)
+                            {{ __('Collector Reviews') }}
                         </h2>
                     </div>
 
@@ -93,7 +93,7 @@
                                     <span>{{ $i <= round($averageRating) ? '★' : '☆' }}</span>
                                 @endfor
                             </div>
-                            <div class="text-xs text-[#777777]">{{ $reviews->count() }} টি ভেরিফাইড রিভিউ</div>
+                            <div class="text-xs text-[#777777]">{{ __(':count Verified Reviews', ['count' => $reviews->count()]) }}</div>
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
                                             <h4 class="font-semibold text-gray-900 text-sm">{{ $rev->author_name }}</h4>
                                             @if($rev->is_verified_purchase)
                                                 <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
-                                                    <span>✓</span> ভেরিফাইড ক্রেতা
+                                                    <span>✓</span> {{ __('Verified Buyer') }}
                                                 </span>
                                             @endif
                                         </div>
@@ -133,7 +133,7 @@
                                 @if($rev->admin_reply)
                                     <div class="mt-4 pt-4 border-t border-[#F0EFEA] bg-[#F9F8F5] p-4 rounded-2xl space-y-1">
                                         <div class="text-xs font-bold text-[#214E34] flex items-center gap-1.5">
-                                            <span>🏛️</span> সরলতা কিউরেটর বার্তা:
+                                            <span>🏛️</span> {{ __('Sorolata Curator Note:') }}
                                         </div>
                                         <p class="text-xs text-gray-600 leading-relaxed">
                                             {{ $rev->admin_reply }}
@@ -146,19 +146,19 @@
                 @else
                     <div class="py-10 text-center rounded-3xl bg-white border border-[#E8E8E8] p-8 space-y-2">
                         <div class="text-2xl text-amber-500">★</div>
-                        <h4 class="text-sm font-semibold text-gray-900">এখনও কোনো পাবলিক রিভিউ যুক্ত হয়নি</h4>
-                        <p class="text-xs text-gray-500 max-w-sm mx-auto">এই অনন্য মাস্টারপিস সংগ্রহটি প্রথম গ্রহণ করে আপনার মূল্যবান অনুভূতি শেয়ার করুন।</p>
+                        <h4 class="text-sm font-semibold text-gray-900">{{ __('No public reviews yet') }}</h4>
+                        <p class="text-xs text-gray-500 max-w-sm mx-auto">{{ __('Be the first to acquire this unique masterpiece and share your review.') }}</p>
                     </div>
                 @endif
 
                 <!-- Write a Review Form -->
                 <div class="bg-white rounded-[32px] p-8 sm:p-10 border border-[#E8E8E8] shadow-soft-sm space-y-6">
                     <div>
-                        <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">Share Your Experience</span>
+                        <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Share Your Experience') }}</span>
                         <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D] mt-1">
-                            আপনার সংগ্রহ অনুভূতি লিখুন
+                            {{ __('Write a Review') }}
                         </h3>
-                        <p class="text-xs text-[#777777] mt-1">তাঁতশিল্পীদের প্রতি আপনার মূল্যায়ন আমাদের ঐতিহ্য সংরক্ষণ প্রক্রিয়াকে আরও সমৃদ্ধ করে।</p>
+                        <p class="text-xs text-[#777777] mt-1">{{ __('Your review honors our artisans and enriches the living heritage archive.') }}</p>
                     </div>
 
                     <form action="{{ route('products.review.submit', $product->slug) }}" method="POST" class="space-y-6" x-data="{ rating: 5 }">
@@ -166,7 +166,7 @@
                         
                         <!-- Star Rating Selector -->
                         <div class="space-y-2">
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">আপনার রেটিং নির্বাচন করুন</label>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">{{ __('Select Your Rating') }}</label>
                             <div class="flex items-center gap-2">
                                 <template x-for="star in 5" :key="star">
                                     <button 
@@ -179,7 +179,7 @@
                                     </button>
                                 </template>
                                 <span class="text-xs font-semibold text-gray-600 ml-2">
-                                    (<span x-text="rating"></span> / ৫ স্টার)
+                                    (<span x-text="rating"></span> / 5 {{ __('Stars') }})
                                 </span>
                             </div>
                             <input type="hidden" name="rating" :value="rating">
@@ -187,51 +187,51 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="space-y-1.5">
-                                <label for="author_name" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">আপনার নাম *</label>
+                                <label for="author_name" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">{{ __('Your Name *') }}</label>
                                 <input 
                                     type="text" 
                                     name="author_name" 
                                     id="author_name" 
                                     required 
                                     value="{{ old('author_name', auth()->user()?->name ?? '') }}"
-                                    placeholder="যেমন: ফারহানা রহমান"
+                                    placeholder="{{ __('e.g. Farhana Rahman') }}"
                                     class="w-full px-4 py-3 text-xs border border-gray-300 rounded-2xl focus:ring-1 focus:ring-[#214E34] focus:outline-none"
                                 >
                             </div>
 
                             <div class="space-y-1.5">
-                                <label for="author_location" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">আপনার জেলা / শহর</label>
+                                <label for="author_location" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">{{ __('Your District / City') }}</label>
                                 <input 
                                     type="text" 
                                     name="author_location" 
                                     id="author_location" 
                                     value="{{ old('author_location') }}"
-                                    placeholder="যেমন: গুলশান, ঢাকা"
+                                    placeholder="{{ __('e.g. Gulshan, Dhaka') }}"
                                     class="w-full px-4 py-3 text-xs border border-gray-300 rounded-2xl focus:ring-1 focus:ring-[#214E34] focus:outline-none"
                                 >
                             </div>
                         </div>
 
                         <div class="space-y-1.5">
-                            <label for="title" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">রিভিউ শিরোনাম (ঐচ্ছিক)</label>
+                            <label for="title" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">{{ __('Review Title (Optional)') }}</label>
                             <input 
                                 type="text" 
                                 name="title" 
                                 id="title" 
                                 value="{{ old('title') }}"
-                                placeholder="যেমন: অতুলনীয় বুনন ও ঐতিহ্যবাহী আভিজাত্য"
+                                placeholder="{{ __('e.g. Incomparable weave and heritage elegance') }}"
                                 class="w-full px-4 py-3 text-xs border border-gray-300 rounded-2xl focus:ring-1 focus:ring-[#214E34] focus:outline-none"
                             >
                         </div>
 
                         <div class="space-y-1.5">
-                            <label for="content" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">আপনার বিস্তারিত অনুভূতি ও মন্তব্য *</label>
+                            <label for="content" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">{{ __('Your Review & Detailed Impressions *') }}</label>
                             <textarea 
                                 name="content" 
                                 id="content" 
                                 rows="4" 
                                 required 
-                                placeholder="বুনন গুণমান, জামদানির মোটিফ, ফিনিশিং কিংবা প্যাকেজিং নিয়ে আপনার অভিজ্ঞতা লিখুন..."
+                                placeholder="{{ __('Share your thoughts on weave quality, motif intricacies, finishing, or unboxing...') }}"
                                 class="w-full px-4 py-3 text-xs border border-gray-300 rounded-2xl focus:ring-1 focus:ring-[#214E34] focus:outline-none leading-relaxed"
                             >{{ old('content') }}</textarea>
                         </div>
@@ -240,7 +240,7 @@
                             type="submit" 
                             class="px-8 py-3.5 bg-[#214E34] hover:bg-[#163824] text-white text-xs font-bold uppercase tracking-wider rounded-2xl transition-all shadow-md shadow-emerald-900/10 flex items-center gap-2"
                         >
-                            <span>রিভিউ জমা দিন</span>
+                            <span>{{ __('Submit Review') }}</span>
                             <span>→</span>
                         </button>
                     </form>

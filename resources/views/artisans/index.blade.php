@@ -9,12 +9,12 @@
 @section('content')
     <section class="py-16 bg-white border-b border-[#E8E8E8]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center max-w-3xl mx-auto space-y-4">
-            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">Human Provenance</span>
+            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Human Provenance') }}</span>
             <h1 class="font-editorial-heading text-4xl sm:text-6xl font-light text-[#1D1D1D]">
-                The Master Artisans
+                {{ __('The Master Artisans') }}
             </h1>
             <p class="font-editorial-body text-base text-[#555555] leading-relaxed">
-                We believe the maker is just as important as the artifact. Discover the generational guild masters keeping Bengal's living cultural flame alive.
+                {{ __("We believe the maker is just as important as the artifact. Discover the generational guild masters keeping Bengal's living cultural flame alive.") }}
             </p>
         </div>
     </section>
@@ -32,8 +32,8 @@
                         <p class="text-xs text-[#888888]">{{ $artisan->atelier_name }} • {{ $artisan->district?->name_en }}</p>
                     </div>
                     <div class="pt-2 border-t border-[#E8E8E8] flex items-center justify-between text-xs">
-                        <span class="text-[#888888]">{{ $artisan->years_of_mastery }} Years Mastery</span>
-                        <a href="{{ route('artisan.show', $artisan->slug ?? $artisan->uuid) }}" class="text-[#214E34] font-semibold hover:underline">Studio Profile →</a>
+                        <span class="text-[#888888]">{{ __(':count Years Mastery', ['count' => $artisan->years_of_mastery]) }}</span>
+                        <a href="{{ route('artisan.show', $artisan->slug ?? $artisan->uuid) }}" class="text-[#214E34] font-semibold hover:underline">{{ __('Studio Profile →') }}</a>
                     </div>
                 </div>
             @endforeach

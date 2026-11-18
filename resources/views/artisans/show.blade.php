@@ -21,7 +21,7 @@
                     {{ $artisan->full_name }}
                 </h1>
                 <p class="text-sm text-[#F8F6F2]/80 font-light">
-                    Atelier: <strong class="text-white">{{ $artisan->atelier_name }}</strong> • {{ $artisan->years_of_mastery }} Years Generational Mastery
+                    {{ __('Atelier:') }} <strong class="text-white">{{ $artisan->atelier_name }}</strong> • {{ __(':count Years Generational Mastery', ['count' => $artisan->years_of_mastery]) }}
                 </p>
             </div>
         </div>
@@ -43,7 +43,7 @@
             <!-- Awards & Recognitions -->
             @if(!empty($artisan->awards))
                 <div class="pt-6 border-t border-[#E8E8E8] space-y-3">
-                    <h4 class="text-xs font-semibold uppercase tracking-widest text-[#1D1D1D]">Honors & Guild Recognitions</h4>
+                    <h4 class="text-xs font-semibold uppercase tracking-widest text-[#1D1D1D]">{{ __('Honors & Guild Recognitions') }}</h4>
                     <ul class="text-xs text-[#555555] space-y-1.5 list-disc list-inside">
                         @foreach($artisan->awards as $award)
                             <li>{{ $award }}</li>
@@ -57,9 +57,9 @@
     <!-- Artifacts by this Master Artisan -->
     <section class="py-20 max-w-7xl mx-auto px-6 lg:px-12 space-y-8">
         <div>
-            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">Atelier Catalogue</span>
+            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Atelier Catalogue') }}</span>
             <h2 class="font-editorial-heading text-3xl sm:text-4xl font-light text-[#1D1D1D]">
-                Pieces Handcrafted by {{ $artisan->full_name }}
+                {{ __('Pieces Handcrafted by :artisan', ['artisan' => $artisan->full_name]) }}
             </h2>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -67,7 +67,7 @@
                 <x-product-card :product="$product" />
             @empty
                 <div class="col-span-4 text-center py-16 text-[#888888]">
-                    {{ $artisan->full_name }} is currently working on the next loom cycle.
+                    {{ __(':artisan is currently working on the next loom cycle.', ['artisan' => $artisan->full_name]) }}
                 </div>
             @endforelse
         </div>

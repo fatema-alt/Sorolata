@@ -23,8 +23,8 @@ echo "VALID: lang/en.json and lang/bn.json are valid JSON.\n";
 echo "Total EN keys: " . count($en) . "\n";
 echo "Total BN keys: " . count($bn) . "\n";
 
-// Scan views in Batch 1
-$batch1Files = [
+// Scan views in Batch 1 & 2
+$batchFiles = [
     __DIR__ . '/../resources/views/layouts/storefront.blade.php',
     __DIR__ . '/../resources/views/storefront/index.blade.php',
     __DIR__ . '/../resources/views/components/category-card.blade.php',
@@ -35,12 +35,22 @@ $batch1Files = [
     __DIR__ . '/../resources/views/components/product-card.blade.php',
     __DIR__ . '/../resources/views/components/shoppable-product-card.blade.php',
     __DIR__ . '/../resources/views/components/testimonial-card.blade.php',
+    __DIR__ . '/../resources/views/shop/index.blade.php',
+    __DIR__ . '/../resources/views/categories/show.blade.php',
+    __DIR__ . '/../resources/views/collections/show.blade.php',
+    __DIR__ . '/../resources/views/districts/index.blade.php',
+    __DIR__ . '/../resources/views/districts/show.blade.php',
+    __DIR__ . '/../resources/views/artisans/index.blade.php',
+    __DIR__ . '/../resources/views/artisans/show.blade.php',
+    __DIR__ . '/../resources/views/stories/index.blade.php',
+    __DIR__ . '/../resources/views/stories/show.blade.php',
+    __DIR__ . '/../resources/views/products/show.blade.php',
 ];
 
 $missingKeys = [];
 $totalKeysChecked = 0;
 
-foreach ($batch1Files as $file) {
+foreach ($batchFiles as $file) {
     if (!file_exists($file)) continue;
     $content = file_get_contents($file);
     
