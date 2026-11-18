@@ -231,11 +231,11 @@
                         <div class="relative text-xs">
                             <span class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-[#214E34] ring-4 ring-white"></span>
                             <div class="flex items-center justify-between">
-                                <span class="font-bold text-gray-900 uppercase tracking-wider text-[11px]">{{ $timeline->status }}</span>
+                                <span class="font-bold text-gray-900 uppercase tracking-wider text-[11px]">{{ $timeline->localizedStatus() }}</span>
                                 <span class="text-[10px] font-mono text-gray-500">{{ $timeline->created_at->format('d M, Y • h:i A') }}</span>
                             </div>
-                            <p class="text-gray-700 mt-1 leading-relaxed">{{ $timeline->note }}</p>
-                            <span class="text-[10px] text-gray-400 mt-0.5 block">{{ __('Actor:') }} {{ ucfirst($timeline->actor_type) }}</span>
+                            <p class="text-gray-700 mt-1 leading-relaxed">{{ $timeline->localizedNote() }}</p>
+                            <span class="text-[10px] text-gray-400 mt-0.5 block">{{ __('Actor:') }} {{ __($timeline->actor_type) }}</span>
                         </div>
                     @empty
                         <p class="text-xs text-gray-500">{{ __('No timeline entries recorded yet.') }}</p>
