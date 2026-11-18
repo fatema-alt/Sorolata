@@ -80,7 +80,7 @@
                         <div class="flex flex-wrap items-center {{ $justifyClass }} gap-4 mt-2">
                             <a href="{{ $settings['primary_cta_url'] ?? route('shop.index') }}" 
                                class="px-8 py-3.5 rounded-full bg-[#214E34] hover:bg-[#183926] text-white text-xs font-semibold uppercase tracking-wider transition-all shadow-sm">
-                                {{ $settings['primary_cta_text'] ?? 'Explore Curated Catalog' }}
+                                {{ $settings['primary_cta_text'] ?? __('Explore Curated Catalog') }}
                             </a>
                             @if (!empty($settings['secondary_cta_text']))
                                 <a href="{{ $settings['secondary_cta_url'] ?? route('stories.index') }}" 
@@ -292,7 +292,7 @@
                         <a href="{{ $settings['primary_cta_url'] ?? '#' }}" 
                            class="px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider inline-block shadow-sm hover:opacity-95 transition-all"
                            style="background-color: {{ $settings['bg_color'] ?? '#214E34' }}; color: {{ $textColor === '#1D1D1D' ? '#FFFFFF' : $textColor }};">
-                            {{ $settings['primary_cta_text'] ?? 'Explore Artifacts' }}
+                            {{ $settings['primary_cta_text'] ?? __('Explore Artifacts') }}
                         </a>
                     </div>
 
@@ -305,10 +305,10 @@
                                 </div>
                             @endif
                             <span class="text-[10px] uppercase font-bold tracking-widest text-[#214E34] block mb-1">
-                                {{ $parsedBadge ?: 'GI Certified Heritage' }}
+                                {{ $parsedBadge ?: __('GI Certified Heritage') }}
                             </span>
                             <h4 class="font-editorial-heading text-lg font-bold text-gray-900 mb-1">
-                                {{ $parsedHeadline ?: 'Handcrafted Jamdani Piece' }}
+                                {{ $parsedHeadline ?: __('Handcrafted Jamdani Piece') }}
                             </h4>
                             <div class="text-sm font-bold text-[#C96A3D] mb-4">
                                 {{ $settings['price'] ?? '৳ 18,500' }}
@@ -318,7 +318,7 @@
                                 <input type="hidden" name="product_id" value="{{ $settings['product_id'] ?? 1 }}">
                                 <input type="hidden" name="quantity" value="1">
                                 <button type="submit" class="w-full py-2.5 rounded-full bg-[#214E34] hover:bg-[#183926] text-white text-xs font-semibold tracking-wide transition-colors">
-                                    Add to Archival Bag
+                                    {{ __('Add to Archival Bag') }}
                                 </button>
                             </form>
                         </div>
@@ -327,12 +327,12 @@
                 @elseif ($type === 'element_artisan_quote')
                     <div class="max-w-3xl mx-auto p-8 rounded-3xl bg-[#F8F6F2] border-l-4 border-[#214E34] shadow-sm my-4">
                         <p class="font-editorial-heading text-2xl italic text-gray-800 leading-snug mb-4">
-                            "{{ $parsedSubheadline ?: 'Our hands carry the memory of three centuries of loom heritage on the Shitalakshya.' }}"
+                            "{{ $parsedSubheadline ?: __('Our hands carry the memory of three centuries of loom heritage on the Shitalakshya.') }}"
                         </p>
                         <div class="flex items-center space-x-2 text-xs">
-                            <span class="font-bold text-gray-900">— {{ $parsedHeadline ?: 'Ustad Alimullah Dewan' }}</span>
+                            <span class="font-bold text-gray-900">— {{ $parsedHeadline ?: __('Ustad Alimullah Dewan') }}</span>
                             <span class="text-gray-400">•</span>
-                            <span class="text-[#214E34] font-semibold">{{ $parsedBadge ?: 'Royal Master Loom Guild' }}</span>
+                            <span class="text-[#214E34] font-semibold">{{ $parsedBadge ?: __('Royal Master Loom Guild') }}</span>
                         </div>
                     </div>
 
@@ -408,7 +408,7 @@
                                         </h3>
                                         <div class="text-[11px] text-gray-300 flex items-center justify-between pt-1">
                                             <span>By Ustad Alimullah</span>
-                                            <span class="text-[#A3D9B1] font-semibold">Explore →</span>
+                                            <span class="text-[#A3D9B1] font-semibold">{{ __('Explore →') }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -428,7 +428,7 @@
                                         </h3>
                                         <div class="text-[11px] text-gray-300 flex items-center justify-between pt-1">
                                             <span>By Master Sukumar</span>
-                                            <span class="text-[#A3D9B1] font-semibold">Explore →</span>
+                                            <span class="text-[#A3D9B1] font-semibold">{{ __('Explore →') }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -442,11 +442,11 @@
                             <div>
                                 <span class="text-[11px] font-bold uppercase tracking-widest text-[#214E34]">TOPIC ARCHIVES</span>
                                 <h3 class="font-editorial-heading text-2xl text-gray-900 font-bold">
-                                    {{ $parsedHeadline ?: 'Explore Stories by Heritage Craft & Guild' }}
+                                    {{ $parsedHeadline ?: __('Explore Stories by Heritage Craft & Guild') }}
                                 </h3>
                             </div>
                             <a href="{{ route('stories.index') }}" class="text-xs font-semibold text-[#214E34] hover:underline flex items-center space-x-1">
-                                <span>View All Gazette Topics</span>
+                                <span>{{ __('View All Gazette Topics') }}</span>
                                 <span>→</span>
                             </a>
                         </div>
@@ -492,9 +492,9 @@
                             <div class="lg:col-span-8 space-y-6">
                                 <div class="flex items-center justify-between pb-3 border-b border-stone-200">
                                     <h3 class="font-editorial-heading text-2xl font-bold text-gray-900">
-                                        {{ $parsedHeadline ?: 'Heritage Gazette Stories & In-Depth Chronicles' }}
+                                        {{ $parsedHeadline ?: __('Heritage Gazette Stories & In-Depth Chronicles') }}
                                     </h3>
-                                    <span class="text-xs text-gray-400 font-medium">Curated Journal</span>
+                                    <span class="text-xs text-gray-400 font-medium">{{ __('Curated Journal') }}</span>
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">

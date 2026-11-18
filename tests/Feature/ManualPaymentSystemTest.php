@@ -84,7 +84,7 @@ class ManualPaymentSystemTest extends TestCase
         $viewResponse = $this->get(route('payment.manual.instruction', ['order' => $order->order_number]));
         $viewResponse->assertStatus(200);
         $viewResponse->assertSee($order->order_number);
-        $viewResponse->assertSee('পেমেন্ট নির্দেশনা');
+        $viewResponse->assertSee(__('Payment Instructions & TrxID Submission'));
         $viewResponse->assertSee('bKash');
     }
 

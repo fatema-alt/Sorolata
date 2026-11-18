@@ -7,7 +7,7 @@
                 <!-- Heritage Badge -->
                 <x-badge variant="district" size="md">
                     <span class="w-1.5 h-1.5 rounded-full bg-[#C96A3D]"></span>
-                    <span>{{ $settings['badge_text'] ?? 'GI Certified Heritage Artifact' }}</span>
+                    <span>{{ $settings['badge_text'] ?? __('GI Certified Heritage Artifact') }}</span>
                 </x-badge>
 
                 <!-- Product Title & Subtitle -->
@@ -24,22 +24,22 @@
                 <!-- Provenance Summary -->
                 <div class="pt-4 border-t border-[#E8E8E8] grid grid-cols-2 gap-4 text-xs text-[#555555]">
                     <div>
-                        <span class="block uppercase tracking-wider text-[10px] text-[#888888]">Master Artisan</span>
-                        <span class="font-medium text-[#1D1D1D]">{{ $artisan?->full_name ?? 'Generational Guild' }}</span>
+                        <span class="block uppercase tracking-wider text-[10px] text-[#888888]">{{ __('Master Artisan') }}</span>
+                        <span class="font-medium text-[#1D1D1D]">{{ $artisan?->full_name ?? __('Generational Guild') }}</span>
                     </div>
                     <div>
-                        <span class="block uppercase tracking-wider text-[10px] text-[#888888]">Origin & District</span>
-                        <span class="font-medium text-[#1D1D1D]">{{ $district?->name_en ?? 'Bengal Heritage Basin' }}</span>
+                        <span class="block uppercase tracking-wider text-[10px] text-[#888888]">{{ __('Origin & District') }}</span>
+                        <span class="font-medium text-[#1D1D1D]">{{ $district?->name_en ?? __('Bengal Heritage Basin') }}</span>
                     </div>
                 </div>
 
                 <!-- Quick Action CTA -->
                 <div class="pt-4 flex items-center space-x-6">
                     <x-button href="#purchase-section" variant="primary" size="lg">
-                        Acquire Piece • {{ $product->formatted_price }}
+                        {{ __('Acquire Piece • :price', ['price' => $product->formatted_price]) }}
                     </x-button>
                     <a href="#artisan-section" class="text-xs uppercase tracking-widest text-[#555555] hover:text-[#214E34] underline underline-offset-4 transition-colors font-medium">
-                        Read Atelier Story ↓
+                        {{ __('Read Atelier Story ↓') }}
                     </a>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                         fetchpriority="high"
                     >
                     <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[11px] text-[#1D1D1D] font-medium tracking-wide shadow-soft-xs">
-                        Original Heritage Photography
+                        {{ __('Original Heritage Photography') }}
                     </div>
                 </div>
             </div>

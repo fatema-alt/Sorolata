@@ -31,26 +31,26 @@
     <div class="wrapper">
         <div class="header">
             <h1 class="logo">SOROLATA</h1>
-            <div class="badge">Artisan Heirloom Provenance</div>
+            <div class="badge">{{ __('Artisan Heirloom Provenance') }}</div>
         </div>
 
         <div class="content">
-            <div class="greeting">ধন্যবাদ, {{ $order->customer_name }}!</div>
+            <div class="greeting">{{ __('Thank you, :name!', ['name' => $order->customer_name]) }}</div>
             <p class="subtitle">
-                আপনার অর্ডারটি সফলভাবে গৃহীত হয়েছে। আমাদের কারিগর ও কিউরেটর দল আপনার ঐতিহ্যবাহী পণ্যটি যত্নের সাথে প্রস্তুত করছে।
+                {{ __('Your order has been successfully placed. Our artisan and curatorial teams are hand-preparing your authentic heirloom with deep care.') }}
             </p>
 
             <div class="order-meta">
                 <div class="meta-col">
-                    <div class="meta-label">Order Number</div>
+                    <div class="meta-label">{{ __('Order Number') }}</div>
                     <div class="meta-val">#{{ $order->order_number }}</div>
                 </div>
                 <div class="meta-col">
-                    <div class="meta-label">Payment Method</div>
+                    <div class="meta-label">{{ __('Payment Method') }}</div>
                     <div class="meta-val">{{ strtoupper($order->payment_gateway?->value ?? 'MANUAL') }}</div>
                 </div>
                 <div class="meta-col">
-                    <div class="meta-label">Status</div>
+                    <div class="meta-label">{{ __('Status') }}</div>
                     <div class="meta-val">{{ $order->status->label() }}</div>
                 </div>
             </div>
@@ -59,9 +59,9 @@
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th>Item & Artisan</th>
-                        <th style="text-align: center;">Qty</th>
-                        <th style="text-align: right;">Total</th>
+                        <th>{{ __('Item & Artisan') }}</th>
+                        <th style="text-align: center;">{{ __('Qty') }}</th>
+                        <th style="text-align: right;">{{ __('Total') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,7 +70,7 @@
                         <td>
                             <div style="font-weight: 600; color: #ffffff;">{{ $item->product_title }}</div>
                             @if($item->artisan_name)
-                                <div style="font-size: 11px; color: #d4af37;">By {{ $item->artisan_name }}</div>
+                                <div style="font-size: 11px; color: #d4af37;">{{ __('By :name', ['name' => $item->artisan_name]) }}</div>
                             @endif
                         </td>
                         <td style="text-align: center; color: #94a3b8;">{{ $item->quantity }}</td>
@@ -83,41 +83,41 @@
             <!-- Financials -->
             <table class="totals-table">
                 <tr>
-                    <td>Subtotal</td>
+                    <td>{{ __('Subtotal') }}</td>
                     <td style="text-align: right; color: #e2e8f0;">৳ {{ number_format($order->subtotal_amount, 0) }}</td>
                 </tr>
                 <tr>
-                    <td>Delivery Charge ({{ $order->shipping_address['district'] ?? 'Standard' }})</td>
+                    <td>{{ __('Delivery Charge (:district)', ['district' => $order->shipping_address['district'] ?? __('Standard')]) }}</td>
                     <td style="text-align: right; color: #e2e8f0;">৳ {{ number_format($order->shipping_fee, 0) }}</td>
                 </tr>
                 @if($order->advance_delivery_charge > 0)
                 <tr>
-                    <td style="color: #38bdf8;">Advance Delivery Charge Paid</td>
+                    <td style="color: #38bdf8;">{{ __('Advance Delivery Charge Paid') }}</td>
                     <td style="text-align: right; color: #38bdf8;">- ৳ {{ number_format($order->advance_delivery_charge, 0) }}</td>
                 </tr>
                 @endif
                 <tr class="grand">
-                    <td>Total Payable / Due</td>
+                    <td>{{ __('Total Payable / Due') }}</td>
                     <td style="text-align: right; color: #ffffff;">৳ {{ number_format($order->due_amount ?? $order->total_amount, 0) }}</td>
                 </tr>
             </table>
 
             <!-- Delivery Address -->
             <div style="background-color: #151922; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; border: 1px solid #222938;">
-                <div style="font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 4px;">Delivery Address</div>
-                <div style="font-size: 13px; color: #cbd5e1;">{{ $order->shipping_address['address'] ?? ($order->shipping_address['line_1'] ?? 'Delivery Address') }}, {{ $order->shipping_address['district'] ?? ($order->shipping_address['city'] ?? 'Dhaka') }}</div>
-                <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Phone: {{ $order->customer_phone }}</div>
+                <div style="font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 4px;">{{ __('Delivery Address') }}</div>
+                <div style="font-size: 13px; color: #cbd5e1;">{{ $order->shipping_address['address'] ?? ($order->shipping_address['line_1'] ?? __('Delivery Address')) }}, {{ $order->shipping_address['district'] ?? ($order->shipping_address['city'] ?? __('Dhaka')) }}</div>
+                <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">{{ __('Phone:') }} {{ $order->customer_phone }}</div>
             </div>
 
             <!-- CTA -->
             <a href="{{ url('/track-order?search=' . $order->order_number) }}" class="btn">
-                🔍 Track Your Heirloom Live (লাইভ অর্ডার ট্র্যাক করুন)
+                🔍 {{ __('Track Your Heirloom Live') }}
             </a>
         </div>
 
         <div class="footer">
-            Sorolata Heritage Crafts & Atelier • Support Hotline: +880 1700 000 000<br>
-            Preserving indigenous Bangladeshi craftsmanship with pride.
+            {{ __('Sorolata Heritage Crafts & Atelier • Support Hotline: +880 1700 000 000') }}<br>
+            {{ __('Preserving indigenous Bangladeshi craftsmanship with pride.') }}
         </div>
     </div>
 </body>

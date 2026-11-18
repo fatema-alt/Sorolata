@@ -53,6 +53,25 @@ $batchFiles = [
     __DIR__ . '/../resources/views/account/index.blade.php',
     __DIR__ . '/../resources/views/pages/wishlist.blade.php',
     __DIR__ . '/../resources/views/pages/track-order.blade.php',
+    // Batch 4
+    __DIR__ . '/../resources/views/payment/bkash_checkout.blade.php',
+    __DIR__ . '/../resources/views/payment/sslcommerz_checkout.blade.php',
+    __DIR__ . '/../resources/views/payment/manual_instruction.blade.php',
+    __DIR__ . '/../resources/views/pages/about.blade.php',
+    __DIR__ . '/../resources/views/pages/contact.blade.php',
+    __DIR__ . '/../resources/views/pages/search.blade.php',
+    __DIR__ . '/../resources/views/errors/404.blade.php',
+    __DIR__ . '/../resources/views/emails/order_confirmation.blade.php',
+    __DIR__ . '/../resources/views/builder/blocks/artisan_spotlight.blade.php',
+    __DIR__ . '/../resources/views/builder/blocks/editorial_narrative.blade.php',
+    __DIR__ . '/../resources/views/builder/blocks/generic_element.blade.php',
+    __DIR__ . '/../resources/views/builder/blocks/heritage_provenance.blade.php',
+    __DIR__ . '/../resources/views/builder/blocks/hero_cinematic.blade.php',
+    __DIR__ . '/../resources/views/builder/blocks/interactive_gallery.blade.php',
+    __DIR__ . '/../resources/views/builder/blocks/specs_anatomy.blade.php',
+    __DIR__ . '/../resources/views/builder/blocks/sticky_purchase_box.blade.php',
+    __DIR__ . '/../resources/views/builder/blocks/testimonial_editorial.blade.php',
+    __DIR__ . '/../resources/views/builder/landing.blade.php',
 ];
 
 $missingKeys = [];

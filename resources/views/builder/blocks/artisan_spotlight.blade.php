@@ -17,11 +17,11 @@
                     <div class="absolute bottom-6 left-6 right-6 bg-[#1D1D1D]/80 backdrop-blur-md p-5 rounded-[24px] text-white">
                         <div class="flex items-center justify-between">
                             <div>
-                                <span class="text-[10px] uppercase tracking-widest text-[#AAAAAA]">Atelier</span>
-                                <h4 class="font-editorial-heading text-xl font-light">{{ $artisan?->atelier_name ?? 'Bengal Heritage Loom' }}</h4>
+                                <span class="text-[10px] uppercase tracking-widest text-[#AAAAAA]">{{ __('Atelier') }}</span>
+                                <h4 class="font-editorial-heading text-xl font-light">{{ $artisan?->atelier_name ?? __('Bengal Heritage Loom') }}</h4>
                             </div>
                             <span class="text-xs px-3 py-1 bg-[#214E34] text-white rounded-full font-medium">
-                                {{ $artisan?->years_of_mastery ?? 35 }} Years Mastery
+                                {{ __(':years Years Mastery', ['years' => $artisan?->years_of_mastery ?? 35]) }}
                             </span>
                         </div>
                     </div>
@@ -32,15 +32,15 @@
             <div class="lg:col-span-7 order-1 lg:order-2 space-y-6">
                 <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#C96A3D] font-bold">
                     <span class="w-2 h-2 rounded-full bg-[#C96A3D]"></span>
-                    <span>The Master Artisan Behind This Piece</span>
+                    <span>{{ __('The Master Artisan Behind This Piece') }}</span>
                 </div>
 
                 <h2 class="font-editorial-heading text-3xl sm:text-4xl lg:text-5xl font-light text-[#1D1D1D] leading-tight">
-                    {{ $artisan?->full_name ?? 'Master Craftsman of Bengal' }}
+                    {{ $artisan?->full_name ?? __('Master Craftsman of Bengal') }}
                 </h2>
 
                 <p class="text-xs uppercase tracking-widest text-[#888888]">
-                    Specialty: {{ $artisan?->craft_type?->title() ?? 'Heritage Handloom Weaving' }} • {{ $district?->name_en ?? 'Tangail' }}, Bangladesh
+                    {{ __('Specialty:') }} {{ $artisan?->craft_type?->title() ?? __('Heritage Handloom Weaving') }} • {{ $district?->name_en ?? __('Tangail') }}, {{ __('Bangladesh') }}
                 </p>
 
                 <!-- Editorial Pull Quote -->
@@ -52,23 +52,23 @@
 
                 <div class="text-[#555555] text-base leading-relaxed space-y-4 font-editorial-body">
                     <p>
-                        {{ $artisan?->biography ?? 'Carrying forward an uninterrupted lineage of artisan mastery. Every piece represents weeks of patient handcrafting using indigenous techniques passed down through generations of guild masters.' }}
+                        {{ $artisan?->biography ?? __('Carrying forward an uninterrupted lineage of artisan mastery. Every piece represents weeks of patient handcrafting using indigenous techniques passed down through generations of guild masters.') }}
                     </p>
                 </div>
 
                 <!-- Provenance & Fair Trade Verification -->
                 <div class="pt-6 grid grid-cols-2 sm:grid-cols-3 gap-6 border-t border-[#E8E8E8] text-xs">
                     <div>
-                        <span class="block text-[#888888] uppercase tracking-wider text-[10px]">Artisan Royalty</span>
-                        <span class="font-medium text-[#1D1D1D]">Direct Atelier Compensation</span>
+                        <span class="block text-[#888888] uppercase tracking-wider text-[10px]">{{ __('Artisan Royalty') }}</span>
+                        <span class="font-medium text-[#1D1D1D]">{{ __('Direct Atelier Compensation') }}</span>
                     </div>
                     <div>
-                        <span class="block text-[#888888] uppercase tracking-wider text-[10px]">Verification</span>
-                        <span class="font-medium text-[#2D6A4F]">Verified Heritage Guild ✓</span>
+                        <span class="block text-[#888888] uppercase tracking-wider text-[10px]">{{ __('Verification') }}</span>
+                        <span class="font-medium text-[#2D6A4F]">{{ __('Verified Heritage Guild ✓') }}</span>
                     </div>
                     <div>
-                        <span class="block text-[#888888] uppercase tracking-wider text-[10px]">Origin Tag</span>
-                        <span class="font-medium text-[#1D1D1D]">100% Traceable Lot</span>
+                        <span class="block text-[#888888] uppercase tracking-wider text-[10px]">{{ __('Origin Tag') }}</span>
+                        <span class="font-medium text-[#1D1D1D]">{{ __('100% Traceable Lot') }}</span>
                     </div>
                 </div>
             </div>

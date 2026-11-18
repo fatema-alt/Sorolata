@@ -4,9 +4,9 @@
             
             <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[#E8E8E8] pb-8 gap-4">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">Immediate Acquisition</span>
+                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Immediate Acquisition') }}</span>
                     <h2 class="font-editorial-heading text-3xl sm:text-4xl text-[#1D1D1D] mt-1">{{ $product->title }}</h2>
-                    <p class="text-xs text-[#888888] mt-1">Single Batch Archive Edition • Hand-inspected by Chief Curator</p>
+                    <p class="text-xs text-[#888888] mt-1">{{ __('Single Batch Archive Edition • Hand-inspected by Chief Curator') }}</p>
                 </div>
                 <div class="text-left sm:text-right">
                     <span class="font-editorial-heading text-4xl sm:text-5xl font-normal text-[#C96A3D]">
@@ -25,8 +25,8 @@
                         ✓
                     </div>
                     <div>
-                        <span class="font-semibold text-[#1D1D1D] block">Insured Courier</span>
-                        <span>Delivered in tamper-evident wooden or botanical box.</span>
+                        <span class="font-semibold text-[#1D1D1D] block">{{ __('Insured Courier') }}</span>
+                        <span>{{ __('Delivered in tamper-evident wooden or botanical box.') }}</span>
                     </div>
                 </div>
 
@@ -35,8 +35,8 @@
                         ✓
                     </div>
                     <div>
-                        <span class="font-semibold text-[#1D1D1D] block">Artisan Royalty</span>
-                        <span>Fair remuneration contractually deposited to artisan guild.</span>
+                        <span class="font-semibold text-[#1D1D1D] block">{{ __('Artisan Royalty') }}</span>
+                        <span>{{ __('Fair remuneration contractually deposited to artisan guild.') }}</span>
                     </div>
                 </div>
 
@@ -45,8 +45,8 @@
                         ✓
                     </div>
                     <div>
-                        <span class="font-semibold text-[#1D1D1D] block">Provenance Certificate</span>
-                        <span>Numbered certificate signed by the craftsman and guild leader.</span>
+                        <span class="font-semibold text-[#1D1D1D] block">{{ __('Provenance Certificate') }}</span>
+                        <span>{{ __('Numbered certificate signed by the craftsman and guild leader.') }}</span>
                     </div>
                 </div>
             </div>
@@ -58,12 +58,12 @@
                 
                 <div class="flex flex-col sm:flex-row gap-4">
                     <div class="sm:w-28 flex items-center border border-[#E8E8E8] rounded-full px-4 py-3 bg-[#F8F6F2] justify-between">
-                        <span class="text-xs text-[#888888] uppercase">Qty</span>
+                        <span class="text-xs text-[#888888] uppercase">{{ __('Qty') }}</span>
                         <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock_quantity }}" class="w-12 text-center text-sm font-semibold text-[#1D1D1D] focus:outline-none bg-transparent">
                     </div>
 
                     <button type="submit" class="flex-grow py-4 px-8 bg-[#214E34] hover:bg-[#173825] text-white rounded-full font-medium tracking-wide text-sm transition-luxury shadow-soft-xs hover:shadow-soft-md flex items-center justify-center space-x-3 cursor-pointer">
-                        <span>Acquire Piece & Add To Collector Bag</span>
+                        <span>{{ __('Acquire Piece & Add To Collector Bag') }}</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
@@ -72,16 +72,16 @@
 
                 <!-- Instant payment reassurance -->
                 <div class="flex items-center justify-center space-x-4 pt-3 text-[11px] text-[#888888]">
-                    <span>Accepted Payments:</span>
-                    <span class="font-medium text-[#1D1D1D]">bKash Direct</span>
+                    <span>{{ __('Accepted Payments:') }}</span>
+                    <span class="font-medium text-[#1D1D1D]">{{ __('bKash Direct') }}</span>
                     <span>•</span>
-                    <span class="font-medium text-[#1D1D1D]">Nagad</span>
+                    <span class="font-medium text-[#1D1D1D]">{{ __('Nagad') }}</span>
                     <span>•</span>
-                    <span class="font-medium text-[#1D1D1D]">Visa / MasterCard</span>
+                    <span class="font-medium text-[#1D1D1D]">{{ __('Visa / MasterCard') }}</span>
                     <span>•</span>
-                    <span class="font-medium text-[#1D1D1D]">Amex</span>
+                    <span class="font-medium text-[#1D1D1D]">{{ __('Amex') }}</span>
                     <span>•</span>
-                    <span class="font-medium text-[#1D1D1D]">Global Wire</span>
+                    <span class="font-medium text-[#1D1D1D]">{{ __('Global Wire') }}</span>
                 </div>
             </form>
 

@@ -3,13 +3,13 @@
         <div class="max-w-3xl mb-12">
             <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#214E34] font-bold mb-3">
                 <span class="w-2 h-2 rounded-full bg-[#214E34]"></span>
-                <span>Geographical Indication & Regional Provenance</span>
+                <span>{{ __('Geographical Indication & Regional Provenance') }}</span>
             </div>
             <h2 class="font-editorial-heading text-3xl sm:text-4xl lg:text-5xl font-light text-[#1D1D1D]">
-                Rooted in {{ $district?->name_en ?? 'Bengal' }} (<span class="font-editorial-bangla">{{ $district?->name_bn ?? 'বাংলাদেশ' }}</span>)
+                {{ __('Rooted in :district', ['district' => $district?->name_en ?? __('Bengal')]) }} (<span class="font-editorial-bangla">{{ $district?->name_bn ?? 'বাংলাদেশ' }}</span>)
             </h2>
             <p class="font-editorial-body text-base text-[#555555] mt-4 leading-relaxed">
-                Soil, microclimate, and river humidity shape the personality of every craft in Bangladesh. Learn why this exact district is the irreplaceable cradle of this tradition.
+                {{ __('Soil, microclimate, and river humidity shape the personality of every craft in Bangladesh. Learn why this exact district is the irreplaceable cradle of this tradition.') }}
             </p>
         </div>
 
@@ -19,9 +19,9 @@
                 <div class="w-10 h-10 rounded-full bg-[#214E34]/10 flex items-center justify-center text-[#214E34]">
                     <x-icon name="shield-check" class="w-5 h-5 text-[#214E34]" />
                 </div>
-                <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">GI Heritage Specialty</h3>
+                <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">{{ __('GI Heritage Specialty') }}</h3>
                 <p class="text-sm text-[#555555] leading-relaxed">
-                    {{ $district?->gi_specialty ?? 'World-renowned handloom textile weaving registered under national geographical indication.' }}
+                    {{ $district?->gi_specialty ?? __('World-renowned handloom textile weaving registered under national geographical indication.') }}
                 </p>
             </div>
 
@@ -30,9 +30,9 @@
                 <div class="w-10 h-10 rounded-full bg-[#C96A3D]/10 flex items-center justify-center text-[#C96A3D]">
                     <x-icon name="sparkles" class="w-5 h-5 text-[#C96A3D]" />
                 </div>
-                <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">River Basin & Microclimate</h3>
+                <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">{{ __('River Basin & Microclimate') }}</h3>
                 <p class="text-sm text-[#555555] leading-relaxed">
-                    {{ $district?->river_basin ?? 'Shitalakshya & Jamuna River Basin' }} — the ambient river air provides the exact morning humidity essential for ultra-fine thread tension without snapping.
+                    {{ $district?->river_basin ?? __('Shitalakshya & Jamuna River Basin') }} — {{ __('the ambient river air provides the exact morning humidity essential for ultra-fine thread tension without snapping.') }}
                 </p>
             </div>
 
@@ -41,9 +41,9 @@
                 <div class="w-10 h-10 rounded-full bg-[#214E34]/10 flex items-center justify-center text-[#214E34]">
                     <x-icon name="map-pin" class="w-5 h-5 text-[#214E34]" />
                 </div>
-                <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">Historical Chronicle</h3>
+                <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">{{ __('Historical Chronicle') }}</h3>
                 <p class="text-sm text-[#555555] leading-relaxed">
-                    {{ $district?->historical_narrative ?? 'Documented in traveler chronicles since the 14th century, cultivated by imperial patronage and preserved through generational resilience.' }}
+                    {{ $district?->historical_narrative ?? __('Documented in traveler chronicles since the 14th century, cultivated by imperial patronage and preserved through generational resilience.') }}
                 </p>
             </div>
         </div>

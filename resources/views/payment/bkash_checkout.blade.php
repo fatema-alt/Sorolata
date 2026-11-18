@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,17 +25,17 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-xl font-bold tracking-tight">bKash Payment</h2>
-                    <p class="text-xs text-pink-100">সরলতা হেরিটেজ মার্চেন্ট গেটওয়ে</p>
+                    <h2 class="text-xl font-bold tracking-tight">{{ __('bKash Payment') }}</h2>
+                    <p class="text-xs text-pink-100">{{ __('Sorolata Heritage Merchant Gateway') }}</p>
                 </div>
             </div>
-            <span class="text-xs bg-white/20 px-2.5 py-1 rounded-full text-white font-medium">Secured 256-bit</span>
+            <span class="text-xs bg-white/20 px-2.5 py-1 rounded-full text-white font-medium">{{ __('Secured 256-bit') }}</span>
         </div>
 
         <!-- Order & Amount Summary -->
         <div class="bg-pink-50/70 p-5 border-b border-pink-100">
             <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">ইনভয়েস / অর্ডার</span>
+                <span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">{{ __('Invoice / Order') }}</span>
                 <span class="text-sm font-mono font-bold text-gray-900">#{{ $order->order_number }}</span>
             </div>
 
@@ -43,14 +43,14 @@
                 <div class="bg-amber-100/80 border border-amber-300 rounded-lg p-3 my-2 text-xs text-amber-900 flex items-start gap-2">
                     <span class="text-base">🛡️</span>
                     <div>
-                        <strong class="font-bold">অগ্রিম ডেলিভারি চার্জ (COD নিরাপত্তা):</strong>
-                        <p class="text-amber-800 mt-0.5">পার্সেল নিশ্চিতকরণ ও ফেক অর্ডার রোধে ডেলিভারি চার্জ পরিশোধ করুন। বাকি পণ্য মূল্য ৳{{ number_format($order->total_amount - $payableAmount, 2) }} ডেলিভারির সময় পরিশোধ করবেন।</p>
+                        <strong class="font-bold">{{ __('Advance Delivery Charge (COD Protection):') }}</strong>
+                        <p class="text-amber-800 mt-0.5">{{ __('Pay delivery fee to confirm order and prevent spam. Remaining :balance will be payable in cash upon parcel delivery.', ['balance' => '৳' . number_format($order->total_amount - $payableAmount, 2)]) }}</p>
                     </div>
                 </div>
             @endif
 
             <div class="flex justify-between items-baseline mt-3 pt-3 border-t border-pink-200/50">
-                <span class="text-sm font-medium text-gray-700">পরিশোধযোগ্য মোট টাকা:</span>
+                <span class="text-sm font-medium text-gray-700">{{ __('Total Payable Amount:') }}</span>
                 <span class="text-2xl font-black text-[#E2136E]">৳{{ number_format($payableAmount, 2) }}</span>
             </div>
         </div>
@@ -64,7 +64,7 @@
             <input type="hidden" name="status" value="success">
 
             <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">আপনার বিকাশ একাউন্ট নাম্বার</label>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">{{ __('Your bKash Account Number') }}</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 font-medium text-sm">+88</span>
                     <input type="text" name="customer_phone" value="{{ $order->customer_phone }}" class="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm font-mono focus:ring-2 focus:ring-[#E2136E] focus:outline-none" required placeholder="017XXXXXXXX">
@@ -72,26 +72,26 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">৪-ডিজিট ওটিপি / পিন (Sandbox Simulator)</label>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">{{ __('4-Digit OTP / PIN (Sandbox Simulator)') }}</label>
                 <input type="password" value="12345" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm font-mono tracking-widest focus:ring-2 focus:ring-[#E2136E] focus:outline-none" placeholder="•••••">
-                <p class="text-[11px] text-gray-500 mt-1">টেস্ট মোডে যেকোনো পিন দিয়ে সরাসরি পেমেন্ট কনফার্ম করুন।</p>
+                <p class="text-[11px] text-gray-500 mt-1">{{ __('In test mode, enter any PIN to simulate payment confirmation directly.') }}</p>
             </div>
 
             <div class="pt-2">
                 <button type="submit" class="w-full bkash-pink bkash-pink-hover text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-pink-500/25 transition-all flex items-center justify-center space-x-2">
-                    <span>কনফার্ম ও পেমেন্ট সম্পন্ন করুন (৳{{ number_format($payableAmount, 2) }})</span>
+                    <span>{{ __('Confirm & Complete Payment (:amount)', ['amount' => '৳' . number_format($payableAmount, 2)]) }}</span>
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </button>
             </div>
 
             <div class="text-center pt-2">
-                <a href="{{ route('checkout.index') }}" class="text-xs text-gray-500 hover:text-gray-800 underline">পেমেন্ট বাতিল করে ফিরে যান</a>
+                <a href="{{ route('checkout.index') }}" class="text-xs text-gray-500 hover:text-gray-800 underline">{{ __('Cancel Payment and Return') }}</a>
             </div>
         </form>
 
         <div class="bg-gray-50 px-6 py-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
-            <span>Official bKash PGW API v1.2</span>
-            <span>24/7 Helpline: 16247</span>
+            <span>{{ __('Official bKash PGW API v1.2') }}</span>
+            <span>{{ __('24/7 Helpline: 16247') }}</span>
         </div>
     </div>
 </body>
