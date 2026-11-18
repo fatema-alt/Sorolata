@@ -52,6 +52,7 @@ class Order extends Model
         'shipping_address',
         'billing_address',
         'notes',
+        'locale',
     ];
 
     protected $casts = [
@@ -123,13 +124,18 @@ class Order extends Model
         return $this->belongsTo(ShippingRate::class);
     }
 
-    public function getLocaleAttribute(): string
+    public function getLocaleAttribute(?string $value = null): string
     {
+        if (!empty($value)) {
+            return $value;
+        }
+
         return $this->shipping_address['locale'] ?? (session('locale') ?? config('app.locale', 'en'));
     }
 
-    public function setLocaleAttribute(string $value): void
+    public function setLocaleAttribute(?string $value): void
     {
+        $this->attributes['locale'] = $value;
         $address = $this->shipping_address ?? [];
         $address['locale'] = $value;
         $this->shipping_address = $address;

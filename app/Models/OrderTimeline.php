@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\HasBilingualAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderTimeline extends Model
 {
-    use HasFactory;
+    use HasFactory, HasBilingualAttributes;
 
     protected $fillable = [
         'order_id',
@@ -18,6 +19,7 @@ class OrderTimeline extends Model
         'actor_type',
         'actor_id',
         'note',
+        'note_bn',
         'customer_notified',
         'metadata',
     ];
@@ -43,6 +45,10 @@ class OrderTimeline extends Model
 
     public function localizedNote(): string
     {
+        if (app()->getLocale() === 'bn' && !empty($this->note_bn)) {
+            return (string) $this->note_bn;
+        }
+
         $note = (string) $this->note;
         if (empty($note)) {
             return '';

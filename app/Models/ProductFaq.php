@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\HasBilingualAttributes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductFaq extends Model
 {
+    use HasBilingualAttributes;
+
     protected $fillable = [
         'product_id',
         'question',
+        'question_bn',
         'answer',
+        'answer_bn',
         'sort_order',
         'is_active',
     ];

@@ -151,6 +151,7 @@ class CheckoutPageController extends Controller
             'paid_amount' => $paidAmount,
             'due_amount' => $dueAmount,
             'currency' => Currency::BDT,
+            'locale' => app()->getLocale(),
             'status' => OrderStatus::PENDING,
             'payment_status' => PaymentStatus::UNPAID,
             'payment_gateway' => PaymentGateway::tryFrom($gatewayInput) ?? PaymentGateway::COD,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\DistrictRegion;
+use App\Traits\HasBilingualAttributes;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Illuminate\Support\Str;
 
 class District extends Model
 {
-    use HasFactory, HasUuid, SoftDeletes;
+    use HasFactory, HasUuid, SoftDeletes, HasBilingualAttributes;
 
     protected $fillable = [
         'uuid',
@@ -23,8 +24,11 @@ class District extends Model
         'name_bn',
         'division',
         'gi_specialty',
+        'gi_specialty_bn',
         'historical_narrative',
+        'historical_narrative_bn',
         'river_basin',
+        'river_basin_bn',
         'latitude',
         'longitude',
         'meta',
@@ -68,6 +72,33 @@ class District extends Model
         }
 
         return Str::slug($this->name_en ?? (string) $this->uuid);
+    }
+
+    public function getNameAttribute(): ?string
+    {
+        return $this->getLocalized('name');
+    }
+
+    public function getLocalized(string $attribute, ?string $locale = null): ?string
+    {
+        $locale = $locale ?? app()->getLocale();
+
+        if ($attribute === 'name') {
+            if ($locale === 'bn' && !empty($this->name_bn)) {
+                return (string) $this->name_bn;
+            }
+            return (string) ($this->name_en ?? $this->name_bn);
+        }
+
+        if ($locale === 'bn') {
+            $bnValue = $this->getAttribute("{$attribute}_bn");
+            if (!empty($bnValue)) {
+                return (string) $bnValue;
+            }
+        }
+
+        $val = $this->getAttribute($attribute);
+        return $val !== null ? (string) $val : null;
     }
 
     protected $casts = [
