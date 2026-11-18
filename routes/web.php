@@ -28,6 +28,20 @@ Route::get('/language/{locale}', function (string $locale) {
     return redirect()->back();
 })->name('language.switch');
 
+// Failsafe Auto-Clean Redirects: Strip any /public/ or /sorolata/ from incoming URLs
+Route::any('/public/{fallbackPlaceholder}', function (string $fallbackPlaceholder) {
+    $clean = preg_replace('#^sorolata/?(public/?)?#', '', $fallbackPlaceholder);
+    return redirect('/' . ltrim($clean, '/'), 301);
+})->where('fallbackPlaceholder', '.*');
+
+Route::any('/sorolata/{fallbackPlaceholder}', function (string $fallbackPlaceholder) {
+    $clean = preg_replace('#^public/?#', '', $fallbackPlaceholder);
+    return redirect('/' . ltrim($clean, '/'), 301);
+})->where('fallbackPlaceholder', '.*');
+
+Route::get('/public', fn() => redirect('/', 301));
+Route::get('/sorolata', fn() => redirect('/', 301));
+
 // SEO XML Sitemap
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
