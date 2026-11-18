@@ -29,9 +29,9 @@
 
     <!-- 1. Announcement Bar -->
     <aside class="bg-[#214E34] text-[#F8F6F2] text-xs py-2 px-4 text-center tracking-widest uppercase font-medium flex items-center justify-center gap-4">
-        <span>GI Certified Bengal Craftsmanship</span>
+        <span>{{ __('GI Certified Bengal Craftsmanship') }}</span>
         <span class="hidden sm:inline opacity-40">•</span>
-        <span class="hidden sm:inline">Complimentary Insured Courier to BD, USA, UK, Canada & Europe</span>
+        <span class="hidden sm:inline">{{ __('Complimentary Insured Courier to BD, USA, UK, Canada & Europe') }}</span>
     </aside>
 
         <!-- 2. Transparent Floating Glass Navbar with Mega Menu -->
@@ -80,35 +80,35 @@
                     >
                         <!-- Col 1: Categories -->
                         <div class="space-y-3">
-                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-[#214E34]">Traditional Guilds</h4>
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-[#214E34]">{{ __('Traditional Guilds') }}</h4>
                             <ul class="text-xs space-y-2 text-[#555555]">
-                                <li><a href="{{ route('shop.index', ['category' => 'heritage-handloom-textiles']) }}" class="hover:text-[#214E34] transition-colors">Handloom Textiles</a></li>
-                                <li><a href="{{ route('shop.index', ['category' => 'bell-metal-brassware']) }}" class="hover:text-[#214E34] transition-colors">Bell-Metal & Kansa</a></li>
-                                <li><a href="{{ route('shop.index', ['category' => 'traditional-rugs-carpets']) }}" class="hover:text-[#214E34] transition-colors">Shatranji Carpets</a></li>
-                                <li><a href="{{ route('shop.index') }}" class="text-[#C96A3D] font-semibold hover:underline block pt-1">All Guilds →</a></li>
+                                <li><a href="{{ route('shop.index', ['category' => 'heritage-handloom-textiles']) }}" class="hover:text-[#214E34] transition-colors">{{ __('Handloom Textiles') }}</a></li>
+                                <li><a href="{{ route('shop.index', ['category' => 'bell-metal-brassware']) }}" class="hover:text-[#214E34] transition-colors">{{ __('Bell-Metal & Kansa') }}</a></li>
+                                <li><a href="{{ route('shop.index', ['category' => 'traditional-rugs-carpets']) }}" class="hover:text-[#214E34] transition-colors">{{ __('Shatranji Carpets') }}</a></li>
+                                <li><a href="{{ route('shop.index') }}" class="text-[#C96A3D] font-semibold hover:underline block pt-1">{{ __('All Guilds →') }}</a></li>
                             </ul>
                         </div>
 
                         <!-- Col 2: Districts -->
                         <div class="space-y-3">
-                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-[#214E34]">Geographical Hubs</h4>
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-[#214E34]">{{ __('Geographical Hubs') }}</h4>
                             <ul class="text-xs space-y-2 text-[#555555]">
-                                <li><a href="{{ route('district.show', 'narayanganj-sonargaon') }}" class="hover:text-[#214E34] transition-colors">Narayanganj (Sonargaon)</a></li>
-                                <li><a href="{{ route('district.show', 'tangail') }}" class="hover:text-[#214E34] transition-colors">Tangail Handloom</a></li>
-                                <li><a href="{{ route('district.show', 'bogura') }}" class="hover:text-[#214E34] transition-colors">Bogura Brass Foundries</a></li>
-                                <li><a href="{{ route('district.show', 'rangpur-nisbetganj') }}" class="hover:text-[#214E34] transition-colors">Rangpur Shatranji Guild</a></li>
-                                <li><a href="{{ route('districts.index') }}" class="text-[#214E34] font-semibold hover:underline block pt-1">All 64 Districts →</a></li>
+                                <li><a href="{{ route('district.show', 'narayanganj-sonargaon') }}" class="hover:text-[#214E34] transition-colors">{{ __('Narayanganj (Sonargaon)') }}</a></li>
+                                <li><a href="{{ route('district.show', 'tangail') }}" class="hover:text-[#214E34] transition-colors">{{ __('Tangail Handloom') }}</a></li>
+                                <li><a href="{{ route('district.show', 'bogura') }}" class="hover:text-[#214E34] transition-colors">{{ __('Bogura Brass Foundries') }}</a></li>
+                                <li><a href="{{ route('district.show', 'rangpur-nisbetganj') }}" class="hover:text-[#214E34] transition-colors">{{ __('Rangpur Shatranji Guild') }}</a></li>
+                                <li><a href="{{ route('districts.index') }}" class="text-[#214E34] font-semibold hover:underline block pt-1">{{ __('All 64 Districts →') }}</a></li>
                             </ul>
                         </div>
 
                         <!-- Col 3: Artisans & Stories -->
                         <div class="space-y-3">
-                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-[#214E34]">Human Provenance</h4>
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-[#214E34]">{{ __('Human Provenance') }}</h4>
                             <ul class="text-xs space-y-2 text-[#555555]">
-                                <li><a href="{{ route('artisans.index') }}" class="hover:text-[#214E34] transition-colors">Master Artisans</a></li>
-                                <li><a href="{{ route('stories.index') }}" class="hover:text-[#214E34] transition-colors">The Heritage Gazette</a></li>
-                                <li><a href="{{ route('pages.about') }}" class="hover:text-[#214E34] transition-colors">Our Living Manifesto</a></li>
-                                <li><a href="{{ route('pages.contact') }}" class="hover:text-[#214E34] transition-colors">Curator Concierge</a></li>
+                                <li><a href="{{ route('artisans.index') }}" class="hover:text-[#214E34] transition-colors">{{ __('Master Artisans') }}</a></li>
+                                <li><a href="{{ route('stories.index') }}" class="hover:text-[#214E34] transition-colors">{{ __('The Heritage Gazette') }}</a></li>
+                                <li><a href="{{ route('pages.about') }}" class="hover:text-[#214E34] transition-colors">{{ __('Our Living Manifesto') }}</a></li>
+                                <li><a href="{{ route('pages.contact') }}" class="hover:text-[#214E34] transition-colors">{{ __('Curator Concierge') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
                 <a href="{{ route('stories.index') }}" class="hover:text-[#214E34] font-medium transition-colors flex items-center gap-1.5 whitespace-nowrap">
                     <span>{{ __('Stories') }}</span>
                     <span class="text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded bg-[#C96A3D]/10 text-[#C96A3D] font-bold whitespace-nowrap">
-                        {{ app()->getLocale() === 'bn' ? 'ম্যাগাজিন' : 'Magazine' }}
+                        {{ __('Magazine') }}
                     </span>
                 </a>
             </nav>
@@ -143,19 +143,19 @@
 
                 <!-- Account / Concierge -->
                 @auth
-                    <a href="{{ route('account.index') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-[#214E34] border border-emerald-200 transition-colors text-xs font-semibold shrink-0" aria-label="Account">
+                    <a href="{{ route('account.index') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-[#214E34] border border-emerald-200 transition-colors text-xs font-semibold shrink-0" aria-label="{{ __('Account') }}">
                         <x-icon name="user" class="w-3.5 h-3.5" />
                         <span class="max-w-[100px] truncate">{{ auth()->user()->name }}</span>
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-black/5 text-[#555555] hover:text-[#214E34] transition-colors text-xs font-medium shrink-0" aria-label="Sign In">
+                    <a href="{{ route('login') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-black/5 text-[#555555] hover:text-[#214E34] transition-colors text-xs font-medium shrink-0" aria-label="{{ __('Sign In') }}">
                         <x-icon name="user" class="w-4 h-4" />
                         <span>{{ __('Sign In') }}</span>
                     </a>
                 @endauth
 
                 <!-- Wishlist Trigger -->
-                <a href="{{ route('wishlist.index') }}" class="relative hidden sm:flex p-2 text-[#555555] hover:text-[#C96A3D] transition-colors shrink-0" aria-label="Wishlist">
+                <a href="{{ route('wishlist.index') }}" class="relative hidden sm:flex p-2 text-[#555555] hover:text-[#C96A3D] transition-colors shrink-0" aria-label="{{ __('Wishlist') }}">
                     <x-icon name="heart" class="w-5 h-5" />
                     @php
                         $wishlistCount = count(session('sorolata_wishlist', []));
@@ -168,7 +168,7 @@
                 </a>
 
                 <!-- Cart / Bag Trigger -->
-                <a href="{{ route('cart.index') }}" class="relative p-2 text-[#1D1D1D] hover:text-[#214E34] transition-colors shrink-0" aria-label="Collector Bag">
+                <a href="{{ route('cart.index') }}" class="relative p-2 text-[#1D1D1D] hover:text-[#214E34] transition-colors shrink-0" aria-label="{{ __('Collector Bag') }}">
                     <x-icon name="shopping-bag" class="w-5 h-5" />
                     @php
                         $bagCount = count(session('sorolata_collector_bag', []));
@@ -198,12 +198,12 @@
         target="_blank" 
         rel="noopener"
         class="fixed bottom-20 md:bottom-8 right-6 z-40 bg-[#25D366] text-white p-3.5 rounded-full shadow-soft-lg hover:scale-110 transition-luxury flex items-center gap-2 group"
-        aria-label="WhatsApp Concierge"
+        aria-label="{{ __('WhatsApp Concierge') }}"
     >
         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.072.043.419-.101.824z"/>
         </svg>
-        <span class="hidden group-hover:inline text-xs font-semibold pr-1">Concierge Live</span>
+        <span class="hidden group-hover:inline text-xs font-semibold pr-1">{{ __('Concierge Live') }}</span>
     </a>
 
     <!-- Back to Top Floating Button -->
@@ -217,7 +217,7 @@
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-75"
         class="fixed bottom-20 md:bottom-8 left-6 z-40 bg-white/90 backdrop-blur-md text-[#1D1D1D] p-3 rounded-full shadow-soft-md border border-[#E8E8E8] hover:bg-[#214E34] hover:text-white transition-luxury cursor-pointer"
-        aria-label="Back to Top"
+        aria-label="{{ __('Back to Top') }}"
         style="display: none;"
     >
         <x-icon name="chevron-down" class="w-4 h-4 transform rotate-180" />
@@ -231,61 +231,61 @@
             <div class="md:col-span-5 space-y-4">
                 <span class="font-editorial-heading text-4xl font-light text-[#F8F6F2]">Sorolata</span>
                 <p class="text-sm text-[#AAAAAA] leading-relaxed max-w-md font-editorial-body">
-                    A timeless sanctuary celebrating Bangladeshi handcrafted heritage. We preserve endangered living traditions by bringing master artisan artifacts directly to thoughtful collectors worldwide.
+                    {{ __('A timeless sanctuary celebrating Bangladeshi handcrafted heritage. We preserve endangered living traditions by bringing master artisan artifacts directly to thoughtful collectors worldwide.') }}
                 </p>
                 <div class="flex flex-wrap gap-3 pt-2 text-xs text-[#E8E8E8]">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15">
                         <x-icon name="shield-check" class="w-3.5 h-3.5 text-[#C96A3D]" />
-                        100% Verified GI Provenance
+                        {{ __('100% Verified GI Provenance') }}
                     </span>
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15">
                         <x-icon name="sparkles" class="w-3.5 h-3.5 text-[#C96A3D]" />
-                        Direct Atelier Compensation
+                        {{ __('Direct Atelier Compensation') }}
                     </span>
                 </div>
             </div>
 
             <!-- Col 2: Heritage Clusters -->
             <div class="md:col-span-2 space-y-3">
-                <h4 class="text-xs font-semibold uppercase tracking-widest text-[#F8F6F2]">Heritage Districts</h4>
+                <h4 class="text-xs font-semibold uppercase tracking-widest text-[#F8F6F2]">{{ __('Heritage Districts') }}</h4>
                 <ul class="text-sm space-y-2 text-[#AAAAAA]">
-                    <li><a href="{{ route('district.show', 'narayanganj-sonargaon') }}" class="hover:text-white transition-colors">Sonargaon (Muslin)</a></li>
-                    <li><a href="{{ route('district.show', 'tangail') }}" class="hover:text-white transition-colors">Tangail (Jamdani Silk)</a></li>
-                    <li><a href="{{ route('district.show', 'bogura') }}" class="hover:text-white transition-colors">Bogura (Bell Metal)</a></li>
-                    <li><a href="{{ route('district.show', 'rangpur-nisbetganj') }}" class="hover:text-white transition-colors">Rangpur (Shatranji)</a></li>
-                    <li><a href="{{ route('districts.index') }}" class="hover:text-white transition-colors">All 64 Districts</a></li>
+                    <li><a href="{{ route('district.show', 'narayanganj-sonargaon') }}" class="hover:text-white transition-colors">{{ __('Sonargaon (Muslin)') }}</a></li>
+                    <li><a href="{{ route('district.show', 'tangail') }}" class="hover:text-white transition-colors">{{ __('Tangail (Jamdani Silk)') }}</a></li>
+                    <li><a href="{{ route('district.show', 'bogura') }}" class="hover:text-white transition-colors">{{ __('Bogura (Bell Metal)') }}</a></li>
+                    <li><a href="{{ route('district.show', 'rangpur-nisbetganj') }}" class="hover:text-white transition-colors">{{ __('Rangpur (Shatranji)') }}</a></li>
+                    <li><a href="{{ route('districts.index') }}" class="hover:text-white transition-colors">{{ __('All 64 Districts') }}</a></li>
                 </ul>
             </div>
 
             <!-- Col 3: Collections & Support -->
             <div class="md:col-span-2 space-y-3">
-                <h4 class="text-xs font-semibold uppercase tracking-widest text-[#F8F6F2]">Quick Links</h4>
+                <h4 class="text-xs font-semibold uppercase tracking-widest text-[#F8F6F2]">{{ __('Quick Links') }}</h4>
                 <ul class="text-sm space-y-2 text-[#AAAAAA]">
-                    <li><a href="{{ route('shop.index') }}" class="hover:text-white transition-colors">Curated Catalog</a></li>
-                    <li><a href="{{ route('artisans.index') }}" class="hover:text-white transition-colors">Master Artisans</a></li>
-                    <li><a href="{{ route('stories.index') }}" class="hover:text-white transition-colors">The Heritage Gazette</a></li>
-                    <li><a href="{{ route('pages.about') }}" class="hover:text-white transition-colors">Our Manifesto</a></li>
-                    <li><a href="{{ route('track.order') }}" class="hover:text-white transition-colors">Track Order</a></li>
-                    <li><a href="{{ route('pages.contact') }}" class="hover:text-white transition-colors">Concierge Desk</a></li>
+                    <li><a href="{{ route('shop.index') }}" class="hover:text-white transition-colors">{{ __('Curated Catalog') }}</a></li>
+                    <li><a href="{{ route('artisans.index') }}" class="hover:text-white transition-colors">{{ __('Master Artisans') }}</a></li>
+                    <li><a href="{{ route('stories.index') }}" class="hover:text-white transition-colors">{{ __('The Heritage Gazette') }}</a></li>
+                    <li><a href="{{ route('pages.about') }}" class="hover:text-white transition-colors">{{ __('Our Manifesto') }}</a></li>
+                    <li><a href="{{ route('track.order') }}" class="hover:text-white transition-colors">{{ __('Track Order') }}</a></li>
+                    <li><a href="{{ route('pages.contact') }}" class="hover:text-white transition-colors">{{ __('Concierge Desk') }}</a></li>
                 </ul>
             </div>
 
             <!-- Col 4: Newsletter -->
             <div class="md:col-span-3 space-y-4">
-                <h4 class="text-xs font-semibold uppercase tracking-widest text-[#F8F6F2]">The Collector's Desk</h4>
+                <h4 class="text-xs font-semibold uppercase tracking-widest text-[#F8F6F2]">{{ __("The Collector's Desk") }}</h4>
                 <p class="text-xs text-[#AAAAAA] leading-relaxed">
-                    Receive intimate notifications when a master craftsman finishes a limited archival drop.
+                    {{ __('Receive intimate notifications when a master craftsman finishes a limited archival drop.') }}
                 </p>
                 <form class="space-y-3">
                     <div class="relative">
                         <input 
                             type="email" 
-                            placeholder="Enter your email address..." 
+                            placeholder="{{ __('Enter your email address...') }}" 
                             class="w-full bg-white/10 border border-white/20 text-xs px-4 py-3 text-white placeholder-white/50 rounded-full focus:outline-none focus:border-[#C96A3D] transition-colors"
                         >
                     </div>
                     <x-button variant="terracotta" size="sm" class="w-full justify-center">
-                        Subscribe to Collector Dispatches
+                        {{ __('Subscribe to Collector Dispatches') }}
                     </x-button>
                 </form>
             </div>
@@ -294,17 +294,17 @@
 
         <!-- Bottom Copyright & Payment Trust -->
         <div class="max-w-7xl mx-auto px-6 lg:px-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-[#888888] gap-4">
-            <p>© {{ date('Y') }} Sorolata Commerce Platform. All rights reserved.</p>
+            <p>{{ __('© :year Sorolata Commerce Platform. All rights reserved.', ['year' => date('Y')]) }}</p>
             <div class="flex items-center gap-3 text-[11px] text-[#AAAAAA]">
-                <span>Secured with bKash Direct</span>
+                <span>{{ __('Secured with bKash Direct') }}</span>
                 <span>•</span>
-                <span>Nagad</span>
+                <span>{{ __('Nagad') }}</span>
                 <span>•</span>
-                <span>Visa / MC</span>
+                <span>{{ __('Visa / MC') }}</span>
                 <span>•</span>
-                <span>Stripe Global</span>
+                <span>{{ __('Stripe Global') }}</span>
             </div>
-            <p class="font-editorial-heading italic text-sm text-[#AAAAAA]">Crafted with quiet reverence for human touch.</p>
+            <p class="font-editorial-heading italic text-sm text-[#AAAAAA]">{{ __('Crafted with quiet reverence for human touch.') }}</p>
         </div>
     </footer>
 

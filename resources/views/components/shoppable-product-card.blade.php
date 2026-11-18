@@ -14,7 +14,7 @@
 <div x-data="{ 
         adding: false, 
         added: false,
-        buttonText: '{{ __('Add to Bag') }}',
+        buttonText: @json(__('Add to Bag'), JSON_UNESCAPED_UNICODE),
         addToCart() {
             this.adding = true;
             fetch('{{ route('cart.store') }}', {
@@ -30,16 +30,16 @@
             .then(data => {
                 this.adding = false;
                 this.added = true;
-                this.buttonText = '✓ {{ $locale === 'bn' ? 'ঝুলিতে যোগ হয়েছে' : 'Added to Bag' }}';
+                this.buttonText = '✓ ' + @json(__('Added to Bag'), JSON_UNESCAPED_UNICODE);
                 window.dispatchEvent(new CustomEvent('cart-count-updated', { detail: { count: data.cart_count } }));
                 setTimeout(() => {
                     this.added = false;
-                    this.buttonText = '{{ __('Add to Bag') }}';
+                    this.buttonText = @json(__('Add to Bag'), JSON_UNESCAPED_UNICODE);
                 }, 3000);
             })
             .catch(err => {
                 this.adding = false;
-                alert('Something went wrong. Please try again.');
+                alert(@json(__('Something went wrong. Please try again.'), JSON_UNESCAPED_UNICODE));
             });
         }
      }"
@@ -66,7 +66,7 @@
                 @endif
                 @if($product->district?->gi_specialty)
                     <span class="text-[#214E34] text-[10px] font-semibold tracking-widest uppercase bg-[#214E34]/10 px-2 py-0.5 rounded-full border border-[#214E34]/20">
-                        GI CERTIFIED
+                        {{ __('GI Certified') }}
                     </span>
                 @endif
                 <span class="text-xs text-[#888888]">•</span>
@@ -86,7 +86,7 @@
             <!-- Artisan Credit -->
             @if($artisanName)
                 <p class="text-xs sm:text-sm text-[#666666]">
-                    {{ $locale === 'bn' ? 'মাস্টার কারিগর:' : 'Master Artisan:' }}
+                    {{ __('Master Artisan:') }}
                     <strong class="text-[#1D1D1D]">{{ $artisanName }}</strong>
                     @if($artisan->district)
                         <span class="text-[#888888]">({{ $locale === 'bn' ? $artisan->district->name_bn : $artisan->district->name_en }})</span>
@@ -125,7 +125,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
                         </template>
-                        <span x-text="buttonText"></span>
+                        <span x-text="buttonText">{{ __('Add to Bag') }}</span>
                     </button>
 
                     <!-- View Details Link -->

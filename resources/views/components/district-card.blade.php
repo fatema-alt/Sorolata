@@ -21,14 +21,14 @@
     </div>
 
     <div class="pt-3 border-t border-[#E8E8E8]">
-        <span class="text-[10px] uppercase tracking-widest text-[#888888] block mb-1">GI Specialty</span>
+        <span class="text-[10px] uppercase tracking-widest text-[#888888] block mb-1">{{ __('GI Specialty') }}</span>
         <p class="text-xs text-[#555555] line-clamp-2 leading-relaxed">
-            {{ $district->gi_specialty ?? 'Heritage Artisan Cradle' }}
+            {{ $district->gi_specialty ?? __('Heritage Artisan Cradle') }}
         </p>
     </div>
 
     <div class="pt-1 flex items-center justify-between text-xs text-[#214E34] font-semibold">
-        <span>Explore District Artisans</span>
+        <span>{{ __('Explore District Artisans') }}</span>
         <span class="transform group-hover:translate-x-1 transition-transform">→</span>
     </div>
 </div>

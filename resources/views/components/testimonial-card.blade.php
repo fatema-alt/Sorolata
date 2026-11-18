@@ -12,7 +12,7 @@
             @if($verified)
                 <span class="inline-flex items-center gap-1 text-[10px] text-[#2D6A4F] font-semibold uppercase tracking-wider">
                     <x-icon name="shield-check" class="w-3.5 h-3.5 text-[#2D6A4F]" />
-                    Verified Collector
+                    {{ __('Verified Collector') }}
                 </span>
             @endif
         </div>

@@ -2,7 +2,7 @@
     'title',
     'subtitle',
     'imageUrl',
-    'tag' => 'Limited Drop',
+    'tag' => null,
     'link' => '#',
 ])
 
@@ -15,7 +15,7 @@
     >
     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-8 text-white">
         <span class="inline-block text-[10px] tracking-widest uppercase font-bold text-[#DE7D4E] mb-1">
-            {{ $tag }}
+            {{ $tag ? __($tag) : __('Limited Drop') }}
         </span>
         <h3 class="font-editorial-heading text-3xl font-light text-white mb-2 leading-tight">
             {{ $title }}
@@ -25,7 +25,7 @@
         </p>
         <div class="mt-4">
             <x-button variant="secondary" size="sm" class="border-white/80 text-white hover:bg-white/20">
-                Explore Drop →
+                {{ __('Explore Drop →') }}
             </x-button>
         </div>
     </div>

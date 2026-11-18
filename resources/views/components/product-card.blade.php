@@ -7,8 +7,8 @@
     $imageUrl = $primaryMedia ? url($primaryMedia->file_path) : 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1000&auto=format&fit=crop';
     $hasDiscount = !empty($product->compare_at_price) && $product->compare_at_price > $product->price;
     $discountPercent = $hasDiscount ? round((($product->compare_at_price - $product->price) / $product->compare_at_price) * 100) : 0;
-    $districtName = $product->district?->name_en ?? 'Heritage District';
-    $craftTitle = $product->artisan?->craft_type?->title() ?? 'Heritage Handcraft';
+    $districtName = $product->district?->name_en ?? __('Heritage District');
+    $craftTitle = $product->artisan?->craft_type?->title() ?? __('Heritage Handcraft');
 @endphp
 
 <article {{ $attributes->merge(['class' => 'group relative bg-white rounded-[32px] p-4 shadow-soft-xs hover:shadow-soft-hover transition-luxury flex flex-col justify-between']) }}>
@@ -28,7 +28,7 @@
         <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">
             @if($hasDiscount)
                 <x-badge variant="terracotta" size="xs">
-                    {{ $discountPercent }}% Off
+                    {{ __(':percent% Off', ['percent' => $discountPercent]) }}
                 </x-badge>
             @endif
             <x-badge variant="district" size="xs">
@@ -46,9 +46,9 @@
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <button 
                 type="submit" 
-                aria-label="{{ $isWishlisted ? 'Remove from Wishlist' : 'Save to Wishlist' }}" 
+                aria-label="{{ $isWishlisted ? __('Remove from Wishlist') : __('Save to Wishlist') }}" 
                 class="w-9 h-9 rounded-full {{ $isWishlisted ? 'bg-[#C96A3D] text-white shadow-md' : 'bg-white/90 backdrop-blur-md text-[#555555]' }} hover:text-white hover:bg-[#C96A3D] hover:scale-110 flex items-center justify-center shadow-soft-xs transition-luxury"
-                title="{{ $isWishlisted ? 'উইশলিস্ট থেকে মুছুন' : 'উইশলিস্টে যোগ করুন' }}"
+                title="{{ $isWishlisted ? __('Remove from Wishlist') : __('Save to Wishlist') }}"
             >
                 <x-icon name="heart" class="w-4 h-4 {{ $isWishlisted ? 'fill-current' : '' }}" />
             </button>
@@ -61,7 +61,7 @@
                 class="w-full py-2.5 px-4 bg-white/95 backdrop-blur-md hover:bg-[#214E34] text-[#1D1D1D] hover:text-white rounded-full text-xs font-semibold tracking-wide flex items-center justify-center gap-2 shadow-soft-md transition-colors"
             >
                 <x-icon name="eye" class="w-3.5 h-3.5" />
-                <span>Explore Story & Details</span>
+                <span>{{ __('Explore Story & Details') }}</span>
             </a>
         </div>
     </div>
@@ -86,7 +86,7 @@
 
         <!-- Artisan Attribution -->
         <p class="text-xs text-[#888888] font-light">
-            By <span class="text-[#555555] font-medium">{{ $product->artisan?->full_name ?? 'Master Artisan Guild' }}</span>
+            {{ __('By') }} <span class="text-[#555555] font-medium">{{ $product->artisan?->full_name ?? __('Master Artisan Guild') }}</span>
         </p>
 
         <!-- Price & Cart CTA Row -->
@@ -101,7 +101,7 @@
             <a 
                 href="{{ route('products.show', $product->slug) }}" 
                 class="w-8 h-8 rounded-full bg-[#F8F6F2] hover:bg-[#214E34] text-[#1D1D1D] hover:text-white flex items-center justify-center transition-luxury shadow-soft-xs"
-                aria-label="Acquire Product"
+                aria-label="{{ __('Acquire Product') }}"
             >
                 <x-icon name="arrow-right" class="w-3.5 h-3.5" />
             </a>

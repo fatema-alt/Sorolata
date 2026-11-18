@@ -11,12 +11,12 @@
         loading="lazy"
     >
     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 text-white">
-        <span class="text-[10px] uppercase tracking-widest text-white/80 font-semibold mb-1">Authentic Guild</span>
+        <span class="text-[10px] uppercase tracking-widest text-white/80 font-semibold mb-1">{{ __('Authentic Guild') }}</span>
         <h4 class="font-editorial-heading text-2xl font-light text-white group-hover:text-[#F8F6F2] transition-colors">
             {{ $category->name }}
         </h4>
         <p class="text-xs text-white/70 mt-1 line-clamp-1 font-light">
-            {{ $category->description ?? 'Generational techniques passed down since antiquity.' }}
+            {{ $category->description ?? __('Generational techniques passed down since antiquity.') }}
         </p>
     </div>
 </a>

@@ -17,23 +17,23 @@
                 <div class="lg:col-span-7 space-y-6">
                     <x-badge variant="primary" size="md">
                         <x-icon name="sparkles" class="w-3.5 h-3.5 text-[#C96A3D]" />
-                        <span>Bengal Artisan Sanctuary • Vol. 01</span>
+                        <span>{{ __('Bengal Artisan Sanctuary • Vol. 01') }}</span>
                     </x-badge>
                     
                     <h1 class="font-editorial-heading text-5xl sm:text-6xl lg:text-[72px] font-light text-[#1D1D1D] leading-[1.08] tracking-tight">
-                        Where Every Artifact Tells An Irreplaceable Story.
+                        {{ __('Where Every Artifact Tells An Irreplaceable Story.') }}
                     </h1>
 
                     <p class="font-editorial-body text-lg sm:text-xl text-[#555555] font-light max-w-2xl leading-relaxed">
-                        Centuries of handloom mastery, bell-metal forging, and botanical alchemy—curated for those who treasure authentic human provenance over industrial automation.
+                        {{ __('Centuries of handloom mastery, bell-metal forging, and botanical alchemy—curated for those who treasure authentic human provenance over industrial automation.') }}
                     </p>
 
                     <div class="pt-4 flex flex-wrap items-center gap-4">
                         <x-button href="{{ route('shop.index') }}" variant="primary" size="lg" iconRight="arrow-right">
-                            Explore Archival Pieces
+                            {{ __('Explore Archival Pieces') }}
                         </x-button>
                         <x-button href="{{ route('districts.index') }}" variant="secondary" size="lg" icon="map-pin">
-                            Explore By District
+                            {{ __('Explore By District') }}
                         </x-button>
                     </div>
 
@@ -41,15 +41,15 @@
                     <div class="pt-8 border-t border-[#E8E8E8] grid grid-cols-3 gap-6 text-xs text-[#555555]">
                         <div>
                             <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">100%</span>
-                            <span class="text-[#888888]">GI Provenance</span>
+                            <span class="text-[#888888]">{{ __('GI Provenance') }}</span>
                         </div>
                         <div>
                             <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">64</span>
-                            <span class="text-[#888888]">Bengal Districts</span>
+                            <span class="text-[#888888]">{{ __('Bengal Districts') }}</span>
                         </div>
                         <div>
                             <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">Direct</span>
-                            <span class="text-[#888888]">Artisan Royalty</span>
+                            <span class="text-[#888888]">{{ __('Artisan Royalty') }}</span>
                         </div>
                     </div>
                 </div>
@@ -65,10 +65,10 @@
                             fetchpriority="high"
                         >
                         <div class="absolute bottom-6 left-6 right-6 sorolata-glass rounded-[24px] p-4 text-[#1D1D1D] shadow-soft-md">
-                            <span class="text-[10px] uppercase tracking-widest text-[#214E34] font-bold block">Featured Archival Piece</span>
-                            <h4 class="font-editorial-heading text-xl font-light">Imperial Sonargaon Muslin Scarf</h4>
+                            <span class="text-[10px] uppercase tracking-widest text-[#214E34] font-bold block">{{ __('Featured Archival Piece') }}</span>
+                            <h4 class="font-editorial-heading text-xl font-light">{{ __('Imperial Sonargaon Muslin Scarf') }}</h4>
                             <div class="flex items-center justify-between mt-2 pt-2 border-t border-[#E8E8E8]/70 text-xs">
-                                <span class="text-[#888888]">Master Weaver Alimuddin</span>
+                                <span class="text-[#888888]">{{ __('Master Weaver Alimuddin') }}</span>
                                 <x-price price="18500" size="sm" />
                             </div>
                         </div>
@@ -84,28 +84,28 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-16">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">Curated Drops</span>
+                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Curated Drops') }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        Featured Collections
+                        {{ __('Featured Collections') }}
                     </h2>
                 </div>
                 <p class="text-xs uppercase tracking-widest text-[#888888] mt-4 sm:mt-0 font-medium">
-                    Curated for Living Room, Dining, Bedroom & Festival Gifting
+                    {{ __('Curated for Living Room, Dining, Bedroom & Festival Gifting') }}
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <x-collection-card 
-                    title="The Royal Muslin & Jamdani Drop"
-                    subtitle="300-count gossamer threads spun along the misty morning banks of the Shitalakshya River."
+                    :title="__('The Royal Muslin & Jamdani Drop')"
+                    :subtitle="__('300-count gossamer threads spun along the misty morning banks of the Shitalakshya River.')"
                     imageUrl="https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1200&auto=format&fit=crop"
-                    tag="Drop 01 • Sonargaon & Tangail"
+                    :tag="__('Drop 01 • Sonargaon & Tangail')"
                 />
                 <x-collection-card 
-                    title="Ancestral Bell-Metal & Kansa Tableware"
-                    subtitle="Hand-chiseled bronze alloys cast with ancient Mahasthangarh methods in Bogura."
+                    :title="__('Ancestral Bell-Metal & Kansa Tableware')"
+                    :subtitle="__('Hand-chiseled bronze alloys cast with ancient Mahasthangarh methods in Bogura.')"
                     imageUrl="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=1200&auto=format&fit=crop"
-                    tag="Drop 02 • Bogura Foundries"
+                    :tag="__('Drop 02 • Bogura Foundries')"
                 />
             </div>
         </div>
@@ -115,12 +115,12 @@
     <section class="py-24 bg-[#F8F6F2]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">Craft Taxonomies</span>
+                <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('Craft Taxonomies') }}</span>
                 <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                    Shop by Traditional Guild
+                    {{ __('Shop by Traditional Guild') }}
                 </h2>
                 <p class="text-sm text-[#555555] mt-3 leading-relaxed">
-                    Explore centuries-old techniques perfected across generations of master craftsmen.
+                    {{ __('Explore centuries-old techniques perfected across generations of master craftsmen.') }}
                 </p>
             </div>
 
@@ -137,13 +137,13 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">Loom Fresh</span>
+                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('Loom Fresh') }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        New Arrivals
+                        {{ __('New Arrivals') }}
                     </h2>
                 </div>
                 <div class="flex items-center gap-3 mt-4 sm:mt-0 text-xs text-[#888888]">
-                    <span>Touch-friendly horizontal scroll</span>
+                    <span>{{ __('Touch-friendly horizontal scroll') }}</span>
                     <span>→</span>
                 </div>
             </div>
@@ -164,14 +164,14 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-16">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">Collector Favorites</span>
+                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Collector Favorites') }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        Archival Best Sellers
+                        {{ __('Archival Best Sellers') }}
                     </h2>
                 </div>
                 <div class="mt-4 sm:mt-0">
                     <x-button href="{{ route('shop.index') }}" variant="ghost" size="sm" iconRight="arrow-right">
-                        View Entire Catalog
+                        {{ __('View Entire Catalog') }}
                     </x-button>
                 </div>
             </div>
@@ -189,16 +189,16 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="bg-[#F8F6F2] rounded-[32px] p-8 sm:p-14 border border-[#E8E8E8] grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-6 space-y-6">
-                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">Curator Distinction</span>
+                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('Curator Distinction') }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] leading-tight">
-                        Editor's Choice: Tangail Pure Mulberry Silk Jamdani
+                        {{ __("Editor's Choice: Tangail Pure Mulberry Silk Jamdani") }}
                     </h2>
                     <p class="font-editorial-body text-base text-[#555555] leading-relaxed">
-                        Hand-knotted supplementary weft geometric motifs on pure organic mulberry silk. Woven without paper stencils over six weeks by master weaver Rabeya Begum in Delduar.
+                        {{ __('Hand-knotted supplementary weft geometric motifs on pure organic mulberry silk. Woven without paper stencils over six weeks by master weaver Rabeya Begum in Delduar.') }}
                     </p>
                     <div class="pt-2 flex items-center gap-6">
                         <x-button href="{{ route('shop.index') }}" variant="primary" size="md">
-                            Acquire Editor's Selection →
+                            {{ __("Acquire Editor's Selection →") }}
                         </x-button>
                         <x-price price="24500" compareAtPrice="29000" size="lg" />
                     </div>
@@ -215,19 +215,19 @@
     <!-- SECTION 09: Story Banner (Editorial Manifesto) -->
     <section id="story-manifesto" class="py-28 bg-[#214E34] text-[#F8F6F2] relative overflow-hidden">
         <div class="max-w-5xl mx-auto px-6 lg:px-12 text-center space-y-8 relative z-10">
-            <span class="text-xs uppercase tracking-widest text-[#DE7D4E] font-bold">Our Heritage Manifesto</span>
+            <span class="text-xs uppercase tracking-widest text-[#DE7D4E] font-bold">{{ __('Our Heritage Manifesto') }}</span>
             
             <blockquote class="font-editorial-heading text-3xl sm:text-5xl lg:text-6xl font-light text-[#F8F6F2] leading-[1.15]">
-                "We do not mass produce. We do not compromise. We preserve the human breath in every thread, hammer strike, and brushstroke."
+                {{ __('"We do not mass produce. We do not compromise. We preserve the human breath in every thread, hammer strike, and brushstroke."') }}
             </blockquote>
 
             <p class="font-editorial-body text-base sm:text-lg text-[#F8F6F2]/80 max-w-2xl mx-auto leading-relaxed">
-                In an era dominated by synthetic fast-fashion and automated machine replicas, Sorolata provides sanctuary for endangered heritage arts. By ensuring fair, direct compensation to rural guilds, we keep Bengal's living cultural soul vibrant.
+                {{ __("In an era dominated by synthetic fast-fashion and automated machine replicas, Sorolata provides sanctuary for endangered heritage arts. By ensuring fair, direct compensation to rural guilds, we keep Bengal's living cultural soul vibrant.") }}
             </p>
 
             <div class="pt-4">
                 <x-button href="{{ route('pages.about') }}" variant="terracotta" size="lg">
-                    Read Complete Manifesto →
+                    {{ __('Read Complete Manifesto →') }}
                 </x-button>
             </div>
         </div>
@@ -238,13 +238,13 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-16">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">Geographical Provenance</span>
+                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('Geographical Provenance') }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        Shop by Heritage District
+                        {{ __('Shop by Heritage District') }}
                     </h2>
                 </div>
                 <a href="{{ route('districts.index') }}" class="text-xs uppercase tracking-widest text-[#214E34] font-bold hover:underline mt-4 sm:mt-0">
-                    View All 64 Districts →
+                    {{ __('View All 64 Districts →') }}
                 </a>
             </div>
 
@@ -262,12 +262,12 @@
     <section id="artisan-section" class="py-24 bg-white border-y border-[#E8E8E8]/70">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">Generational Masters</span>
+                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Generational Masters') }}</span>
                 <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                    The Hands Behind The Heirlooms
+                    {{ __('The Hands Behind The Heirlooms') }}
                 </h2>
                 <p class="text-sm text-[#555555] mt-3 leading-relaxed">
-                    Every artisan has a name, a studio, and an unbroken lineage of dedication.
+                    {{ __('Every artisan has a name, a studio, and an unbroken lineage of dedication.') }}
                 </p>
             </div>
 
@@ -300,8 +300,8 @@
                         </p>
 
                         <div class="pt-2 border-t border-[#E8E8E8] flex items-center justify-between text-xs">
-                            <span class="text-[#888888]">{{ $artisan->years_of_mastery }} Years Mastery</span>
-                            <a href="{{ route('artisan.show', $artisan->slug ?? $artisan->uuid) }}" class="text-[#214E34] font-semibold hover:underline">Profile →</a>
+                            <span class="text-[#888888]">{{ __(':count Years Mastery', ['count' => $artisan->years_of_mastery]) }}</span>
+                            <a href="{{ route('artisan.show', $artisan->slug ?? $artisan->uuid) }}" class="text-[#214E34] font-semibold hover:underline">{{ __('Profile →') }}</a>
                         </div>
                     </div>
                 @endforeach
@@ -314,13 +314,13 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-16">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">Fresh from the Ateliers</span>
+                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('Fresh from the Ateliers') }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        Trending Releases
+                        {{ __('Trending Releases') }}
                     </h2>
                 </div>
                 <p class="text-xs uppercase tracking-widest text-[#888888] mt-4 sm:mt-0 font-medium">
-                    Limited pieces ready for immediate international dispatch
+                    {{ __('Limited pieces ready for immediate international dispatch') }}
                 </p>
             </div>
 
@@ -336,30 +336,30 @@
     <section class="py-24 bg-white border-y border-[#E8E8E8]/70">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">Collector Reviews</span>
+                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Collector Reviews') }}</span>
                 <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                    Cherished by Discerning Collectors
+                    {{ __('Cherished by Discerning Collectors') }}
                 </h2>
                 <p class="text-sm text-[#555555] mt-3 leading-relaxed">
-                    Read unedited reviews from textile historians, interior designers, and global expat patrons.
+                    {{ __('Read unedited reviews from textile historians, interior designers, and global expat patrons.') }}
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <x-testimonial-card 
-                    quote="Unboxing the Sonargaon Muslin scarf in London was breathtaking. The signed provenance certificate and the unrefined botanical ecru texture is simply incomparable."
-                    author="Dr. Eleanor Vance"
-                    location="Textile Historian • Kensington, London"
+                    :quote="__('Unboxing the Sonargaon Muslin scarf in London was breathtaking. The signed provenance certificate and the unrefined botanical ecru texture is simply incomparable.')"
+                    :author="__('Dr. Eleanor Vance')"
+                    :location="__('Textile Historian • Kensington, London')"
                 />
                 <x-testimonial-card 
-                    quote="The hand-chiseled Bogura brass kettle serves as the crown jewel of our dining room. It holds heat with incredible acoustic resonance."
-                    author="Tariqul Rahman"
-                    location="Architect & Expat Collector • Toronto, Canada"
+                    :quote="__('The hand-chiseled Bogura brass kettle serves as the crown jewel of our dining room. It holds heat with incredible acoustic resonance.')"
+                    :author="__('Tariqul Rahman')"
+                    :location="__('Architect & Expat Collector • Toronto, Canada')"
                 />
                 <x-testimonial-card 
-                    quote="The Tangail Mulberry Jamdani is a museum-grade textile. Knowing the exact weaver who crafted it makes it our family's most valued heirloom."
-                    author="Farhana Chowdhury"
-                    location="Art Collector • Gulshan, Dhaka"
+                    :quote="__('The Tangail Mulberry Jamdani is a museum-grade textile. Knowing the exact weaver who crafted it makes it our family\'s most valued heirloom.')"
+                    :author="__('Farhana Chowdhury')"
+                    :location="__('Art Collector • Gulshan, Dhaka')"
                 />
             </div>
         </div>
@@ -370,13 +370,13 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-16">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">Visual Chronicle</span>
+                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('Visual Chronicle') }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
                         @SorolataHeritage
                     </h2>
                 </div>
                 <p class="text-xs text-[#888888] mt-4 sm:mt-0">
-                    Follow the daily rhythms of our rural weaving clusters
+                    {{ __('Follow the daily rhythms of our rural weaving clusters') }}
                 </p>
             </div>
 
@@ -396,7 +396,7 @@
                     <div class="group relative rounded-[24px] overflow-hidden aspect-square bg-[#E8E8E8] shadow-soft-xs hover:shadow-soft-md transition-luxury">
                         <img 
                             src="{{ $shot }}" 
-                            alt="Atelier Life in Bengal" 
+                            alt="{{ __('Atelier Life in Bengal') }}" 
                             class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                             loading="lazy"
                         >
@@ -412,28 +412,28 @@
     <!-- SECTION 15: Newsletter -->
     <section class="py-24 bg-white border-t border-[#E8E8E8]/70">
         <div class="max-w-3xl mx-auto px-6 lg:px-12 text-center space-y-6">
-            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">The Collector's Circle</span>
+            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __("The Collector's Circle") }}</span>
             
             <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D]">
-                Receive Intimate Archival Dispatches
+                {{ __('Receive Intimate Archival Dispatches') }}
             </h2>
 
             <p class="font-editorial-body text-base text-[#555555] leading-relaxed">
-                Join our private circle of patrons. We dispatch thoughtful notes when a generational weaver prepares a rare loom, with exclusive early access to one-off pieces.
+                {{ __('Join our private circle of patrons. We dispatch thoughtful notes when a generational weaver prepares a rare loom, with exclusive early access to one-off pieces.') }}
             </p>
 
             <form class="pt-4 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
                 <input 
                     type="email" 
-                    placeholder="Enter your email address..." 
+                    placeholder="{{ __('Enter your email address...') }}" 
                     class="flex-grow px-6 py-4 rounded-full border border-[#E8E8E8] bg-[#F8F6F2] text-sm text-[#1D1D1D] placeholder-[#888888] focus:outline-none focus:border-[#214E34] focus:ring-2 focus:ring-[#214E34]/10 transition-colors"
                     required
                 >
                 <x-button type="submit" variant="primary" size="md" class="whitespace-nowrap px-8">
-                    Join Collector Desk
+                    {{ __('Join Collector Desk') }}
                 </x-button>
             </form>
-            <p class="text-[11px] text-[#888888]">We honor your privacy. Unsubscribe at any moment with a single click.</p>
+            <p class="text-[11px] text-[#888888]">{{ __('We honor your privacy. Unsubscribe at any moment with a single click.') }}</p>
         </div>
     </section>
 
