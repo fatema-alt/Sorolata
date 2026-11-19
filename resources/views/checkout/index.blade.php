@@ -57,7 +57,13 @@
             </div>
         @endif
 
-        <form action="{{ route('checkout.process') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        @auth
+            <form id="checkout-logout-form" method="POST" action="{{ route('customer.logout') }}" class="hidden">
+                @csrf
+            </form>
+        @endauth
+
+        <form id="checkout-order-form" action="{{ route('checkout.process') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
             @csrf
 
             <!-- Left: Checkout Forms -->
@@ -82,12 +88,9 @@
                                 <x-icon name="user" class="w-4 h-4 text-[#214E34]" />
                                 <span>{{ __('Logged in as') }} <strong class="text-gray-900">{{ auth()->user()->name }}</strong> ({{ auth()->user()->email }})</span>
                             </div>
-                            <form method="POST" action="{{ route('customer.logout') }}" class="inline m-0">
-                                @csrf
-                                <button type="submit" class="text-xs text-[#C96A3D] font-bold hover:underline">
-                                    {{ __('Log out / Guest Checkout') }}
-                                </button>
-                            </form>
+                            <button type="submit" form="checkout-logout-form" class="text-xs text-[#C96A3D] font-bold hover:underline cursor-pointer">
+                                {{ __('Log out / Guest Checkout') }}
+                            </button>
                         </div>
                     @else
                         <div class="p-3.5 rounded-2xl bg-[#F8F6F2] border border-[#E8E8E8] text-xs text-[#555555] flex flex-wrap items-center justify-between gap-2">
@@ -415,7 +418,7 @@
                         <span class="text-2xl font-black text-[#A05A42]">৳<span x-text="grandTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})"></span></span>
                     </div>
 
-                    <button type="submit" class="w-full bg-[#214E34] hover:bg-[#163824] text-white py-4 rounded-2xl font-bold text-sm shadow-lg shadow-emerald-900/20 transition-all flex items-center justify-center space-x-2 cursor-pointer">
+                    <button type="submit" form="checkout-order-form" class="w-full bg-[#214E34] hover:bg-[#163824] text-white py-4 rounded-2xl font-bold text-sm shadow-lg shadow-emerald-900/20 transition-all flex items-center justify-center space-x-2 cursor-pointer">
                         <span>{{ __('Place Order & Proceed to Payment →') }}</span>
                     </button>
 
@@ -429,4 +432,19 @@
         </form>
 
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkoutForm = document.getElementById('checkout-order-form');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('invalid', function(e) {
+                    const firstInvalid = checkoutForm.querySelector(':invalid');
+                    if (firstInvalid) {
+                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstInvalid.focus();
+                    }
+                }, true);
+            }
+        });
+    </script>
 @endsection
