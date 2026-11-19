@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="none">
+    <rect width="120" height="40" rx="8" fill="#F7941D"/>
+    <!-- Nagad flame/curve emblem -->
+    <circle cx="22" cy="20" r="10" fill="#FFFFFF"/>
+    <path d="M18 20C18 16 22 13 24 12C23 15 26 17 26 20C26 23 23 26 20 26C18 26 18 22 18 20Z" fill="#ED1C24"/>
+    <circle cx="21" cy="21" r="2.5" fill="#F7941D"/>
+    <!-- Text Nagad -->
+    <text x="38" y="25" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="15" letter-spacing="-0.3">Nagad</text>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="none">
+    <rect width="120" height="40" rx="8" fill="#0054A6"/>
+    <!-- BRAC square grid emblem -->
+    <rect x="12" y="12" width="7" height="7" rx="1.5" fill="#FFFFFF"/>
+    <rect x="21" y="12" width="7" height="7" rx="1.5" fill="#F48120"/>
+    <rect x="12" y="21" width="7" height="7" rx="1.5" fill="#00A859"/>
+    <rect x="21" y="21" width="7" height="7" rx="1.5" fill="#FFFFFF"/>
+    <!-- Text BRAC -->
+    <text x="34" y="25" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="13" letter-spacing="0.5">BRAC BANK</text>
+</svg>

@@ -94,8 +94,8 @@ class CheckoutPageController extends Controller
             'customer_phone' => 'required|string|max:30',
             'delivery_address' => 'required|string|max:500',
             'city_district' => 'required|string|max:100',
-            'payment_gateway' => 'required|string',
             'gift_note' => 'nullable|string|max:500',
+            'payment_gateway' => 'nullable|string',
         ]);
 
         $bag = session()->get('sorolata_collector_bag', []);
@@ -128,12 +128,12 @@ class CheckoutPageController extends Controller
         $totalAmount = max(0.0, $subtotal - $discountAmount) + $shippingFee;
         $orderNumber = 'SRL-' . strtoupper(Str::random(8));
 
-        $gatewayInput = strtolower(trim($validated['payment_gateway']));
+        $gatewayInput = strtolower(trim((string) ($validated['payment_gateway'] ?? 'cash_on_delivery')));
         $isCod = in_array($gatewayInput, ['cod', 'cash_on_delivery'], true);
         $requireAdvanceFee = (bool) config('services.cod.require_advance_delivery_fee', true);
 
         // Advance Delivery Charge logic for Anti-fraud COD
-        $advanceCharge = ($isCod && $requireAdvanceFee) ? $shippingFee : 0.00;
+        $advanceCharge = $shippingFee;
         $paidAmount = 0.00;
         $dueAmount = $totalAmount;
 
@@ -208,9 +208,7 @@ class CheckoutPageController extends Controller
             'order_id' => $order->id,
             'status' => $order->status->value,
             'actor_type' => 'customer',
-            'note' => $isCod && $requireAdvanceFee
-                ? "Order placed with Cash on Delivery. Advance delivery charge of ৳{$advanceCharge} required to confirm parcel dispatch."
-                : 'Order placed through storefront one-page checkout.',
+            'note' => 'Order placed through storefront. Proceeding to payment instruction and verification.',
             'customer_notified' => true,
         ]);
 
@@ -233,30 +231,6 @@ class CheckoutPageController extends Controller
             }
         } catch (\Throwable $e) {
             Log::warning("Order confirmation email failed: " . $e->getMessage());
-        }
-
-        // Route through Payment Gateway (Manual Instructions or Automated Gateway)
-        try {
-            if (in_array($gatewayInput, ['brac_bank', 'dbbl', 'bank_transfer'], true) || ($isCod && $requireAdvanceFee)) {
-                return redirect()->route('payment.manual.instruction', ['order' => $orderNumber]);
-            }
-
-            // If merchant credentials not yet configured in .env, seamlessly use manual payment instruction
-            $bkashConfig = config('services.bkash');
-            $hasBkashApi = !empty($bkashConfig['app_key']) && !empty($bkashConfig['app_secret']);
-            if (in_array($gatewayInput, ['bkash', 'nagad'], true) && !$hasBkashApi) {
-                return redirect()->route('payment.manual.instruction', ['order' => $orderNumber]);
-            }
-
-            $driverKey = $isCod && $requireAdvanceFee ? 'bkash' : $gatewayInput;
-            $gatewayDriver = $this->paymentManager->driver($driverKey);
-            $initiation = $gatewayDriver->initiatePayment($order);
-
-            if (!empty($initiation->redirectUrl)) {
-                return redirect()->away($initiation->redirectUrl);
-            }
-        } catch (\Throwable $e) {
-            // Fallback to manual instruction
         }
 
         return redirect()->route('payment.manual.instruction', ['order' => $orderNumber]);

@@ -113,7 +113,7 @@
                         </label>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-gray-300 mb-1">bKash Mobile Number</label>
                             <input type="text" name="manual_bkash_number" value="{{ $settings['manual_bkash_number'] ?? '01711002233' }}" 
@@ -122,6 +122,12 @@
                         <div>
                             <label class="block text-xs font-semibold text-gray-300 mb-1">Account Type</label>
                             <input type="text" name="manual_bkash_type" value="{{ $settings['manual_bkash_type'] ?? 'Personal (Send Money)' }}" 
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#E2136E] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">bKash Logo URL (Optional)</label>
+                            <input type="text" name="manual_bkash_logo" value="{{ $settings['manual_bkash_logo'] ?? '' }}" 
+                                   placeholder="Default: /images/payments/bkash.svg"
                                    class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#E2136E] focus:outline-none">
                         </div>
                     </div>
@@ -147,7 +153,7 @@
                         </label>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-gray-300 mb-1">Nagad Mobile Number</label>
                             <input type="text" name="manual_nagad_number" value="{{ $settings['manual_nagad_number'] ?? '01811002233' }}" 
@@ -156,6 +162,12 @@
                         <div>
                             <label class="block text-xs font-semibold text-gray-300 mb-1">Account Type</label>
                             <input type="text" name="manual_nagad_type" value="{{ $settings['manual_nagad_type'] ?? 'Personal (Send Money)' }}" 
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#F7941D] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Nagad Logo URL (Optional)</label>
+                            <input type="text" name="manual_nagad_logo" value="{{ $settings['manual_nagad_logo'] ?? '' }}" 
+                                   placeholder="Default: /images/payments/nagad.svg"
                                    class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#F7941D] focus:outline-none">
                         </div>
                     </div>
@@ -212,6 +224,12 @@
                             <input type="text" name="manual_brac_routing_number" value="{{ $settings['manual_brac_routing_number'] ?? '060261726' }}" 
                                    class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 font-mono focus:border-blue-500 focus:outline-none">
                         </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">BRAC Bank Logo URL (Optional)</label>
+                            <input type="text" name="manual_brac_logo" value="{{ $settings['manual_brac_logo'] ?? '' }}" 
+                                   placeholder="Default: /images/payments/brac_bank.svg"
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-blue-500 focus:outline-none">
+                        </div>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-300 mb-1">Instructions for Customer</label>
@@ -255,6 +273,12 @@
                             <label class="block text-xs font-semibold text-gray-300 mb-1">Routing Number</label>
                             <input type="text" name="manual_dbbl_routing_number" value="{{ $settings['manual_dbbl_routing_number'] ?? '090261345' }}" 
                                    class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 font-mono focus:border-orange-500 focus:outline-none">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Dutch-Bangla / Rocket Logo URL (Optional)</label>
+                            <input type="text" name="manual_dbbl_logo" value="{{ $settings['manual_dbbl_logo'] ?? '' }}" 
+                                   placeholder="Default: /images/payments/rocket.svg"
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-orange-500 focus:outline-none">
                         </div>
                     </div>
                     <div>

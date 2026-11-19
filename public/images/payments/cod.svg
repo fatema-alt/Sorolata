@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="none">
+    <rect width="120" height="40" rx="8" fill="#214E34"/>
+    <!-- Box parcel icon -->
+    <path d="M14 15L22 11L30 15L22 19L14 15Z" fill="#F8F6F2" stroke="#FFFFFF" stroke-width="0.5"/>
+    <path d="M14 16.5L22 20.5V29L14 25V16.5Z" fill="#E8E2D5"/>
+    <path d="M30 16.5L22 20.5V29L30 25V16.5Z" fill="#C9BA9B"/>
+    <path d="M22 19.5V29" stroke="#214E34" stroke-width="0.75"/>
+    <!-- Text COD -->
+    <text x="36" y="24" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="12" letter-spacing="0.5">CASH ON DEL.</text>
+</svg>

@@ -69,8 +69,34 @@
                         <h2 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">
                             {{ __('1. Collector Contact') }}
                         </h2>
-                        <span class="text-xs text-[#888888]">{{ __('Guest Checkout Active') }}</span>
+                        @auth
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100/80 text-[#214E34]">{{ __('Account Verified') }}</span>
+                        @else
+                            <span class="text-xs text-[#888888]">{{ __('Guest Checkout') }}</span>
+                        @endauth
                     </div>
+
+                    @auth
+                        <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#214E34] text-xs flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <x-icon name="user" class="w-4 h-4 text-[#214E34]" />
+                                <span>{{ __('Logged in as') }} <strong class="text-gray-900">{{ auth()->user()->name }}</strong> ({{ auth()->user()->email }})</span>
+                            </div>
+                            <form method="POST" action="{{ route('customer.logout') }}" class="inline m-0">
+                                @csrf
+                                <button type="submit" class="text-xs text-[#C96A3D] font-bold hover:underline">
+                                    {{ __('Log out / Guest Checkout') }}
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <div class="p-3.5 rounded-2xl bg-[#F8F6F2] border border-[#E8E8E8] text-xs text-[#555555] flex flex-wrap items-center justify-between gap-2">
+                            <span>{{ __('Checking out as Guest. Fill in your details below.') }}</span>
+                            <a href="{{ route('login') }}" class="text-[#214E34] font-bold hover:underline">
+                                {{ __('Already registered? Log in →') }}
+                            </a>
+                        </div>
+                    @endauth
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="space-y-1">
@@ -79,7 +105,7 @@
                                 type="text" 
                                 name="customer_name" 
                                 value="{{ old('customer_name', auth()->user()?->name ?? '') }}" 
-                                placeholder="{{ __('e.g. Farhan Ahmed') }}"
+                                placeholder="{{ __('Enter your full name') }}"
                                 class="w-full text-xs p-3.5 rounded-xl border border-[#E8E8E8] bg-[#F8F6F2] focus:outline-none focus:border-[#214E34] focus:bg-white font-sans"
                                 required
                             >
@@ -90,7 +116,7 @@
                                 type="email" 
                                 name="customer_email" 
                                 value="{{ old('customer_email', auth()->user()?->email ?? '') }}" 
-                                placeholder="name@example.com"
+                                placeholder="{{ __('Enter email address') }}"
                                 class="w-full text-xs p-3.5 rounded-xl border border-[#E8E8E8] bg-[#F8F6F2] focus:outline-none focus:border-[#214E34] focus:bg-white font-sans"
                                 required
                             >
@@ -248,104 +274,49 @@
                     </div>
                 </div>
 
-                <!-- 3. Payment Method Selection -->
-                <div class="bg-white rounded-[32px] p-8 border border-[#E8E8E8] shadow-soft-xs space-y-6">
+                <!-- 3. Payment Method (Selected on Next Page) -->
+                <div class="bg-white rounded-[32px] p-8 border border-[#E8E8E8] shadow-soft-xs space-y-4">
                     <div class="flex items-center justify-between">
                         <h2 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">
-                            {{ __('3. Payment Selection & Gateway') }}
+                            {{ __('3. Payment Selection') }}
                         </h2>
                         <span class="text-xs text-emerald-800 bg-emerald-100/80 px-2.5 py-1 rounded-full font-medium">{{ __('SSL / 256-bit Encrypted') }}</span>
                     </div>
 
-                    <div class="space-y-3">
-                        <!-- Option 1: Mobile Banking (bKash & Nagad) -->
-                        <label 
-                            :class="paymentMethod === 'bkash' ? 'border-[#E2136E] bg-pink-50/40 ring-1 ring-[#E2136E]' : 'border-[#E8E8E8] hover:border-pink-300'"
-                            class="flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer"
-                        >
-                            <div class="flex items-center gap-3">
-                                <input type="radio" name="payment_gateway" value="bkash" x-model="paymentMethod" class="w-4 h-4 text-[#E2136E] focus:ring-[#E2136E]">
-                                <div>
-                                    <div class="text-sm font-bold text-gray-900 flex items-center gap-2">
-                                        <span>{{ __('Mobile Banking (bKash & Nagad)') }}</span>
-                                        <span class="bg-[#E2136E] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">{{ __('Popular') }}</span>
-                                    </div>
-                                    <p class="text-xs text-gray-600 mt-0.5">{{ __('Send money to bKash or Nagad account and confirm order with TrxID.') }}</p>
-                                </div>
+                    <div class="p-5 rounded-2xl bg-[#F8F6F2] border border-[#E8E8E8] space-y-3">
+                        <div class="flex items-start gap-3">
+                            <div class="p-2 rounded-xl bg-white border border-[#E8E8E8] text-[#214E34] shrink-0">
+                                <x-icon name="shield-check" class="w-5 h-5 text-[#214E34]" />
                             </div>
-                            <div class="flex items-center gap-1 font-bold text-xs">
-                                <span class="text-[#E2136E]">bKash</span>
-                                <span class="text-gray-300">/</span>
-                                <span class="text-[#F7941D]">Nagad</span>
+                            <div class="space-y-1">
+                                <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">
+                                    {{ __('Choose Payment Method on Next Step') }}
+                                </h3>
+                                <p class="text-xs text-gray-600 leading-relaxed font-sans">
+                                    {{ __('You will choose your payment method (bKash, Nagad, BRAC Bank, DBBL/Rocket, or Cash on Delivery) on the payment page immediately after clicking proceed.') }}
+                                </p>
                             </div>
-                        </label>
+                        </div>
 
-                        <!-- Option 2: BRAC Bank Transfer -->
-                        <label 
-                            :class="paymentMethod === 'brac_bank' ? 'border-blue-600 bg-blue-50/40 ring-1 ring-blue-600' : 'border-[#E8E8E8] hover:border-blue-300'"
-                            class="flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer"
-                        >
-                            <div class="flex items-center gap-3">
-                                <input type="radio" name="payment_gateway" value="brac_bank" x-model="paymentMethod" class="w-4 h-4 text-blue-600 focus:ring-blue-600">
-                                <div>
-                                    <div class="text-sm font-bold text-gray-900 flex items-center gap-2">
-                                        <span>{{ __('BRAC Bank Transfer') }}</span>
-                                        <span class="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">{{ __('Bank Wire') }}</span>
-                                    </div>
-                                    <p class="text-xs text-gray-600 mt-0.5">{{ __('Transfer to BRAC Bank account (Astha App or branch deposit) and enter reference.') }}</p>
-                                </div>
-                            </div>
-                            <span class="text-sm font-bold text-blue-700">BRAC Bank</span>
-                        </label>
-
-                        <!-- Option 3: Dutch-Bangla Bank (DBBL) -->
-                        <label 
-                            :class="paymentMethod === 'dbbl' ? 'border-orange-600 bg-orange-50/40 ring-1 ring-orange-600' : 'border-[#E8E8E8] hover:border-orange-300'"
-                            class="flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer"
-                        >
-                            <div class="flex items-center gap-3">
-                                <input type="radio" name="payment_gateway" value="dbbl" x-model="paymentMethod" class="w-4 h-4 text-orange-600 focus:ring-orange-600">
-                                <div>
-                                    <div class="text-sm font-bold text-gray-900 flex items-center gap-2">
-                                        <span>{{ __('Dutch-Bangla Bank (DBBL / Rocket)') }}</span>
-                                    </div>
-                                    <p class="text-xs text-gray-600 mt-0.5">{{ __('Transfer to DBBL via NexusPay app, Rocket, or any bank account.') }}</p>
-                                </div>
-                            </div>
-                            <span class="text-sm font-bold text-orange-700">DBBL</span>
-                        </label>
-
-                        <!-- Option 3: Cash On Delivery with Advance Delivery Charge -->
-                        <label 
-                            :class="paymentMethod === 'cash_on_delivery' ? 'border-amber-600 bg-amber-50/40 ring-1 ring-amber-600' : 'border-[#E8E8E8] hover:border-amber-300'"
-                            class="flex flex-col p-4 rounded-2xl border transition-all cursor-pointer"
-                        >
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="payment_gateway" value="cash_on_delivery" x-model="paymentMethod" class="w-4 h-4 text-amber-600 focus:ring-amber-600">
-                                    <div>
-                                        <div class="text-sm font-bold text-gray-900 flex items-center gap-2">
-                                            <span>{{ __('Cash on Delivery (COD - Advance Delivery Charge)') }}</span>
-                                            <span class="bg-amber-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">{{ __('Protected') }}</span>
-                                        </div>
-                                        <p class="text-xs text-gray-600 mt-0.5">{{ __('Pay when product is delivered to your doorstep.') }}</p>
-                                    </div>
-                                </div>
-                                <span class="text-xl">📦</span>
-                            </div>
-
-                            <!-- COD Anti-Fraud Policy Box -->
-                            <div x-show="paymentMethod === 'cash_on_delivery'" class="mt-3 pt-3 border-t border-amber-200/60 text-xs text-amber-900 space-y-1">
-                                <div class="flex items-start gap-1.5">
-                                    <span class="text-amber-700 font-bold">{{ __('🛡️ Policy:') }}</span>
-                                    <span>{{ __('To prevent spam orders, only the courier delivery charge (:charge) must be paid in advance via bKash/Nagad.', ['charge' => '৳']) }}</span>
-                                </div>
-                                <div class="flex items-center justify-between font-semibold text-[11px] pt-1 text-gray-700">
-                                    <span>{{ __('Payable Now (Advance Charge):') }} <span class="text-[#E2136E] font-bold">৳<span x-text="shippingFee"></span></span></span>
-                                    <span>{{ __('Due Upon Delivery:') }} <span class="text-amber-800 font-bold">৳<span x-text="subtotal.toLocaleString()"></span></span></span>
-                                </div>
-                            </div>
-                        </label>
+                        <!-- Available Methods Badges / Logos -->
+                        <div class="pt-3 border-t border-[#E8E8E8] flex flex-wrap items-center gap-2">
+                            <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mr-1">{{ __('Available:') }}</span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-[#E8E8E8] text-xs font-bold text-[#E2136E] shadow-2xs">
+                                <span class="w-2 h-2 rounded-full bg-[#E2136E]"></span> bKash
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-[#E8E8E8] text-xs font-bold text-[#F7941D] shadow-2xs">
+                                <span class="w-2 h-2 rounded-full bg-[#F7941D]"></span> Nagad
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-[#E8E8E8] text-xs font-bold text-[#0054A6] shadow-2xs">
+                                <span class="w-2 h-2 rounded-full bg-[#0054A6]"></span> BRAC Bank
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-[#E8E8E8] text-xs font-bold text-[#8C3494] shadow-2xs">
+                                <span class="w-2 h-2 rounded-full bg-[#8C3494]"></span> Rocket
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-[#E8E8E8] text-xs font-bold text-[#214E34] shadow-2xs">
+                                <span class="w-2 h-2 rounded-full bg-[#214E34]"></span> Cash on Delivery
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -392,18 +363,10 @@
                             <span>{{ __('Delivery Charge') }} (<span x-text="isDhaka ? 'ঢাকা' : 'ঢাকার বাইরে'"></span>)</span>
                             <span class="text-[#2D6A4F] font-semibold">৳<span x-text="shippingFee"></span>.00</span>
                         </div>
-                        <template x-if="paymentMethod === 'cash_on_delivery'">
-                            <div class="pt-2 border-t border-dashed border-amber-300 space-y-1">
-                                <div class="flex justify-between text-pink-700 font-bold">
-                                    <span>{{ __('Payable Now (Advance Courier Fee):') }}</span>
-                                    <span>৳<span x-text="shippingFee"></span>.00</span>
-                                </div>
-                                <div class="flex justify-between text-amber-800 font-medium">
-                                    <span>{{ __('Due on Delivery:') }}</span>
-                                    <span>৳<span x-text="dueOnDelivery.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})"></span></span>
-                                </div>
-                            </div>
-                        </template>
+                        <div class="pt-2 border-t border-dashed border-[#E8E8E8] text-xs text-gray-500 flex items-center justify-between">
+                            <span>{{ __('Payment Method:') }}</span>
+                            <span class="text-[#214E34] font-medium">{{ __('Choose on next step') }}</span>
+                        </div>
                     </div>
 
                     <!-- Coupon / Promo Section -->
@@ -452,9 +415,8 @@
                         <span class="text-2xl font-black text-[#A05A42]">৳<span x-text="grandTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})"></span></span>
                     </div>
 
-                    <button type="submit" class="w-full bg-[#214E34] hover:bg-[#163824] text-white py-4 rounded-2xl font-bold text-sm shadow-lg shadow-emerald-900/20 transition-all flex items-center justify-center space-x-2">
-                        <span x-text="paymentMethod === 'cash_on_delivery' ? @json(__('Pay advance charge & confirm order'), JSON_UNESCAPED_UNICODE) : @json(__('Complete payment & confirm order'), JSON_UNESCAPED_UNICODE)"></span>
-                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    <button type="submit" class="w-full bg-[#214E34] hover:bg-[#163824] text-white py-4 rounded-2xl font-bold text-sm shadow-lg shadow-emerald-900/20 transition-all flex items-center justify-center space-x-2 cursor-pointer">
+                        <span>{{ __('Place Order & Proceed to Payment →') }}</span>
                     </button>
 
                     <div class="text-[11px] text-center text-[#888888] space-y-1 pt-1">

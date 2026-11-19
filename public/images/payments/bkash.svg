@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="none">
+    <rect width="120" height="40" rx="8" fill="#E2136E"/>
+    <!-- bKash bird mark -->
+    <path d="M22 8L31 16L24 23L22 8Z" fill="#FFFFFF"/>
+    <path d="M22 8L15 20L22 17L22 8Z" fill="#F8A5C2"/>
+    <path d="M24 23L20 28L18 21L24 23Z" fill="#FFFFFF"/>
+    <path d="M31 16L34 22L26 21L31 16Z" fill="#F8A5C2"/>
+    <!-- Text bKash -->
+    <text x="40" y="25" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" letter-spacing="-0.5">bKash</text>
+</svg>

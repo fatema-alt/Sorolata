@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentGateway;
 use App\Enums\PaymentStatus;
 use App\Models\Order;
 use App\Models\OrderTimeline;
@@ -251,7 +252,22 @@ class PaymentController extends Controller
         $details['customer_notes'] = $validated['customer_notes'] ?? null;
         $details['submitted_at'] = now()->toIso8601String();
 
+        $methodKey = strtolower(trim($validated['payment_method']));
+        $gateway = match ($methodKey) {
+            'bkash' => PaymentGateway::BKASH,
+            'nagad' => PaymentGateway::NAGAD,
+            'brac', 'brac_bank' => PaymentGateway::BRAC_BANK,
+            'dbbl', 'rocket' => PaymentGateway::DBBL,
+            'cash_on_delivery', 'cod' => PaymentGateway::COD,
+            default => PaymentGateway::tryFrom($methodKey) ?? PaymentGateway::COD,
+        };
+
+        $isCod = $request->input('payment_type') === 'cod' || $gateway === PaymentGateway::COD;
+        $advanceCharge = $isCod ? (float) $orderModel->shipping_fee : 0.00;
+
         $orderModel->update([
+            'payment_gateway' => $gateway,
+            'advance_delivery_charge' => $advanceCharge,
             'transaction_id' => $validated['transaction_id'],
             'payment_details' => $details,
         ]);
