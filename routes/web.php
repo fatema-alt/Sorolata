@@ -42,6 +42,28 @@ Route::any('/sorolata/{fallbackPlaceholder}', function (string $fallbackPlacehol
 Route::get('/public', fn() => redirect('/', 301));
 Route::get('/sorolata', fn() => redirect('/', 301));
 
+// Direct Storage Delivery Fallback (Bypasses missing symlink on cPanel/Hostinger shared hosting)
+Route::get('/storage/{path}', function (string $path) {
+    $cleanPath = str_replace(['..', "\0"], '', $path);
+    $cleanPath = ltrim($cleanPath, '/\\');
+
+    $fullPath = storage_path('app/public/' . $cleanPath);
+    if (file_exists($fullPath) && is_file($fullPath)) {
+        return response()->file($fullPath, [
+            'Cache-Control' => 'public, max-age=31536000',
+        ]);
+    }
+
+    $altPath = public_path('storage/' . $cleanPath);
+    if (file_exists($altPath) && is_file($altPath)) {
+        return response()->file($altPath, [
+            'Cache-Control' => 'public, max-age=31536000',
+        ]);
+    }
+
+    abort(404);
+})->where('path', '.*')->name('storage.delivery');
+
 // SEO XML Sitemap
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 

@@ -90,7 +90,7 @@
                                 <div class="flex items-center space-x-3">
                                     <div class="w-10 h-10 rounded-lg bg-[#222733] border border-[#2d3444] overflow-hidden shrink-0 flex items-center justify-center text-gray-500 font-mono text-[10px]">
                                         @if ($p->media->first())
-                                            <img src="{{ $p->media->first()->file_path }}" alt="" class="w-full h-full object-cover">
+                                            <img src="{{ $p->media->first()->url }}" alt="{{ $p->title }}" class="w-full h-full object-cover">
                                         @else
                                             SRL
                                         @endif

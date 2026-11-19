@@ -259,6 +259,17 @@ class AdminProductController extends Controller
             $path = $file->store('products', 'public');
             $filePath = '/storage/' . $path;
 
+            // Redundant copy directly to public/storage for shared hosting environments without symlink support
+            try {
+                $targetDir = public_path('storage/' . dirname($path));
+                if (! is_dir($targetDir)) {
+                    @mkdir($targetDir, 0755, true);
+                }
+                @copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
+            } catch (\Throwable) {
+                // Fail silently if directory creation or copying is restricted
+            }
+
             $media = MediaAsset::create([
                 'uuid' => (string) Str::uuid(),
                 'attachable_type' => Product::class,
@@ -316,6 +327,14 @@ class AdminProductController extends Controller
             ->where('id', $mediaId)
             ->firstOrFail();
 
+        // Remove disk files if local
+        if (!empty($media->file_path) && str_starts_with($media->file_path, '/storage/')) {
+            $rel = substr($media->file_path, strlen('/storage/'));
+            @unlink(storage_path('app/public/' . $rel));
+            @unlink(public_path('storage/' . $rel));
+        }
+
+        MediaAttachment::where('media_asset_id', $media->id)->delete();
         $media->delete();
 
         return back()->with('success', 'Image removed successfully.');

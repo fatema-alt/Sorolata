@@ -289,7 +289,7 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
                         @foreach($product->media as $mediaItem)
                             <div class="relative group aspect-square rounded-2xl overflow-hidden border border-[#282d37] bg-[#0f1115] shadow-xs">
-                                <img src="{{ $mediaItem->file_path }}" alt="{{ $mediaItem->alt_text }}" class="w-full h-full object-cover">
+                                <img src="{{ $mediaItem->url }}" alt="{{ $mediaItem->alt_text }}" class="w-full h-full object-cover" loading="lazy">
                                 @if($loop->first)
                                     <span class="absolute top-1.5 left-1.5 bg-[#214E34] text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
                                         Primary Hero

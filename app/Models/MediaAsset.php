@@ -45,4 +45,21 @@ class MediaAsset extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * Get accessible web URL for this media asset.
+     */
+    public function getUrlAttribute(): string
+    {
+        $path = (string) ($this->file_path ?? '');
+        if (empty($path)) {
+            return '';
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        return url('/' . ltrim($path, '/'));
+    }
 }
