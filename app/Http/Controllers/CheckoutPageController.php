@@ -22,6 +22,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class CheckoutPageController extends Controller
@@ -136,7 +137,7 @@ class CheckoutPageController extends Controller
         $paidAmount = 0.00;
         $dueAmount = $totalAmount;
 
-        $order = Order::create([
+        $orderData = [
             'uuid' => (string) Str::uuid(),
             'order_number' => $orderNumber,
             'user_id' => auth()->id() ?? null,
@@ -151,7 +152,6 @@ class CheckoutPageController extends Controller
             'paid_amount' => $paidAmount,
             'due_amount' => $dueAmount,
             'currency' => Currency::BDT,
-            'locale' => app()->getLocale(),
             'status' => OrderStatus::PENDING,
             'payment_status' => PaymentStatus::UNPAID,
             'payment_gateway' => PaymentGateway::tryFrom($gatewayInput) ?? PaymentGateway::COD,
@@ -163,7 +163,13 @@ class CheckoutPageController extends Controller
                 'locale' => app()->getLocale(),
             ],
             'notes' => $validated['gift_note'] ?? null,
-        ]);
+        ];
+
+        if (Schema::hasColumn('orders', 'locale')) {
+            $orderData['locale'] = app()->getLocale();
+        }
+
+        $order = Order::create($orderData);
 
         foreach ($products as $p) {
             $qty = $bag[$p->id] ?? 1;
