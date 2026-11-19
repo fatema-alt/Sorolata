@@ -986,5 +986,13 @@
     "⚠️ Submitting this request will temporarily pause order processing while our curator team reviews it and gets in touch with you.": "⚠️ অনুরোধটি জমা দিলে আমাদের কিউরেটর দল তাৎক্ষণিকভাবে অর্ডারটির প্রসেসিং সাময়িক স্থগিত করবে এবং আপনার সাথে যোগাযোগ করবে।",
     "🔒 256-bit Bank Grade Security": "🔒 ২৫৬-বিট ব্যাংক-গ্রেড নিরাপত্তা",
     "🔒 Authenticity & Heritage Guarantee": "🔒 মৌলিকতা ও ঐতিহ্যের নিশ্চয়তা",
-    "🛡️ Policy:": "🛡️ নীতিমালা:"
+    "🛡️ Policy:": "🛡️ নীতিমালা:",
+    "Bank transfer or Rocket": "ব্যাংক ট্রান্সফার বা রকেট",
+    "Pay with BRAC Bank": "ব্র্যাক ব্যাংকে পরিশোধ করুন",
+    "Pay with Dutch-Bangla / Rocket": "ডাচ-বাংলা / রকেটে পরিশোধ করুন",
+    "Anything we should know about this payment": "পেমেন্ট সম্পর্কে কোনো তথ্য থাকলে লিখুন",
+    "Total amount to pay now": "এখন মোট প্রদেয় পরিমাণ",
+    "Pay full amount": "সম্পূর্ণ মূল্য পরিশোধ",
+    "COD (Advance Fee)": "ক্যাশ অন ডেলিভারি (অগ্রিম ফি)",
+    "Pay Full Amount": "সম্পূর্ণ মূল্য পরিশোধ"
 }

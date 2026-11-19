@@ -31,10 +31,14 @@ class SSLCommerzGateway implements PaymentGatewayContract
 
     public function initiatePayment(Order $order, array $payload = []): PaymentInitiationDTO
     {
-        $config = config('services.sslcommerz');
-        $storeId = $config['store_id'] ?? '';
-        $storePassword = $config['store_password'] ?? '';
-        $apiUrl = $config['api_url'] ?? 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php';
+        $settings = \App\Models\AdminSetting::all()->pluck('value', 'key')->toArray();
+        $storeId = $settings['sslcommerz_store_id'] ?? config('services.sslcommerz.store_id') ?? '';
+        $storePassword = $settings['sslcommerz_store_password'] ?? config('services.sslcommerz.store_password') ?? '';
+        $mode = $settings['sslcommerz_mode'] ?? config('services.sslcommerz.mode') ?? 'sandbox';
+
+        $apiUrl = $mode === 'live' 
+            ? 'https://securepay.sslcommerz.com/gwprocess/v4/api.php'
+            : (config('services.sslcommerz.api_url') ?? 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php');
 
         $payableAmount = $order->advance_delivery_charge > 0 
             ? (float) $order->advance_delivery_charge 
@@ -109,10 +113,14 @@ class SSLCommerzGateway implements PaymentGatewayContract
             );
         }
 
-        $config = config('services.sslcommerz');
-        $storeId = $config['store_id'] ?? '';
-        $storePassword = $config['store_password'] ?? '';
-        $validateUrl = $config['validate_url'] ?? 'https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php';
+        $settings = \App\Models\AdminSetting::all()->pluck('value', 'key')->toArray();
+        $storeId = $settings['sslcommerz_store_id'] ?? config('services.sslcommerz.store_id') ?? '';
+        $storePassword = $settings['sslcommerz_store_password'] ?? config('services.sslcommerz.store_password') ?? '';
+        $mode = $settings['sslcommerz_mode'] ?? config('services.sslcommerz.mode') ?? 'sandbox';
+
+        $validateUrl = $mode === 'live'
+            ? 'https://securepay.sslcommerz.com/validator/api/validationserverAPI.php'
+            : (config('services.sslcommerz.validate_url') ?? 'https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php');
 
         // If real validation ID and credentials present, validate with SSLCommerz server
         if (!empty($storeId) && !empty($storePassword) && !empty($valId)) {

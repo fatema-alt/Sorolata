@@ -51,7 +51,7 @@
         </button>
     </div>
 
-    <form method="POST" action="{{ route('admin.settings.update') }}" class="space-y-6">
+    <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
 
@@ -82,6 +82,33 @@
                     <label class="block text-xs font-semibold text-gray-300 mb-1">Base Currency</label>
                     <input type="text" name="currency" value="{{ $settings['currency'] ?? 'BDT' }}" readonly 
                            class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-gray-400 px-3 py-2.5 cursor-not-allowed">
+                </div>
+            </div>
+
+            <!-- Store Brand Logo Upload -->
+            <div class="pt-3 border-t border-[#252a36]">
+                <label class="block text-xs font-semibold text-gray-300 mb-2">Store Brand Logo (স্টোর লোগো)</label>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    @if(!empty($settings['store_logo']))
+                        <div class="h-12 px-3 py-1 rounded-xl bg-[#0f1115] border border-[#282d37] flex items-center justify-center shrink-0">
+                            <img src="{{ $settings['store_logo'] }}" alt="Store Logo" class="h-8 max-w-[140px] object-contain">
+                        </div>
+                    @endif
+                    <div class="flex-1 space-y-2 w-full">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] text-gray-400 mb-1">Upload Logo from Device</label>
+                                <input type="file" name="store_logo_file" accept="image/*" 
+                                       class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3 py-2 text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:bg-[#222733] file:text-white cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-gray-400 mb-1">Or Logo URL</label>
+                                <input type="text" name="store_logo" value="{{ $settings['store_logo'] ?? '' }}" 
+                                       placeholder="e.g. /images/logo.png" 
+                                       class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none font-mono">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -128,7 +155,18 @@
                             <label class="block text-xs font-semibold text-gray-300 mb-1">bKash Logo URL (Optional)</label>
                             <input type="text" name="manual_bkash_logo" value="{{ $settings['manual_bkash_logo'] ?? '' }}" 
                                    placeholder="Default: /images/payments/bkash.svg"
-                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#E2136E] focus:outline-none">
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#E2136E] focus:outline-none font-mono">
+                        </div>
+                    </div>
+                    <!-- bKash Logo Upload from Device -->
+                    <div class="pt-2 border-t border-[#1b202c] flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                        <div class="w-12 h-8 rounded-lg bg-[#0f1115] border border-[#282d37] flex items-center justify-center shrink-0">
+                            <img src="{{ !empty($settings['manual_bkash_logo']) ? $settings['manual_bkash_logo'] : asset('images/payments/bkash.svg') }}" alt="bKash" class="h-5 w-auto object-contain">
+                        </div>
+                        <div class="flex-1 w-full">
+                            <label class="block text-[11px] text-gray-400 mb-1">Upload Custom bKash Logo (device থেকে ছবি সিলেক্ট করুন):</label>
+                            <input type="file" name="manual_bkash_logo_file" accept="image/*" 
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3 py-1.5 text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:bg-[#222733] file:text-white cursor-pointer">
                         </div>
                     </div>
                     <div>
@@ -168,7 +206,18 @@
                             <label class="block text-xs font-semibold text-gray-300 mb-1">Nagad Logo URL (Optional)</label>
                             <input type="text" name="manual_nagad_logo" value="{{ $settings['manual_nagad_logo'] ?? '' }}" 
                                    placeholder="Default: /images/payments/nagad.svg"
-                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#F7941D] focus:outline-none">
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#F7941D] focus:outline-none font-mono">
+                        </div>
+                    </div>
+                    <!-- Nagad Logo Upload from Device -->
+                    <div class="pt-2 border-t border-[#1b202c] flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                        <div class="w-12 h-8 rounded-lg bg-[#0f1115] border border-[#282d37] flex items-center justify-center shrink-0">
+                            <img src="{{ !empty($settings['manual_nagad_logo']) ? $settings['manual_nagad_logo'] : asset('images/payments/nagad.svg') }}" alt="Nagad" class="h-5 w-auto object-contain">
+                        </div>
+                        <div class="flex-1 w-full">
+                            <label class="block text-[11px] text-gray-400 mb-1">Upload Custom Nagad Logo (device থেকে ছবি সিলেক্ট করুন):</label>
+                            <input type="file" name="manual_nagad_logo_file" accept="image/*" 
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3 py-1.5 text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:bg-[#222733] file:text-white cursor-pointer">
                         </div>
                     </div>
                     <div>
@@ -228,7 +277,18 @@
                             <label class="block text-xs font-semibold text-gray-300 mb-1">BRAC Bank Logo URL (Optional)</label>
                             <input type="text" name="manual_brac_logo" value="{{ $settings['manual_brac_logo'] ?? '' }}" 
                                    placeholder="Default: /images/payments/brac_bank.svg"
-                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-blue-500 focus:outline-none">
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-blue-500 focus:outline-none font-mono">
+                        </div>
+                    </div>
+                    <!-- BRAC Logo Upload from Device -->
+                    <div class="pt-2 border-t border-[#1b202c] flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                        <div class="w-12 h-8 rounded-lg bg-[#0f1115] border border-[#282d37] flex items-center justify-center shrink-0">
+                            <img src="{{ !empty($settings['manual_brac_logo']) ? $settings['manual_brac_logo'] : asset('images/payments/brac_bank.svg') }}" alt="BRAC Bank" class="h-5 w-auto object-contain">
+                        </div>
+                        <div class="flex-1 w-full">
+                            <label class="block text-[11px] text-gray-400 mb-1">Upload Custom BRAC Bank Logo (device থেকে ছবি সিলেক্ট করুন):</label>
+                            <input type="file" name="manual_brac_logo_file" accept="image/*" 
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3 py-1.5 text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:bg-[#222733] file:text-white cursor-pointer">
                         </div>
                     </div>
                     <div>
@@ -278,7 +338,18 @@
                             <label class="block text-xs font-semibold text-gray-300 mb-1">Dutch-Bangla / Rocket Logo URL (Optional)</label>
                             <input type="text" name="manual_dbbl_logo" value="{{ $settings['manual_dbbl_logo'] ?? '' }}" 
                                    placeholder="Default: /images/payments/rocket.svg"
-                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-orange-500 focus:outline-none">
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-orange-500 focus:outline-none font-mono">
+                        </div>
+                    </div>
+                    <!-- DBBL Logo Upload from Device -->
+                    <div class="pt-2 border-t border-[#1b202c] flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                        <div class="w-12 h-8 rounded-lg bg-[#0f1115] border border-[#282d37] flex items-center justify-center shrink-0">
+                            <img src="{{ !empty($settings['manual_dbbl_logo']) ? $settings['manual_dbbl_logo'] : asset('images/payments/rocket.svg') }}" alt="Rocket" class="h-5 w-auto object-contain">
+                        </div>
+                        <div class="flex-1 w-full">
+                            <label class="block text-[11px] text-gray-400 mb-1">Upload Custom DBBL / Rocket Logo (device থেকে ছবি সিলেক্ট করুন):</label>
+                            <input type="file" name="manual_dbbl_logo_file" accept="image/*" 
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3 py-1.5 text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:bg-[#222733] file:text-white cursor-pointer">
                         </div>
                     </div>
                     <div>
@@ -321,6 +392,76 @@
                     <label class="block text-xs font-semibold text-gray-300 mb-1">COD নীতি ও নির্দেশনা (Customer Instructions)</label>
                     <textarea name="cod_instructions" rows="2" 
                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">{{ $settings['cod_instructions'] ?? 'ফেক অর্ডার ও পার্সেল রিটার্ন রোধে শুধুমাত্র কুরিয়ার চার্জ অগ্রিম বিকাশ, নগদ বা ব্যাংকে পরিশোধ করে TrxID সাবমিট করুন। অবশিষ্ট মূল্য পণ্য হাতে পাওয়ার পর প্রদান করবেন।' }}</textarea>
+                </div>
+            </div>
+
+            <!-- 4. SSLCommerz Automated Gateway (ভবিষ্যতে ব্যবহারের জন্য সরাসরি কনফিগারেশন) -->
+            <div class="p-6 rounded-2xl bg-[#161922] border border-[#252a36] space-y-5">
+                <div class="flex items-center justify-between pb-3 border-b border-[#252a36]">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 rounded-lg bg-[#0A3B5C] text-white flex items-center justify-center font-bold text-xs">SSL</span>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-white">4. SSLCommerz Gateway (কার্ড ও নেট ব্যাংকিং গেটওয়ে)</h3>
+                        </div>
+                        <p class="text-[11px] text-gray-400 mt-1">ভবিষ্যতে SSLCommerz অ্যাকাউন্ট অ্যাক্টিভ হলে এখানে Store ID ও Password দিলেই সরাসরি সক্রিয় হয়ে যাবে।</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="payment_sslcommerz_enabled" value="1" 
+                               {{ ($settings['payment_sslcommerz_enabled'] ?? '0') === '1' ? 'checked' : '' }} 
+                               class="sr-only peer">
+                        <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#0A3B5C]"></div>
+                    </label>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Gateway Environment (মোড)</label>
+                        <select name="sslcommerz_mode" class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#0A3B5C] focus:outline-none">
+                            <option value="sandbox" {{ ($settings['sslcommerz_mode'] ?? 'sandbox') === 'sandbox' ? 'selected' : '' }}>Sandbox (Test Environment)</option>
+                            <option value="live" {{ ($settings['sslcommerz_mode'] ?? '') === 'live' ? 'selected' : '' }}>Live (Production Gateway)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Store ID</label>
+                        <input type="text" name="sslcommerz_store_id" value="{{ $settings['sslcommerz_store_id'] ?? '' }}" 
+                               placeholder="e.g. sorolatalive001"
+                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 font-mono focus:border-[#0A3B5C] focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Store Password / Secret Key</label>
+                        <input type="password" name="sslcommerz_store_password" value="{{ $settings['sslcommerz_store_password'] ?? '' }}" 
+                               placeholder="••••••••••••"
+                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 font-mono focus:border-[#0A3B5C] focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- SSLCommerz Logo Upload -->
+                <div class="pt-2 border-t border-[#1b202c] flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <div class="w-16 h-8 rounded-lg bg-[#0f1115] border border-[#282d37] flex items-center justify-center shrink-0">
+                        <img src="{{ !empty($settings['sslcommerz_logo']) ? $settings['sslcommerz_logo'] : asset('images/payments/sslcommerz.svg') }}" alt="SSLCommerz" class="h-5 w-auto object-contain">
+                    </div>
+                    <div class="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">Upload Gateway Logo (device থেকে ছবি দিন):</label>
+                            <input type="file" name="sslcommerz_logo_file" accept="image/*" 
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl px-3 py-1.5 text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:bg-[#222733] file:text-white cursor-pointer">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">Or Logo URL:</label>
+                            <input type="text" name="sslcommerz_logo" value="{{ $settings['sslcommerz_logo'] ?? '' }}" 
+                                   placeholder="Default: /images/payments/sslcommerz.svg"
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#0A3B5C] focus:outline-none font-mono">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Webhook & IPN Endpoints info -->
+                <div class="p-3 rounded-xl bg-[#0b0d12] border border-[#232834] text-[10px] text-gray-400 space-y-1 font-mono">
+                    <div class="text-gray-300 font-bold uppercase tracking-wider mb-1">Integrated Webhook &amp; IPN Endpoints:</div>
+                    <div class="flex justify-between"><span>Success URL:</span> <span class="text-emerald-400">{{ url('/payment/sslcommerz/success') }}</span></div>
+                    <div class="flex justify-between"><span>Fail URL:</span> <span class="text-rose-400">{{ url('/payment/sslcommerz/fail') }}</span></div>
+                    <div class="flex justify-between"><span>Cancel URL:</span> <span class="text-amber-400">{{ url('/payment/sslcommerz/cancel') }}</span></div>
+                    <div class="flex justify-between"><span>IPN Notification URL:</span> <span class="text-cyan-400">{{ url('/payment/sslcommerz/ipn') }}</span></div>
                 </div>
             </div>
 
