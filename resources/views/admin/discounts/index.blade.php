@@ -79,61 +79,63 @@
     </div>
 
     <!-- Create Coupon Modal -->
-    <div x-show="modalOpen" x-transition.opacity class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" style="display: none;">
-        <div @click.away="modalOpen = false" class="w-full max-w-lg bg-[#161922] border border-[#2d3444] rounded-2xl p-6 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between pb-3 border-b border-[#252a36]">
-                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Draft New Promotional Privilege</h3>
-                <button type="button" @click="modalOpen = false" class="text-gray-400 hover:text-white">&times;</button>
+    <div x-show="modalOpen" x-transition.opacity class="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm p-4" style="display: none;">
+        <div class="min-h-full flex items-center justify-center py-6">
+            <div @click.away="modalOpen = false" class="relative w-full max-w-lg bg-[#161922] border border-[#2d3444] rounded-2xl p-6 shadow-2xl space-y-4 my-auto">
+                <div class="flex items-center justify-between pb-3 border-b border-[#252a36]">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Draft New Promotional Privilege</h3>
+                    <button type="button" @click="modalOpen = false" class="text-gray-400 hover:text-white">&times;</button>
+                </div>
+
+                <form method="POST" action="{{ route('admin.discounts.store') }}" class="space-y-4">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Coupon Code (Uppercase)</label>
+                        <input type="text" name="code" required placeholder="e.g. SONARGAON25" 
+                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 font-mono uppercase focus:border-[#214E34] focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Privilege Campaign Name</label>
+                        <input type="text" name="name" required placeholder="e.g. Winter Handloom Festival 15% Off" 
+                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Discount Type</label>
+                            <select name="type" class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-gray-300 px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                <option value="percentage">Percentage (%)</option>
+                                <option value="fixed_amount">Fixed Amount (৳)</option>
+                                <option value="free_shipping">Complimentary Courier</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Value (% or ৳)</label>
+                            <input type="number" step="0.01" name="value" required placeholder="10" 
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Min. Subtotal Requirement (৳)</label>
+                            <input type="number" step="0.01" name="min_subtotal" placeholder="5000" 
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Usage Limit</label>
+                            <input type="number" name="usage_limit" placeholder="200" 
+                                   class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-2 pt-3 border-t border-[#252a36]">
+                        <button type="button" @click="modalOpen = false" class="px-4 py-2 rounded-xl border border-[#2d3444] text-xs text-gray-400">Cancel</button>
+                        <button type="submit" class="px-5 py-2 rounded-xl bg-[#214E34] hover:bg-[#2c6846] text-white text-xs font-semibold">Publish Coupon</button>
+                    </div>
+                </form>
             </div>
-
-            <form method="POST" action="{{ route('admin.discounts.store') }}" class="space-y-4">
-                @csrf
-                <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">Coupon Code (Uppercase)</label>
-                    <input type="text" name="code" required placeholder="e.g. SONARGAON25" 
-                           class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 font-mono uppercase focus:border-[#214E34] focus:outline-none">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">Privilege Campaign Name</label>
-                    <input type="text" name="name" required placeholder="e.g. Winter Handloom Festival 15% Off" 
-                           class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Discount Type</label>
-                        <select name="type" class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-gray-300 px-3 py-2 focus:border-[#214E34] focus:outline-none">
-                            <option value="percentage">Percentage (%)</option>
-                            <option value="fixed_amount">Fixed Amount (৳)</option>
-                            <option value="free_shipping">Complimentary Courier</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Value (% or ৳)</label>
-                        <input type="number" step="0.01" name="value" required placeholder="10" 
-                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Min. Subtotal Requirement (৳)</label>
-                        <input type="number" step="0.01" name="min_subtotal" placeholder="5000" 
-                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Usage Limit</label>
-                        <input type="number" name="usage_limit" placeholder="200" 
-                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
-                    </div>
-                </div>
-
-                <div class="flex justify-end space-x-2 pt-3 border-t border-[#252a36]">
-                    <button type="button" @click="modalOpen = false" class="px-4 py-2 rounded-xl border border-[#2d3444] text-xs text-gray-400">Cancel</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl bg-[#214E34] hover:bg-[#2c6846] text-white text-xs font-semibold">Publish Coupon</button>
-                </div>
-            </form>
         </div>
     </div>
 

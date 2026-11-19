@@ -168,23 +168,24 @@
     @endif
 
     <!-- 1. CREATE COLLECTION MODAL -->
-    <div x-show="createModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6">
-        <div @click.away="createModal = false" class="bg-[#161922] border border-[#252a36] rounded-3xl max-w-2xl w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden my-auto">
-            <!-- Modal Header (Sticky) -->
-            <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-[#252a36] bg-[#161922] shrink-0">
-                <div>
-                    <h3 class="font-bold text-white text-base">Create Curated Collection (নতুন কালেকশন তৈরি করুন)</h3>
-                    <p class="text-[11px] text-gray-400">ঐতিহ্যবাহী পণ্যের সমন্বয়ে নতুন একটি কালেকশন তৈরি করুন।</p>
+    <div x-show="createModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm p-3 sm:p-6">
+        <div class="min-h-full flex items-center justify-center py-6 sm:py-10">
+            <div @click.away="createModal = false" class="relative bg-[#161922] border border-[#252a36] rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+                <!-- Modal Header (Sticky) -->
+                <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-[#252a36] bg-[#161922] shrink-0">
+                    <div>
+                        <h3 class="font-bold text-white text-base">Create Curated Collection (নতুন কালেকশন তৈরি করুন)</h3>
+                        <p class="text-[11px] text-gray-400">ঐতিহ্যবাহী পণ্যের সমন্বয়ে নতুন একটি কালেকশন তৈরি করুন।</p>
+                    </div>
+                    <button type="button" @click="createModal = false" class="w-8 h-8 rounded-full bg-[#222733] hover:bg-gray-700 text-gray-300 hover:text-white flex items-center justify-center transition">✕</button>
                 </div>
-                <button type="button" @click="createModal = false" class="w-8 h-8 rounded-full bg-[#222733] hover:bg-gray-700 text-gray-300 hover:text-white flex items-center justify-center transition">✕</button>
-            </div>
 
-            <!-- Modal Form with Scrollable Body -->
-            <form method="POST" action="{{ route('admin.collections.store') }}" enctype="multipart/form-data" class="flex flex-col flex-grow overflow-hidden text-xs"
-                  x-data="{ autoSlug: '' }">
-                @csrf
+                <!-- Modal Form with Scrollable Body -->
+                <form method="POST" action="{{ route('admin.collections.store') }}" enctype="multipart/form-data" class="flex flex-col flex-1 min-h-0 overflow-hidden text-xs"
+                      x-data="{ autoSlug: '' }">
+                    @csrf
 
-                <div class="overflow-y-auto p-6 sm:p-8 space-y-4 flex-grow">
+                    <div class="overflow-y-auto p-6 sm:p-8 space-y-4 flex-1 min-h-0">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-semibold text-gray-300 mb-1">Collection Title (English) *</label>
@@ -284,24 +285,26 @@
             </form>
         </div>
     </div>
+    </div>
 
     <!-- 2. EDIT COLLECTION MODAL -->
-    <div x-show="editModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6">
-        <div @click.away="editModal = false" class="bg-[#161922] border border-[#252a36] rounded-3xl max-w-2xl w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden my-auto">
-            <!-- Modal Header (Sticky) -->
-            <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-[#252a36] bg-[#161922] shrink-0">
-                <div>
-                    <h3 class="font-bold text-white text-base">Edit Collection (কালেকশন সম্পাদনা করুন)</h3>
-                    <p class="text-[11px] text-gray-400">কালেকশনের নাম, ছবি ও সংযুক্ত পণ্যসমূহ হালনাগাদ করুন।</p>
+    <div x-show="editModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm p-3 sm:p-6">
+        <div class="min-h-full flex items-center justify-center py-6 sm:py-10">
+            <div @click.away="editModal = false" class="relative bg-[#161922] border border-[#252a36] rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+                <!-- Modal Header (Sticky) -->
+                <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-[#252a36] bg-[#161922] shrink-0">
+                    <div>
+                        <h3 class="font-bold text-white text-base">Edit Collection (কালেকশন সম্পাদনা করুন)</h3>
+                        <p class="text-[11px] text-gray-400">কালেকশনের নাম, ছবি ও সংযুক্ত পণ্যসমূহ হালনাগাদ করুন।</p>
+                    </div>
+                    <button type="button" @click="editModal = false" class="w-8 h-8 rounded-full bg-[#222733] hover:bg-gray-700 text-gray-300 hover:text-white flex items-center justify-center transition">✕</button>
                 </div>
-                <button type="button" @click="editModal = false" class="w-8 h-8 rounded-full bg-[#222733] hover:bg-gray-700 text-gray-300 hover:text-white flex items-center justify-center transition">✕</button>
-            </div>
 
-            <form :action="'{{ url('/admin/collections') }}/' + editCollection.id" method="POST" enctype="multipart/form-data" class="flex flex-col flex-grow overflow-hidden text-xs">
-                @csrf
-                @method('PUT')
+                <form :action="'{{ url('/admin/collections') }}/' + editCollection.id" method="POST" enctype="multipart/form-data" class="flex flex-col flex-1 min-h-0 overflow-hidden text-xs">
+                    @csrf
+                    @method('PUT')
 
-                <div class="overflow-y-auto p-6 sm:p-8 space-y-4 flex-grow">
+                    <div class="overflow-y-auto p-6 sm:p-8 space-y-4 flex-1 min-h-0">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-semibold text-gray-300 mb-1">Collection Title (English) *</label>
@@ -401,6 +404,7 @@
                 </div>
             </form>
         </div>
+    </div>
     </div>
 
 </div>

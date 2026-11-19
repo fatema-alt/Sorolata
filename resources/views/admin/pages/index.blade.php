@@ -203,13 +203,14 @@
 
     <!-- CREATE PAGE MODAL -->
     <div x-show="showCreateModal" 
-         class="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+         class="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm p-4"
          style="display: none;">
-        <div @click.away="showCreateModal = false" class="bg-[#1a1d24] border border-[#282d37] rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
-            <div class="flex items-center justify-between pb-3 border-b border-[#282d37]">
-                <h3 class="text-base font-semibold text-white">Create New Page for Builder</h3>
-                <button type="button" @click="showCreateModal = false" class="text-gray-400 hover:text-white">✕</button>
-            </div>
+        <div class="min-h-full flex items-center justify-center py-6">
+            <div @click.away="showCreateModal = false" class="relative bg-[#1a1d24] border border-[#282d37] rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl my-auto">
+                <div class="flex items-center justify-between pb-3 border-b border-[#282d37]">
+                    <h3 class="text-base font-semibold text-white">Create New Page for Builder</h3>
+                    <button type="button" @click="showCreateModal = false" class="text-gray-400 hover:text-white">✕</button>
+                </div>
 
             <form method="POST" action="{{ route('admin.pages.store') }}" class="space-y-4">
                 @csrf
@@ -263,6 +264,7 @@
                 </div>
             </form>
         </div>
+    </div>
     </div>
 
 </div>
