@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Artisan;
 use App\Models\Category;
 use App\Models\District;
+use App\Models\MediaAsset;
+use App\Models\MediaAttachment;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\Admin\ActivityLogService;
@@ -81,6 +83,9 @@ class AdminProductController extends Controller
             'short_description' => 'nullable|string',
             'short_description_bn' => 'nullable|string',
             'handmade_duration' => 'nullable|string',
+            'image_file' => 'nullable|image|max:10240',
+            'images.*' => 'nullable|image|max:10240',
+            'image_url' => 'nullable|string|max:500',
         ]);
 
         $product = Product::create([
@@ -109,6 +114,8 @@ class AdminProductController extends Controller
             type: StockMovementType::PURCHASE,
             reason: 'Initial Product Intake'
         );
+
+        $this->handleMediaUpload($request, $product);
 
         $this->activityLog->log(
             action: 'product.created',
@@ -161,12 +168,16 @@ class AdminProductController extends Controller
             'traditional_origin' => 'nullable|string',
             'care_instructions' => 'nullable|string',
             'status' => 'required|string',
+            'image_file' => 'nullable|image|max:10240',
+            'images.*' => 'nullable|image|max:10240',
+            'image_url' => 'nullable|string|max:500',
         ]);
 
         $oldStock = $product->stock_quantity;
         $newStock = (int) $validated['stock_quantity'];
 
         $product->update($validated);
+        $this->handleMediaUpload($request, $product);
 
         if ($newStock !== $oldStock) {
             $delta = $newStock - $oldStock;
@@ -225,5 +236,88 @@ class AdminProductController extends Controller
 
         return redirect()->route('admin.products.edit', $replica->id)
             ->with('success', 'Artifact duplicated as draft.');
+    }
+
+    protected function handleMediaUpload(Request $request, Product $product): void
+    {
+        $uploadedFiles = [];
+        if ($request->hasFile('image_file')) {
+            $uploadedFiles[] = $request->file('image_file');
+        }
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                if ($file && $file->isValid()) {
+                    $uploadedFiles[] = $file;
+                }
+            }
+        }
+
+        $highestOrder = (int) $product->media()->max('sort_order');
+        $sortOrder = $highestOrder + 1;
+
+        foreach ($uploadedFiles as $file) {
+            $path = $file->store('products', 'public');
+            $filePath = '/storage/' . $path;
+
+            $media = MediaAsset::create([
+                'uuid' => (string) Str::uuid(),
+                'attachable_type' => Product::class,
+                'attachable_id' => $product->id,
+                'file_path' => $filePath,
+                'disk' => 'public',
+                'mime_type' => $file->getClientMimeType() ?: 'image/jpeg',
+                'file_size' => $file->getSize() ?: 0,
+                'alt_text' => $product->title,
+                'sort_order' => $sortOrder,
+            ]);
+
+            MediaAttachment::create([
+                'media_asset_id' => $media->id,
+                'mediable_type' => Product::class,
+                'mediable_id' => $product->id,
+                'role' => $sortOrder === 1 ? 'hero' : 'gallery',
+                'sort_order' => $sortOrder,
+            ]);
+
+            $sortOrder++;
+        }
+
+        if (empty($uploadedFiles) && $request->filled('image_url')) {
+            $url = trim((string) $request->input('image_url'));
+            if (!empty($url)) {
+                $media = MediaAsset::create([
+                    'uuid' => (string) Str::uuid(),
+                    'attachable_type' => Product::class,
+                    'attachable_id' => $product->id,
+                    'file_path' => $url,
+                    'disk' => 'public',
+                    'mime_type' => 'image/jpeg',
+                    'file_size' => 0,
+                    'alt_text' => $product->title,
+                    'sort_order' => $sortOrder,
+                ]);
+
+                MediaAttachment::create([
+                    'media_asset_id' => $media->id,
+                    'mediable_type' => Product::class,
+                    'mediable_id' => $product->id,
+                    'role' => $sortOrder === 1 ? 'hero' : 'gallery',
+                    'sort_order' => $sortOrder,
+                ]);
+            }
+        }
+    }
+
+    public function deleteMedia(int $id, int $mediaId): RedirectResponse
+    {
+        $product = Product::findOrFail($id);
+        $media = MediaAsset::where('attachable_type', Product::class)
+            ->where('attachable_id', $product->id)
+            ->where('id', $mediaId)
+            ->firstOrFail();
+
+        $media->delete();
+
+        return back()->with('success', 'Image removed successfully.');
     }
 }

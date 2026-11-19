@@ -160,6 +160,7 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
     Route::put('/products/{id}', [\App\Http\Controllers\Admin\AdminProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}', [\App\Http\Controllers\Admin\AdminProductController::class, 'destroy'])->name('products.destroy');
     Route::post('/products/{id}/duplicate', [\App\Http\Controllers\Admin\AdminProductController::class, 'duplicate'])->name('products.duplicate');
+    Route::delete('/products/{id}/media/{mediaId}', [\App\Http\Controllers\Admin\AdminProductController::class, 'deleteMedia'])->name('products.media.destroy');
 
     // Orders & Collector Fulfillment
     Route::get('/orders', [\App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('orders.index');

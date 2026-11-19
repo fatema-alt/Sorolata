@@ -37,6 +37,10 @@
         <button type="button" @click="activeTab = 'general'" :class="activeTab === 'general' ? 'bg-[#222733] text-white shadow' : 'hover:text-gray-200'" class="px-4 py-2 rounded-xl transition-all">
             General
         </button>
+        <button type="button" @click="activeTab = 'media'" :class="activeTab === 'media' ? 'bg-[#222733] text-white shadow' : 'hover:text-gray-200'" class="px-4 py-2 rounded-xl transition-all flex items-center gap-1.5">
+            <span>Media & Gallery</span>
+            <span class="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px]">{{ $product->media->count() }}</span>
+        </button>
         <button type="button" @click="activeTab = 'pricing'" :class="activeTab === 'pricing' ? 'bg-[#222733] text-white shadow' : 'hover:text-gray-200'" class="px-4 py-2 rounded-xl transition-all">
             Pricing
         </button>
@@ -55,7 +59,7 @@
     </div>
 
     <!-- Tabbed Edit Form -->
-    <form method="POST" action="{{ route('admin.products.update', $product->id) }}" class="space-y-6">
+    <form method="POST" action="{{ route('admin.products.update', $product->id) }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
 
@@ -262,6 +266,127 @@
                         No sub-variants configured for this artifact. The primary SKU is used.
                     </div>
                 @endforelse
+            </div>
+        </div>
+
+        <!-- TAB: MEDIA & GALLERY -->
+        <div x-show="activeTab === 'media'" class="p-6 rounded-2xl bg-[#161922] border border-[#252a36] space-y-6">
+            <div>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+                    <span>📸</span> Artifact Photography & Media Assets
+                </h3>
+                <p class="text-[11px] text-gray-400 mt-0.5">Manage existing imagery or upload new high-resolution product photos.</p>
+            </div>
+
+            <!-- Existing Photos Gallery -->
+            <div class="space-y-3">
+                <div class="text-xs font-semibold text-gray-300 flex items-center justify-between">
+                    <span>Current Gallery Images</span>
+                    <span class="text-[11px] text-gray-500 font-mono">{{ $product->media->count() }} photo(s) attached</span>
+                </div>
+
+                @if($product->media->count() > 0)
+                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                        @foreach($product->media as $mediaItem)
+                            <div class="relative group aspect-square rounded-2xl overflow-hidden border border-[#282d37] bg-[#0f1115] shadow-xs">
+                                <img src="{{ $mediaItem->file_path }}" alt="{{ $mediaItem->alt_text }}" class="w-full h-full object-cover">
+                                @if($loop->first)
+                                    <span class="absolute top-1.5 left-1.5 bg-[#214E34] text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
+                                        Primary Hero
+                                    </span>
+                                @endif
+                                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2">
+                                    <button 
+                                        type="submit" 
+                                        formaction="{{ route('admin.products.media.destroy', ['id' => $product->id, 'mediaId' => $mediaItem->id]) }}"
+                                        formmethod="POST"
+                                        onclick="return confirm('Remove this image from artifact?')"
+                                        class="px-2.5 py-1.5 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-[11px] font-semibold flex items-center gap-1 shadow-xs transition-transform transform hover:scale-105"
+                                    >
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="p-6 rounded-xl border border-[#282d37] bg-[#0f1115] text-center text-gray-500 text-xs">
+                        No photos currently attached to this artifact. Use the uploader below to add images.
+                    </div>
+                @endif
+            </div>
+
+            <!-- Upload New Photos Section -->
+            <div class="pt-5 border-t border-[#252a36] space-y-4" x-data="{
+                newPreviews: [],
+                handleNewFiles(event) {
+                    const files = event.target.files;
+                    this.newPreviews = [];
+                    for (let i = 0; i < files.length; i++) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.newPreviews.push({ name: files[i].name, src: e.target.result });
+                        };
+                        reader.readAsDataURL(files[i]);
+                    }
+                }
+            }">
+                <div class="flex items-center justify-between">
+                    <label class="block text-xs font-semibold text-gray-200">Upload Additional Photos</label>
+                    <span class="text-[10px] text-gray-500 font-mono">JPG, PNG, WEBP • Max 10MB</span>
+                </div>
+
+                <!-- Dropzone -->
+                <div class="relative border-2 border-dashed border-[#282d37] hover:border-[#214E34] transition-colors rounded-xl p-6 text-center bg-[#0f1115] group cursor-pointer">
+                    <input 
+                        type="file" 
+                        name="images[]" 
+                        id="edit_product_images" 
+                        multiple 
+                        accept="image/*"
+                        @change="handleNewFiles($event)"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    >
+                    <div class="flex flex-col items-center justify-center space-y-2 pointer-events-none">
+                        <div class="w-10 h-10 rounded-full bg-[#1b202c] border border-[#2b3344] flex items-center justify-center text-gray-300 group-hover:text-emerald-400 group-hover:scale-110 transition-all">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div class="text-xs text-gray-300">
+                            <span class="text-[#34D399] font-bold">Choose Photos</span> or drag & drop files to add
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Previews -->
+                <template x-if="newPreviews.length > 0">
+                    <div class="space-y-2">
+                        <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <span>Ready to Upload on Save:</span>
+                            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold" x-text="newPreviews.length"></span>
+                        </div>
+                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                            <template x-for="(p, index) in newPreviews" :key="index">
+                                <div class="relative group aspect-square rounded-xl overflow-hidden border border-[#282d37] bg-[#161922]">
+                                    <img :src="p.src" class="w-full h-full object-cover">
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Direct Image URL Field -->
+                <div class="pt-2">
+                    <label class="block text-[11px] text-gray-400 mb-1">Or add an external Image URL (Optional):</label>
+                    <input 
+                        type="url" 
+                        name="image_url" 
+                        placeholder="https://images.unsplash.com/photo-..."
+                        class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3.5 py-2 focus:border-[#214E34] focus:outline-none font-mono"
+                    >
+                </div>
             </div>
         </div>
 
