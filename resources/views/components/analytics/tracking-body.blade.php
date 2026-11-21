@@ -1,8 +1,6 @@
 @php
     $trackingSettings = app(\App\Services\Admin\AdminSettingService::class)->all();
-    $trackingEnabled = (bool) ($trackingSettings['tracking_enabled'] ?? '1');
-    $gtmEnabled = (bool) ($trackingSettings['gtm_enabled'] ?? '1');
-    $gtmId = trim((string) ($trackingSettings['gtm_id'] ?? 'GTM-W62NQS6R'));
+    $gtmId = trim((string) ($trackingSettings['gtm_id'] ?? ''));
     if (empty($gtmId)) {
         $gtmId = 'GTM-W62NQS6R';
     }
@@ -10,17 +8,13 @@
     $customBodyScript = $trackingSettings['custom_body_script'] ?? '';
 @endphp
 
-@if($trackingEnabled)
-    {{-- Google Tag Manager (noscript) --}}
-    @if($gtmEnabled && !empty($gtmId))
-        <noscript>
-            <iframe src="{{ !empty($serverContainerUrl) ? $serverContainerUrl : 'https://www.googletagmanager.com' }}/ns.html?id={{ $gtmId }}"
-                    height="0" width="0" style="display:none;visibility:hidden"></iframe>
-        </noscript>
-    @endif
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe src="{{ !empty($serverContainerUrl) ? $serverContainerUrl : 'https://www.googletagmanager.com' }}/ns.html?id={{ $gtmId }}"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
 
-    {{-- Custom Body Script (Injected from Admin Panel) --}}
-    @if(!empty($customBodyScript))
-        {!! $customBodyScript !!}
-    @endif
+@if(!empty($customBodyScript))
+    {!! $customBodyScript !!}
 @endif

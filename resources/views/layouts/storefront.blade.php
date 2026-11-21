@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" translate="no" class="scroll-smooth antialiased notranslate">
 <head>
+    <!-- Dynamic Tracking, GTM, Meta Pixel & DataLayer (PDF Spec) -->
+    @include('components.analytics.tracking-head')
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google" content="notranslate">
@@ -16,9 +19,6 @@
     <!-- Styles & Scripts via Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
-
-    <!-- Dynamic Tracking, GTM, Meta Pixel & DataLayer (PDF Spec) -->
-    @include('components.analytics.tracking-head')
 </head>
 <body 
     x-data="{ 
