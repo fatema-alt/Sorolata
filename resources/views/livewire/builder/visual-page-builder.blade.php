@@ -2070,7 +2070,7 @@
                                     <label class="block text-[11px] font-semibold text-gray-300 mb-1">Product Headline</label>
                                     <input type="text" 
                                            wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
-                                           placeholder="{{ product.title }}"
+                                           placeholder="@{{ product.title }}"
                                            class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
                                 </div>
 
@@ -2086,7 +2086,7 @@
                                     <label class="block text-[11px] font-semibold text-gray-300 mb-1">CTA Button Text & Price</label>
                                     <input type="text" 
                                            wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" 
-                                           placeholder="Acquire Piece • {{ product.price }}"
+                                           placeholder="Acquire Piece • @{{ product.price }}"
                                            class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
                                 </div>
 
@@ -2129,7 +2129,7 @@
                                     <label class="block text-[11px] font-semibold text-gray-300 mb-1">Title</label>
                                     <input type="text" 
                                            wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
-                                           placeholder="{{ product.title }}"
+                                           placeholder="@{{ product.title }}"
                                            class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
                                 </div>
 
@@ -2233,7 +2233,7 @@
                                     <label class="block text-[11px] font-semibold text-gray-300 mb-1">Heading</label>
                                     <input type="text" 
                                            wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
-                                           placeholder="Rooted in {{ district.name }}"
+                                           placeholder="Rooted in @{{ district.name }}"
                                            class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
                                 </div>
 
