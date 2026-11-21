@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Log;
 class LayoutEngineService implements LayoutEngineContract
 {
     public function __construct(
-        protected BlockRegistry $blockRegistry
+        protected BlockRegistry $blockRegistry,
+        protected DynamicDataParserService $parserService
     ) {}
 
     /**
@@ -57,8 +58,17 @@ class LayoutEngineService implements LayoutEngineContract
             }
 
             try {
+                $parsedSettings = $this->parserService->parseSettings($block->settings, $product);
+                $parsedBlock = new LayoutBlockDTO(
+                    id: $block->id,
+                    type: $block->type,
+                    order: $block->order,
+                    isActive: $block->isActive,
+                    settings: $parsedSettings
+                );
+
                 $renderer = $this->blockRegistry->getRenderer($block->type->value);
-                $renderedHtml = (string) $renderer->render($block, $product);
+                $renderedHtml = (string) $renderer->render($parsedBlock, $product);
                 $renderedBlocks[] = $renderedHtml;
             } catch (\Throwable $e) {
                 Log::error("Failed to render block [{$block->type->value}]: {$e->getMessage()}", [

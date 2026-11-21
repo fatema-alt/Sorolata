@@ -3,13 +3,13 @@
         <div class="max-w-3xl mb-12">
             <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#214E34] font-bold mb-3">
                 <span class="w-2 h-2 rounded-full bg-[#214E34]"></span>
-                <span>{{ __('Geographical Indication & Regional Provenance') }}</span>
+                <span>{{ !empty($settings['badge_text']) ? $settings['badge_text'] : __('Geographical Indication & Regional Provenance') }}</span>
             </div>
             <h2 class="font-editorial-heading text-3xl sm:text-4xl lg:text-5xl font-light text-[#1D1D1D]">
-                {{ __('Rooted in :district', ['district' => $district?->name_en ?? __('Bengal')]) }} (<span class="font-editorial-bangla">{{ $district?->name_bn ?? 'বাংলাদেশ' }}</span>)
+                {{ !empty($settings['headline']) ? $settings['headline'] : (__('Rooted in :district', ['district' => $district?->name_en ?? __('Bengal')]) . ' (' . ($district?->name_bn ?? 'বাংলাদেশ') . ')') }}
             </h2>
             <p class="font-editorial-body text-base text-[#555555] mt-4 leading-relaxed">
-                {{ __('Soil, microclimate, and river humidity shape the personality of every craft in Bangladesh. Learn why this exact district is the irreplaceable cradle of this tradition.') }}
+                {{ !empty($settings['subheadline']) ? $settings['subheadline'] : __('Soil, microclimate, and river humidity shape the personality of every craft in Bangladesh. Learn why this exact district is the irreplaceable cradle of this tradition.') }}
             </p>
         </div>
 

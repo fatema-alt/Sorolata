@@ -915,134 +915,362 @@
                             <div class="{{ $containerWidth }} pointer-events-none">
                                 
                                 @if ($section['type'] === 'hero_cinematic')
-                                    <div class="flex flex-col {{ $alignClass }} max-w-4xl mx-auto py-6">
-                                        @if ($parsedBadge)
-                                            <span class="inline-block text-[11px] font-semibold tracking-widest uppercase px-3 py-1 rounded-full border border-[#214E34]/30 text-[#214E34] bg-[#214E34]/5 mb-4">
-                                                {{ $parsedBadge }}
-                                            </span>
-                                        @endif
-                                        <h1 class="font-editorial-heading {{ $headlineSize }} tracking-tight mb-4" style="color: {{ $textColor }};">
-                                            {{ $parsedHeadline ?: ($product?->title ?? 'Bengali Heritage Masterpiece') }}
-                                        </h1>
-                                        @if ($parsedSubheadline)
-                                            <p class="text-base sm:text-lg text-[#555555] font-light leading-relaxed mb-6 max-w-2xl">
-                                                {{ $parsedSubheadline }}
-                                            </p>
-                                        @endif
-
-                                        <!-- Media: Video Embed or Image -->
-                                        @if ($videoData && $videoData['type'] !== 'none')
-                                            <div class="w-full my-6 rounded-2xl overflow-hidden shadow-2xl border border-gray-200/20 aspect-video bg-black flex items-center justify-center">
-                                                @if ($videoData['type'] === 'mp4')
-                                                    <video controls class="w-full h-full object-cover">
-                                                        <source src="{{ $videoData['embed_url'] }}" type="video/mp4">
-                                                    </video>
-                                                @else
-                                                    <iframe src="{{ $videoData['embed_url'] }}" 
-                                                            class="w-full h-full" 
-                                                            frameborder="0" 
-                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                                            allowfullscreen></iframe>
-                                                @endif
-                                            </div>
-                                        @elseif (!empty($imageUrl))
-                                            <div class="w-full my-6 rounded-2xl overflow-hidden shadow-xl border border-gray-200 aspect-[16/9] bg-stone-100">
-                                                <img src="{{ $imageUrl }}" alt="Hero Media" class="w-full h-full object-cover">
-                                            </div>
-                                        @endif
-
-                                        <div class="flex flex-wrap items-center {{ $justifyClass }} gap-4 mt-2">
-                                            <span class="px-6 py-3 rounded-full bg-[#214E34] text-white text-sm font-semibold tracking-wide">
-                                                {{ $settings['primary_cta_text'] ?? ($product ? 'Acquire Piece • ' . $product->formatted_price : 'Acquire Piece • ৳ 18,500') }}
-                                            </span>
-                                            @if (!empty($settings['secondary_cta_text']))
-                                                <span class="px-5 py-3 rounded-full border border-[#1D1D1D]/20 text-[#1D1D1D] text-sm font-medium">
-                                                    {{ $settings['secondary_cta_text'] }}
+                                    <div class="py-6 lg:py-10 text-left">
+                                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                                            
+                                            <!-- Left Editorial Text Block -->
+                                            <div class="lg:col-span-5 space-y-5">
+                                                <!-- Heritage Badge -->
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#C96A3D]/10 text-[#C96A3D] border border-[#C96A3D]/25">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#C96A3D]"></span>
+                                                    <span>{{ $parsedBadge ?: ($settings['badge_text'] ?? 'GI Certified Heritage Artifact') }}</span>
                                                 </span>
-                                            @endif
-                                        </div>
-                                    </div>
 
-                                @elseif ($section['type'] === 'artisan_spotlight')
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center py-6">
-                                        <div class="relative rounded-2xl overflow-hidden bg-stone-200 aspect-[4/3] flex items-center justify-center text-stone-500 shadow-sm border border-stone-200">
-                                            @if (!empty($imageUrl))
-                                                <img src="{{ $imageUrl }}" alt="Artisan Atelier" class="w-full h-full object-cover">
-                                            @else
-                                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800" alt="Master Artisan" class="w-full h-full object-cover">
-                                            @endif
-                                        </div>
-                                        <div class="flex flex-col {{ $alignClass }}">
-                                            <span class="text-xs font-semibold uppercase tracking-widest text-[#C96A3D] block mb-2">
-                                                {{ $parsedBadge ?: 'Master Weaver Guild' }}
-                                            </span>
-                                            <h2 class="font-editorial-heading {{ $headlineSize }} mb-3" style="color: {{ $textColor }};">
-                                                {{ $parsedHeadline ?: ($product?->artisan?->full_name ?? 'Ustad Alimullah Dewan') }}
-                                            </h2>
-                                            <p class="text-sm text-[#555555] leading-relaxed italic mb-4">
-                                                "{{ $parsedSubheadline ?: ($product?->artisan?->quote ?? 'Our hands carry the memory of three centuries of loom heritage on the Shitalakshya.') }}"
-                                            </p>
-                                            <div class="text-xs text-gray-500 space-y-1">
-                                                <div>Atelier: <strong class="text-gray-800">{{ $product?->artisan?->atelier_name ?? 'Dewan Royal Loom' }}</strong></div>
-                                                <div>Experience: <strong class="text-gray-800">{{ $product?->artisan?->years_of_mastery ?? 38 }} Years of Generational Mastery</strong></div>
-                                            </div>
-                                            @if(!empty($settings['primary_cta_text']))
-                                                <div class="mt-4">
-                                                    <span class="px-5 py-2.5 rounded-full bg-[#214E34] text-white text-xs font-semibold">
-                                                        {{ $settings['primary_cta_text'] }}
+                                                <!-- Product Title & Subtitle -->
+                                                <h1 class="font-editorial-heading {{ $headlineSize }} font-light leading-[1.12]" style="color: {{ $textColor }};">
+                                                    {{ $parsedHeadline ?: ($product?->getLocalized('title') ?? $product?->title ?? 'Bengali Heritage Masterpiece') }}
+                                                </h1>
+
+                                                @php
+                                                    $displaySubtitle = $parsedSubheadline ?: ($product?->getLocalized('subtitle') ?? $product?->subtitle ?? '');
+                                                @endphp
+                                                @if(!empty($displaySubtitle))
+                                                    <p class="font-editorial-body text-base text-[#555555] font-light leading-relaxed">
+                                                        {{ $displaySubtitle }}
+                                                    </p>
+                                                @endif
+
+                                                <!-- Provenance Summary -->
+                                                <div class="pt-4 border-t border-[#E8E8E8] grid grid-cols-2 gap-4 text-xs text-[#555555]">
+                                                    <div>
+                                                        <span class="block uppercase tracking-wider text-[10px] text-[#888888]">Master Artisan</span>
+                                                        <span class="font-medium text-[#1D1D1D]">{{ $product?->artisan?->getLocalized('full_name') ?? $product?->artisan?->full_name ?? 'Generational Guild' }}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="block uppercase tracking-wider text-[10px] text-[#888888]">Origin & District</span>
+                                                        <span class="font-medium text-[#1D1D1D]">{{ $product?->district?->getLocalized('name') ?? $product?->district?->name_en ?? 'Bengal Heritage Basin' }}</span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Quick Action CTA -->
+                                                <div class="pt-3 flex flex-wrap items-center gap-4">
+                                                    <span class="px-6 py-3 rounded-full bg-[#214E34] text-white text-xs font-semibold tracking-wide shadow-sm">
+                                                        {{ $settings['primary_cta_text'] ?? ($product ? 'Acquire Piece • ' . $product->formatted_price : 'Acquire Piece • ৳ 18,500') }}
+                                                    </span>
+                                                    <span class="text-xs uppercase tracking-widest text-[#555555] underline underline-offset-4 font-medium">
+                                                        Read Atelier Story ↓
                                                     </span>
                                                 </div>
-                                            @endif
-                                        </div>
-                                    </div>
+                                            </div>
 
-                                @elseif ($section['type'] === 'heritage_provenance')
-                                    <div class="py-6 border-y border-[#E8E8E8]">
-                                        <div class="flex flex-col {{ $alignClass }} max-w-2xl mx-auto mb-6">
-                                            <span class="text-xs uppercase tracking-widest text-[#214E34] font-semibold block mb-1">
-                                                {{ $parsedBadge ?: 'Geographical Origin' }}
-                                            </span>
-                                            <h3 class="font-editorial-heading {{ $headlineSize }}" style="color: {{ $textColor }};">
-                                                {{ $parsedHeadline ?: ('Certified Provenance: ' . ($product?->district?->name_en ?? 'Narayanganj') . ' Basin') }}
-                                            </h3>
-                                            @if ($parsedSubheadline)
-                                                <p class="text-xs text-gray-500 mt-1">{{ $parsedSubheadline }}</p>
-                                            @endif
-                                        </div>
-                                        <div class="grid grid-cols-3 gap-4 text-center">
-                                            <div class="p-4 rounded-xl bg-[#F8F6F2] border border-[#E8E8E8]">
-                                                <div class="text-xs text-gray-400 uppercase">GI Status</div>
-                                                <div class="text-sm font-bold text-[#1D1D1D] mt-1">{{ $product?->district?->gi_specialty ?? 'GI Certified Jamdani' }}</div>
+                                            <!-- Right Hero Photography Column -->
+                                            <div class="lg:col-span-7">
+                                                <div class="relative rounded-[32px] overflow-hidden bg-white shadow-soft-lg aspect-[4/3] lg:aspect-[16/11]">
+                                                    @php
+                                                        $primaryMedia = $product?->media?->first();
+                                                        $heroDisplayImg = !empty($imageUrl) ? $imageUrl : ($primaryMedia ? url($primaryMedia->file_path) : 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1600&auto=format&fit=crop');
+                                                    @endphp
+                                                    @if ($videoData && $videoData['type'] !== 'none')
+                                                        <div class="w-full h-full bg-black flex items-center justify-center">
+                                                            @if ($videoData['type'] === 'mp4')
+                                                                <video controls class="w-full h-full object-cover">
+                                                                    <source src="{{ $videoData['embed_url'] }}" type="video/mp4">
+                                                                </video>
+                                                            @else
+                                                                <iframe src="{{ $videoData['embed_url'] }}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                                                            @endif
+                                                        </div>
+                                                    @else
+                                                        <img src="{{ $heroDisplayImg }}" alt="Hero Media" class="w-full h-full object-cover object-center">
+                                                    @endif
+                                                    <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[10px] text-[#1D1D1D] font-medium tracking-wide shadow-sm">
+                                                        Original Heritage Photography
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="p-4 rounded-xl bg-[#F8F6F2] border border-[#E8E8E8]">
-                                                <div class="text-xs text-gray-400 uppercase">Water Source</div>
-                                                <div class="text-sm font-bold text-[#1D1D1D] mt-1">{{ $product?->district?->river_basin ?? 'Shitalakshya Basin' }}</div>
-                                            </div>
-                                            <div class="p-4 rounded-xl bg-[#F8F6F2] border border-[#E8E8E8]">
-                                                <div class="text-xs text-gray-400 uppercase">Heritage Era</div>
-                                                <div class="text-sm font-bold text-[#1D1D1D] mt-1">Mughal Archival Guild</div>
-                                            </div>
+
                                         </div>
                                     </div>
 
                                 @elseif ($section['type'] === 'sticky_purchase_box')
-                                    <div class="p-6 rounded-2xl bg-white border border-[#E8E8E8] shadow-sm max-w-xl mx-auto py-6">
-                                        <div class="flex justify-between items-center mb-4">
-                                            <div>
-                                                <span class="text-xs text-gray-400 uppercase tracking-widest block">Collector Acquisition</span>
-                                                <div class="font-editorial-heading text-2xl text-[#1D1D1D]">{{ $product ? $product->formatted_price : '৳ 18,500' }}</div>
+                                    <div class="py-8">
+                                        <div class="bg-white rounded-[32px] p-8 sm:p-12 border border-[#E8E8E8] shadow-soft-lg space-y-6 max-w-4xl mx-auto text-left">
+                                            <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[#E8E8E8] pb-6 gap-4">
+                                                <div>
+                                                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">
+                                                        {{ $parsedBadge ?: ($settings['badge_text'] ?? 'Immediate Acquisition') }}
+                                                    </span>
+                                                    <h2 class="font-editorial-heading text-2xl sm:text-3xl text-[#1D1D1D] mt-1">
+                                                        {{ $parsedHeadline ?: ($product?->getLocalized('title') ?? $product?->title ?? 'Product Acquisition') }}
+                                                    </h2>
+                                                    <p class="text-xs text-[#888888] mt-1">
+                                                        {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'Single Batch Archive Edition • Hand-inspected by Chief Curator') }}
+                                                    </p>
+                                                </div>
+                                                <div class="text-left sm:text-right">
+                                                    <span class="font-editorial-heading text-3xl sm:text-4xl font-normal text-[#C96A3D]">
+                                                        {{ $product ? $product->formatted_price : '৳ 18,500' }}
+                                                    </span>
+                                                    @if($product?->formatted_compare_price)
+                                                        <span class="block text-xs line-through text-[#888888] mt-0.5">{{ $product->formatted_compare_price }}</span>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
-                                                In Atelier Stock (Ready to Dispatch)
-                                            </span>
+
+                                            <!-- Delivery & Concierge Perks -->
+                                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-[#555555]">
+                                                <div class="flex items-start space-x-2.5">
+                                                    <div class="w-7 h-7 rounded-full bg-[#214E34]/10 flex items-center justify-center shrink-0 text-[#214E34] text-xs font-bold">✓</div>
+                                                    <div>
+                                                        <span class="font-semibold text-[#1D1D1D] block">Insured Courier</span>
+                                                        <span class="text-[11px] text-[#777777]">Delivered in tamper-evident wooden or botanical box.</span>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-start space-x-2.5">
+                                                    <div class="w-7 h-7 rounded-full bg-[#214E34]/10 flex items-center justify-center shrink-0 text-[#214E34] text-xs font-bold">✓</div>
+                                                    <div>
+                                                        <span class="font-semibold text-[#1D1D1D] block">Artisan Royalty</span>
+                                                        <span class="text-[11px] text-[#777777]">Fair remuneration contractually deposited to artisan guild.</span>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-start space-x-2.5">
+                                                    <div class="w-7 h-7 rounded-full bg-[#214E34]/10 flex items-center justify-center shrink-0 text-[#214E34] text-xs font-bold">✓</div>
+                                                    <div>
+                                                        <span class="font-semibold text-[#1D1D1D] block">Provenance Certificate</span>
+                                                        <span class="text-[11px] text-[#777777]">Numbered certificate signed by craftsman & guild leader.</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Add to Collector Bag Form -->
+                                            <div class="pt-2 flex flex-col sm:flex-row gap-4 items-center">
+                                                <div class="flex items-center border border-[#E8E8E8] rounded-full px-4 py-2.5 bg-[#F8F6F2] space-x-4 text-xs">
+                                                    <span class="text-gray-400 font-bold">-</span>
+                                                    <span class="font-bold text-[#1D1D1D]">১</span>
+                                                    <span class="text-gray-400 font-bold">+</span>
+                                                </div>
+                                                <button type="button" class="w-full flex-1 py-3.5 px-6 rounded-full bg-[#214E34] text-white text-xs font-bold tracking-wider uppercase shadow-sm flex items-center justify-center space-x-2">
+                                                    <span>{{ $settings['primary_cta_text'] ?? 'Acquire Piece & Add To Collector Bag' }}</span>
+                                                    <span>→</span>
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="space-y-3">
-                                            <button class="w-full py-3 rounded-full bg-[#214E34] text-white text-xs font-bold tracking-wider uppercase">
-                                                {{ $settings['primary_cta_text'] ?? 'Add to Archival Box • Instant Checkout' }}
-                                            </button>
-                                            <p class="text-[11px] text-center text-gray-500">
-                                                Complimentary insured white-glove shipping to Bangladesh, USA, UK, Canada & Europe.
+                                    </div>
+
+                                @elseif ($section['type'] === 'artisan_spotlight')
+                                    <div class="py-8 text-left">
+                                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                                            <!-- Artisan Portrait -->
+                                            <div class="lg:col-span-5 order-2 lg:order-1">
+                                                <div class="relative rounded-[32px] overflow-hidden bg-white aspect-[4/5] shadow-soft-lg">
+                                                    @php
+                                                        $portraitImg = !empty($imageUrl) ? $imageUrl : ($product?->artisan?->portrait_url ?? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800');
+                                                    @endphp
+                                                    <img src="{{ $portraitImg }}" alt="Artisan" class="w-full h-full object-cover grayscale contrast-125">
+                                                    <div class="absolute bottom-5 left-5 right-5 bg-[#1D1D1D]/80 backdrop-blur-md p-4 rounded-[20px] text-white">
+                                                        <div class="flex items-center justify-between">
+                                                            <div>
+                                                                <span class="text-[9px] uppercase tracking-widest text-[#AAAAAA]">Atelier</span>
+                                                                <h4 class="font-editorial-heading text-base font-light">{{ $product?->artisan?->atelier_name ?? 'Dewan Royal Loom' }}</h4>
+                                                            </div>
+                                                            <span class="text-[11px] px-2.5 py-0.5 bg-[#214E34] text-white rounded-full font-medium">
+                                                                {{ $product?->artisan?->years_of_mastery ?? 35 }} Years Mastery
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Biographical Narrative -->
+                                            <div class="lg:col-span-7 order-1 lg:order-2 space-y-4">
+                                                <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#C96A3D] font-bold">
+                                                    <span class="w-2 h-2 rounded-full bg-[#C96A3D]"></span>
+                                                    <span>{{ $parsedBadge ?: ($settings['badge_text'] ?? 'The Master Artisan Behind This Piece') }}</span>
+                                                </div>
+
+                                                <h2 class="font-editorial-heading {{ $headlineSize }} font-light leading-tight" style="color: {{ $textColor }};">
+                                                    {{ $parsedHeadline ?: ($product?->artisan?->getLocalized('full_name') ?? $product?->artisan?->full_name ?? 'Ustad Alimullah Dewan') }}
+                                                </h2>
+
+                                                <p class="text-xs uppercase tracking-widest text-[#888888]">
+                                                    Specialty: {{ $product?->artisan?->craft_type?->title() ?? 'Heritage Handloom Weaving' }} • {{ $product?->district?->getLocalized('name') ?? $product?->district?->name_en ?? 'Tangail' }}, Bangladesh
+                                                </p>
+
+                                                @php
+                                                    $artisanQuote = $parsedSubheadline ?: ($product?->artisan?->getLocalized('quote') ?? $product?->artisan?->quote ?? '');
+                                                @endphp
+                                                @if(!empty($artisanQuote))
+                                                    <blockquote class="pl-5 border-l-2 border-[#C96A3D] italic font-editorial-heading text-lg sm:text-xl text-[#1D1D1D] my-4 leading-relaxed">
+                                                        "{{ $artisanQuote }}"
+                                                    </blockquote>
+                                                @endif
+
+                                                <p class="text-[#555555] text-xs sm:text-sm leading-relaxed font-editorial-body">
+                                                    {{ $product?->artisan?->getLocalized('biography') ?? $product?->artisan?->biography ?? 'Carrying forward an uninterrupted lineage of artisan mastery. Every piece represents weeks of patient handcrafting using indigenous techniques passed down through generations of guild masters.' }}
+                                                </p>
+
+                                                <!-- Provenance & Fair Trade -->
+                                                <div class="pt-4 grid grid-cols-3 gap-4 border-t border-[#E8E8E8] text-xs">
+                                                    <div>
+                                                        <span class="block text-[#888888] uppercase tracking-wider text-[9px]">Artisan Royalty</span>
+                                                        <span class="font-medium text-[#1D1D1D] text-[11px]">Direct Compensation</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="block text-[#888888] uppercase tracking-wider text-[9px]">Verification</span>
+                                                        <span class="font-medium text-[#2D6A4F] text-[11px]">Verified Guild ✓</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="block text-[#888888] uppercase tracking-wider text-[9px]">Origin Tag</span>
+                                                        <span class="font-medium text-[#1D1D1D] text-[11px]">100% Traceable</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                @elseif ($section['type'] === 'interactive_gallery')
+                                    <div class="py-10 text-left">
+                                        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+                                            <div>
+                                                <span class="text-xs uppercase tracking-widest text-[#9E4732] font-semibold">
+                                                    {{ $parsedBadge ?: ($settings['badge_text'] ?? 'Macro Visual Study') }}
+                                                </span>
+                                                <h2 class="font-serif-luxury text-2xl sm:text-3xl lg:text-4xl font-light text-[#241F1E] mt-1" style="color: {{ $textColor }};">
+                                                    {{ $parsedHeadline ?: ($settings['headline'] ?? 'Tactile Intricacies') }}
+                                                </h2>
+                                            </div>
+                                            <p class="text-xs sm:text-sm text-[#786C65] max-w-sm mt-2 md:mt-0 font-serif-luxury italic">
+                                                {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'Notice the deliberate irregularities that prove human hand execution over automated mechanics.') }}
                                             </p>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                            @php
+                                                $gallerySample = [
+                                                    'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1000&auto=format&fit=crop',
+                                                    'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop',
+                                                    'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop',
+                                                ];
+                                                if (!empty($imageUrl)) {
+                                                    $gallerySample[0] = $imageUrl;
+                                                }
+                                            @endphp
+                                            @foreach($gallerySample as $gIndex => $gImg)
+                                                <div class="group relative rounded-3xl overflow-hidden bg-[#E2DBD3] aspect-[3/4] shadow-sm">
+                                                    <img src="{{ $gImg }}" alt="Gallery Image {{ $gIndex + 1 }}" class="w-full h-full object-cover">
+                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-4">
+                                                        <span class="text-white text-xs font-medium tracking-wide">Macro Detail {{ sprintf('%02d', $gIndex + 1) }} • Hand Loom Tension</span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                @elseif ($section['type'] === 'heritage_provenance')
+                                    <div class="py-10 text-left">
+                                        <div class="max-w-3xl mb-8">
+                                            <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#214E34] font-bold mb-2">
+                                                <span class="w-2 h-2 rounded-full bg-[#214E34]"></span>
+                                                <span>{{ $parsedBadge ?: ($settings['badge_text'] ?? 'Geographical Indication & Regional Provenance') }}</span>
+                                            </div>
+                                            <h2 class="font-editorial-heading text-2xl sm:text-3xl lg:text-4xl font-light text-[#1D1D1D]" style="color: {{ $textColor }};">
+                                                {{ $parsedHeadline ?: ('Rooted in ' . ($product?->district?->name_en ?? 'Bengal') . ' (' . ($product?->district?->name_bn ?? 'বাংলাদেশ') . ')') }}
+                                            </h2>
+                                            <p class="font-editorial-body text-xs sm:text-sm text-[#555555] mt-2 leading-relaxed">
+                                                {{ $parsedSubheadline ?: 'Soil, microclimate, and river humidity shape the personality of every craft in Bangladesh. Learn why this exact district is the irreplaceable cradle of this tradition.' }}
+                                            </p>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                            <!-- Card 1: GI Specialty -->
+                                            <div class="p-6 rounded-[28px] bg-[#F8F6F2] border border-[#E8E8E8] space-y-3 shadow-soft-xs text-left">
+                                                <div class="w-9 h-9 rounded-full bg-[#214E34]/10 flex items-center justify-center text-[#214E34] font-bold text-sm">
+                                                    ✓
+                                                </div>
+                                                <h3 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">GI Heritage Specialty</h3>
+                                                <p class="text-xs text-[#555555] leading-relaxed">
+                                                    {{ $product?->district?->gi_specialty ?? 'World-renowned handloom textile weaving registered under national geographical indication.' }}
+                                                </p>
+                                            </div>
+
+                                            <!-- Card 2: River Basin Climate -->
+                                            <div class="p-6 rounded-[28px] bg-[#F8F6F2] border border-[#E8E8E8] space-y-3 shadow-soft-xs text-left">
+                                                <div class="w-9 h-9 rounded-full bg-[#C96A3D]/10 flex items-center justify-center text-[#C96A3D] font-bold text-sm">
+                                                    ✦
+                                                </div>
+                                                <h3 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">River Basin & Microclimate</h3>
+                                                <p class="text-xs text-[#555555] leading-relaxed">
+                                                    {{ $product?->district?->river_basin ?? 'Shitalakshya & Jamuna River Basin' }} — the ambient river air provides the exact morning humidity essential for ultra-fine thread tension.
+                                                </p>
+                                            </div>
+
+                                            <!-- Card 3: Historical Chronicle -->
+                                            <div class="p-6 rounded-[28px] bg-[#F8F6F2] border border-[#E8E8E8] space-y-3 shadow-soft-xs text-left">
+                                                <div class="w-9 h-9 rounded-full bg-[#214E34]/10 flex items-center justify-center text-[#214E34] font-bold text-sm">
+                                                    📍
+                                                </div>
+                                                <h3 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">Historical Chronicle</h3>
+                                                <p class="text-xs text-[#555555] leading-relaxed">
+                                                    {{ $product?->district?->historical_narrative ?? 'Documented in traveler chronicles since the 14th century, cultivated by imperial patronage.' }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                @elseif ($section['type'] === 'specs_anatomy')
+                                    <div class="py-10">
+                                        <div class="text-center max-w-2xl mx-auto mb-10">
+                                            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold block mb-1">
+                                                {{ $parsedBadge ?: ($settings['badge_text'] ?? 'Material Formulation') }}
+                                            </span>
+                                            <h2 class="font-editorial-heading text-2xl sm:text-3xl lg:text-4xl font-light text-[#1D1D1D]" style="color: {{ $textColor }};">
+                                                {{ $parsedHeadline ?: ($settings['headline'] ?? 'Pure Formulation & Metrics') }}
+                                            </h2>
+                                            <p class="text-xs sm:text-sm text-[#555555] mt-2">
+                                                {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'Transparent composition details. No synthetic polymers. No chemical bleaches.') }}
+                                            </p>
+                                        </div>
+
+                                        <div class="bg-white rounded-[32px] p-6 sm:p-10 border border-[#E8E8E8] shadow-soft-md divide-y divide-[#E8E8E8] max-w-3xl mx-auto text-left">
+                                            @php
+                                                $specsData = [
+                                                    'Fiber / Material' => '100% Hand-Ginned Indigenous Cotton / Mulberry Silk',
+                                                    'Weave Density' => '120 × 120 thread count pit-loom configuration',
+                                                    'Dye Formulation' => 'Botanical Madder Root, Pomegranate Rind, Indigo Fermentation',
+                                                    'Crafting Duration' => '180 hours of handloom dedication per single piece',
+                                                    'Dimensions' => '220 cm × 75 cm (Generous Archival Drape)',
+                                                    'Care Instructions' => 'Delicate cold hand rinse with natural soapnut, shade dry',
+                                                ];
+                                                if (!empty($product?->heritage_specs)) {
+                                                    $specsData = array_merge($specsData, $product->heritage_specs);
+                                                }
+                                            @endphp
+                                            @foreach($specsData as $sLabel => $sValue)
+                                                <div class="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm gap-2">
+                                                    <span class="font-semibold text-[#1D1D1D] uppercase tracking-wider text-xs sm:w-1/3">{{ $sLabel }}</span>
+                                                    <span class="text-[#555555] font-light sm:w-2/3">{{ $sValue }}</span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                @elseif ($section['type'] === 'testimonial_editorial')
+                                    <div class="py-10 max-w-3xl mx-auto text-center space-y-4">
+                                        <span class="text-xs uppercase tracking-widest text-[#9E4732] font-semibold block">
+                                            {{ $parsedBadge ?: ($settings['badge_text'] ?? 'Collector Impressions') }}
+                                        </span>
+
+                                        <blockquote class="font-serif-luxury text-xl sm:text-2xl lg:text-3xl italic text-[#241F1E] font-light leading-snug">
+                                            "{{ $parsedSubheadline ?: ($settings['impression'] ?? 'Unboxing this piece in London was a transcendent experience. The tactile weight, the aroma of natural river washed cotton, and the signed provenance letter from Master Weaver Alimuddin makes it the most prized textile in my entire collection.') }}"
+                                        </blockquote>
+
+                                        <div class="pt-2">
+                                            <span class="block font-medium text-sm text-[#241F1E]">
+                                                {{ $parsedHeadline ?: ($settings['collector_name'] ?? 'Dr. Eleanor Vance') }}
+                                            </span>
+                                            <span class="block text-xs text-[#8C837D] mt-0.5">
+                                                {{ $settings['collector_location'] ?? 'Textile Historian & Collector • Kensington, London' }}
+                                            </span>
                                         </div>
                                     </div>
 

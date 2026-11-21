@@ -2,13 +2,13 @@
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
             <div>
-                <span class="text-xs uppercase tracking-widest text-[#9E4732] font-semibold">{{ __('Macro Visual Study') }}</span>
+                <span class="text-xs uppercase tracking-widest text-[#9E4732] font-semibold">{{ !empty($settings['badge_text']) ? $settings['badge_text'] : __('Macro Visual Study') }}</span>
                 <h2 class="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-light text-[#241F1E] mt-2">
-                    {{ __('Tactile Intricacies') }}
+                    {{ !empty($settings['headline']) ? $settings['headline'] : __('Tactile Intricacies') }}
                 </h2>
             </div>
             <p class="text-sm text-[#786C65] max-w-sm mt-4 md:mt-0 font-serif-luxury italic text-lg">
-                {{ __('Notice the deliberate irregularities that prove human hand execution over automated mechanics.') }}
+                {{ !empty($settings['subheadline']) ? $settings['subheadline'] : __('Notice the deliberate irregularities that prove human hand execution over automated mechanics.') }}
             </p>
         </div>
 
@@ -19,6 +19,9 @@
                     'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop',
                     'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop',
                 ];
+                if (!empty($settings['image_url'])) {
+                    $sampleImages[0] = $settings['image_url'];
+                }
             @endphp
 
             @foreach($sampleImages as $index => $img)

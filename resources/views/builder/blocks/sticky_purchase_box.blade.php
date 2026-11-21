@@ -4,9 +4,9 @@
             
             <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[#E8E8E8] pb-8 gap-4">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Immediate Acquisition') }}</span>
-                    <h2 class="font-editorial-heading text-3xl sm:text-4xl text-[#1D1D1D] mt-1">{{ $product->getLocalized('title') }}</h2>
-                    <p class="text-xs text-[#888888] mt-1">{{ __('Single Batch Archive Edition • Hand-inspected by Chief Curator') }}</p>
+                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ !empty($settings['badge_text']) ? $settings['badge_text'] : __('Immediate Acquisition') }}</span>
+                    <h2 class="font-editorial-heading text-3xl sm:text-4xl text-[#1D1D1D] mt-1">{{ !empty($settings['headline']) ? $settings['headline'] : $product->getLocalized('title') }}</h2>
+                    <p class="text-xs text-[#888888] mt-1">{{ !empty($settings['subheadline']) ? $settings['subheadline'] : __('Single Batch Archive Edition • Hand-inspected by Chief Curator') }}</p>
                 </div>
                 <div class="text-left sm:text-right">
                     <span class="font-editorial-heading text-4xl sm:text-5xl font-normal text-[#C96A3D]">
@@ -63,7 +63,7 @@
                     </div>
 
                     <button type="submit" class="flex-grow py-4 px-8 bg-[#214E34] hover:bg-[#173825] text-white rounded-full font-medium tracking-wide text-sm transition-luxury shadow-soft-xs hover:shadow-soft-md flex items-center justify-center space-x-3 cursor-pointer">
-                        <span>{{ __('Acquire Piece & Add To Collector Bag') }}</span>
+                        <span>{{ !empty($settings['primary_cta_text']) ? $settings['primary_cta_text'] : __('Acquire Piece & Add To Collector Bag') }}</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>

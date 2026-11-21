@@ -7,17 +7,20 @@
                 <!-- Heritage Badge -->
                 <x-badge variant="district" size="md">
                     <span class="w-1.5 h-1.5 rounded-full bg-[#C96A3D]"></span>
-                    <span>{{ $settings['badge_text'] ?? __('GI Certified Heritage Artifact') }}</span>
+                    <span>{{ !empty($settings['badge_text']) ? $settings['badge_text'] : __('GI Certified Heritage Artifact') }}</span>
                 </x-badge>
 
                 <!-- Product Title & Subtitle -->
                 <h1 class="font-editorial-heading text-4xl sm:text-5xl lg:text-6xl font-light text-[#1D1D1D] leading-[1.12]">
-                    {{ $product->getLocalized('title') }}
+                    {{ !empty($settings['headline']) ? $settings['headline'] : $product->getLocalized('title') }}
                 </h1>
 
-                @if(!empty($product->getLocalized('subtitle')))
+                @php
+                    $displaySubtitle = !empty($settings['subheadline']) ? $settings['subheadline'] : $product->getLocalized('subtitle');
+                @endphp
+                @if(!empty($displaySubtitle))
                     <p class="font-editorial-body text-lg text-[#555555] font-light leading-relaxed">
-                        {{ $product->getLocalized('subtitle') }}
+                        {{ $displaySubtitle }}
                     </p>
                 @endif
 
@@ -36,7 +39,7 @@
                 <!-- Quick Action CTA -->
                 <div class="pt-4 flex items-center space-x-6">
                     <x-button href="#purchase-section" variant="primary" size="lg">
-                        {{ __('Acquire Piece • :price', ['price' => $product->formatted_price]) }}
+                        {{ !empty($settings['primary_cta_text']) ? $settings['primary_cta_text'] : __('Acquire Piece • :price', ['price' => $product->formatted_price]) }}
                     </x-button>
                     <a href="#artisan-section" class="text-xs uppercase tracking-widest text-[#555555] hover:text-[#214E34] underline underline-offset-4 transition-colors font-medium">
                         {{ __('Read Atelier Story ↓') }}
@@ -49,11 +52,11 @@
                 <div class="relative rounded-[32px] overflow-hidden bg-white shadow-soft-lg aspect-[4/3] lg:aspect-[16/11]">
                     @php
                         $primaryMedia = $product->media->first();
-                        $imageUrl = $primaryMedia ? url($primaryMedia->file_path) : 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1600&auto=format&fit=crop';
+                        $heroDisplayImg = !empty($settings['image_url']) ? $settings['image_url'] : ($primaryMedia ? url($primaryMedia->file_path) : 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1600&auto=format&fit=crop');
                     @endphp
                     <img 
-                        src="{{ $imageUrl }}" 
-                        alt="{{ $product->getLocalized('title') }}" 
+                        src="{{ $heroDisplayImg }}" 
+                        alt="{{ !empty($settings['headline']) ? $settings['headline'] : $product->getLocalized('title') }}" 
                         class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700 ease-out"
                         loading="eager"
                         fetchpriority="high"

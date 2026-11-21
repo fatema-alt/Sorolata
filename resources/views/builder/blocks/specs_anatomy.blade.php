@@ -1,12 +1,12 @@
 <section class="py-20 lg:py-28 bg-[#F8F6F2] border-t border-[#E8E8E8]">
     <div class="max-w-5xl mx-auto px-6 lg:px-12">
         <div class="text-center max-w-2xl mx-auto mb-16">
-            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ __('Material Formulation') }}</span>
+            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ !empty($settings['badge_text']) ? $settings['badge_text'] : __('Material Formulation') }}</span>
             <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                {{ __('Pure Formulation & Metrics') }}
+                {{ !empty($settings['headline']) ? $settings['headline'] : __('Pure Formulation & Metrics') }}
             </h2>
             <p class="text-sm text-[#555555] mt-3">
-                {{ __('Transparent composition details. No synthetic polymers. No chemical bleaches.') }}
+                {{ !empty($settings['subheadline']) ? $settings['subheadline'] : __('Transparent composition details. No synthetic polymers. No chemical bleaches.') }}
             </p>
         </div>
 
