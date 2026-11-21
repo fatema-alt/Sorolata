@@ -1,8 +1,8 @@
 @extends('layouts.storefront')
 
 @section('seo_meta')
-    <title>{{ $homePage->seo_meta['title'] ?? 'Sorolata — Handcrafted Heritage & Living Artisan Sanctuary' }}</title>
-    <meta name="description" content="{{ $homePage->seo_meta['description'] ?? 'Discover rare, handmade, and GI-certified heritage artifacts from master Bangladeshi artisans. Pure craftsmanship, human provenance, and timeless luxury.' }}">
+    <title>{{ $homePage?->seo_meta['title'] ?? 'Sorolata — Handcrafted Heritage & Living Artisan Sanctuary' }}</title>
+    <meta name="description" content="{{ $homePage?->seo_meta['description'] ?? 'Discover rare, handmade, and GI-certified heritage artifacts from master Bangladeshi artisans. Pure craftsmanship, human provenance, and timeless luxury.' }}">
     <link rel="canonical" href="{{ url('/') }}">
 @endsection
 
@@ -420,7 +420,7 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                 @php
-                    $instaShots = [
+                    $instaShots = $instaShots ?? [
                         'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop',
                         'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=600&auto=format&fit=crop',
                         'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=600&auto=format&fit=crop',
@@ -430,7 +430,7 @@
                     ];
                 @endphp
 
-                @foreach($instaShots as $shot)
+                @foreach(($instaShots ?? []) as $shot)
                     <div class="group relative rounded-[24px] overflow-hidden aspect-square bg-[#E8E8E8] shadow-soft-xs hover:shadow-soft-md transition-luxury">
                         <img 
                             src="{{ $shot }}" 

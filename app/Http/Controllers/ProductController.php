@@ -60,6 +60,15 @@ class ProductController extends Controller
 
         $collections = Collection::take(2)->get();
 
+        $instaShots = [
+            'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=600&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=600&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=600&auto=format&fit=crop',
+        ];
+
         return view('storefront.index', [
             'products' => $featuredProducts,
             'bestSellers' => $bestSellers,
@@ -70,6 +79,7 @@ class ProductController extends Controller
             'collections' => $collections,
             'builderSections' => $builderSections,
             'homePage' => $homePage,
+            'instaShots' => $instaShots,
         ]);
     }
 
