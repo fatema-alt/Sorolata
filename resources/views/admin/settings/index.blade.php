@@ -48,7 +48,7 @@
         </button>
         <button type="button" @click="tab = 'analytics'" :class="tab === 'analytics' ? 'bg-[#222733] text-white shadow' : 'hover:text-gray-200'" class="px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-            <span>Analytics & GTM (ট্র্যাকিং ও পিক্সেল)</span>
+            <span>Google Tag Manager (GTM)</span>
         </button>
         <button type="button" @click="tab = 'backup'" :class="tab === 'backup' ? 'bg-[#222733] text-white shadow' : 'hover:text-gray-200'" class="px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-1.5">
             <x-icon name="database" class="w-3.5 h-3.5 text-emerald-400" />
@@ -717,259 +717,56 @@
             </div>
         </div>
 
-        <!-- Tracking, GTM, Meta Pixel & Conversions API (CAPI) Tab -->
+        <!-- Google Tag Manager (GTM) Tab -->
         <div x-show="tab === 'analytics'" class="space-y-6">
 
-            <!-- Overview & Status Banner -->
-            <div class="p-6 rounded-2xl bg-[#161922] border border-[#252a36] space-y-4">
+            <div class="p-6 rounded-2xl bg-[#161922] border border-[#252a36] space-y-6">
+                <!-- Header with Master Active Toggle -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#252a36] gap-3">
-                    <div>
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-white">Tracking & DataLayer Engine (GTM / GA4 / Pixel / CAPI)</h3>
-                        <p class="text-[11px] text-gray-400 mt-0.5">গুগল ট্যাগ ম্যানেজার, জিএ৪, ফেসবুক পিক্সেল এবং সার্ভার-সাইড কনভার্সন এপিআই (CAPI ও Stape.io) পরিচালনা করুন।</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="tracking_enabled" value="1" 
-                                   {{ ($settings['tracking_enabled'] ?? '1') == '1' ? 'checked' : '' }} 
-                                   class="sr-only peer">
-                            <div class="w-11 h-6 bg-[#252a36] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#214E34]"></div>
-                        </label>
-                        <span class="text-xs text-gray-300 font-medium">Master Tracking Active</span>
-                    </div>
-                </div>
-
-                <!-- Live Status Pills -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
-                    <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37] flex items-center justify-between">
-                        <div class="text-[11px]">
-                            <span class="text-gray-400 block font-mono text-[10px]">GOOGLE TAG MGR</span>
-                            <span class="font-semibold {{ ($settings['gtm_enabled'] ?? '1') == '1' && !empty($settings['gtm_id'] ?? 'GTM-W62NQS6R') ? 'text-emerald-400' : 'text-gray-500' }}">
-                                {{ ($settings['gtm_enabled'] ?? '1') == '1' && !empty($settings['gtm_id'] ?? 'GTM-W62NQS6R') ? 'Active' : 'Disabled' }}
-                            </span>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-[#4285F4]/10 border border-[#4285F4]/30 flex items-center justify-center text-[#4285F4] font-bold text-sm shrink-0">
+                            GTM
                         </div>
-                        <span class="w-2.5 h-2.5 rounded-full {{ ($settings['gtm_enabled'] ?? '1') == '1' && !empty($settings['gtm_id'] ?? 'GTM-W62NQS6R') ? 'bg-emerald-400 shadow-sm shadow-emerald-500/50' : 'bg-gray-600' }}"></span>
-                    </div>
-
-                    <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37] flex items-center justify-between">
-                        <div class="text-[11px]">
-                            <span class="text-gray-400 block font-mono text-[10px]">GA4 MEASUREMENT</span>
-                            <span class="font-semibold {{ ($settings['ga4_enabled'] ?? '0') == '1' && !empty($settings['ga4_measurement_id']) ? 'text-emerald-400' : 'text-gray-500' }}">
-                                {{ ($settings['ga4_enabled'] ?? '0') == '1' && !empty($settings['ga4_measurement_id']) ? 'Active' : 'Disabled' }}
-                            </span>
+                        <div>
+                            <h3 class="text-sm font-bold text-white tracking-wide">Google Tag Manager (GTM)</h3>
+                            <p class="text-xs text-gray-400 mt-0.5">গুগল ট্যাগ ম্যানেজার কন্টেইনার আইডি এবং লাইভ ডেটালেয়ার সংযোগ পরিচালনা করুন।</p>
                         </div>
-                        <span class="w-2.5 h-2.5 rounded-full {{ ($settings['ga4_enabled'] ?? '0') == '1' && !empty($settings['ga4_measurement_id']) ? 'bg-emerald-400 shadow-sm shadow-emerald-500/50' : 'bg-gray-600' }}"></span>
-                    </div>
-
-                    <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37] flex items-center justify-between">
-                        <div class="text-[11px]">
-                            <span class="text-gray-400 block font-mono text-[10px]">META BROWSER PIXEL</span>
-                            <span class="font-semibold {{ ($settings['fb_pixel_enabled'] ?? '0') == '1' && !empty($settings['fb_pixel_id']) ? 'text-emerald-400' : 'text-gray-500' }}">
-                                {{ ($settings['fb_pixel_enabled'] ?? '0') == '1' && !empty($settings['fb_pixel_id']) ? 'Active' : 'Disabled' }}
-                            </span>
-                        </div>
-                        <span class="w-2.5 h-2.5 rounded-full {{ ($settings['fb_pixel_enabled'] ?? '0') == '1' && !empty($settings['fb_pixel_id']) ? 'bg-emerald-400 shadow-sm shadow-emerald-500/50' : 'bg-gray-600' }}"></span>
-                    </div>
-
-                    <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37] flex items-center justify-between">
-                        <div class="text-[11px]">
-                            <span class="text-gray-400 block font-mono text-[10px]">SERVER CAPI (10/10)</span>
-                            <span class="font-semibold {{ ($settings['fb_capi_enabled'] ?? '0') == '1' && !empty($settings['fb_capi_token']) ? 'text-blue-400' : 'text-gray-500' }}">
-                                {{ ($settings['fb_capi_enabled'] ?? '0') == '1' && !empty($settings['fb_capi_token']) ? 'Enabled' : 'Disabled' }}
-                            </span>
-                        </div>
-                        <span class="w-2.5 h-2.5 rounded-full {{ ($settings['fb_capi_enabled'] ?? '0') == '1' && !empty($settings['fb_capi_token']) ? 'bg-blue-400 shadow-sm shadow-blue-500/50' : 'bg-gray-600' }}"></span>
-                    </div>
-                </div>
-
-                <!-- DataLayer Enable Toggle -->
-                <div class="p-4 rounded-xl bg-[#0f1115] border border-[#282d37] flex items-center justify-between">
-                    <div>
-                        <span class="text-xs font-bold text-white block">Full E-Commerce DataLayer Engine (GTM4WP & GA4 Schema)</span>
-                        <span class="text-[11px] text-gray-400 block mt-0.5">ভিজিটরদের পেজভিউ, প্রোডাক্ট দেখা (view_item), কার্ট অ্যাড (add_to_cart), চেকআউট শুরু (begin_checkout) ও অর্ডার সম্পন্ন (purchase) ইভেন্ট ডাটালেয়ারে পাঠায়।</span>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="datalayer_enabled" value="1" 
-                               {{ ($settings['datalayer_enabled'] ?? '1') == '1' ? 'checked' : '' }} 
-                               class="sr-only peer">
-                        <div class="w-11 h-6 bg-[#252a36] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#214E34]"></div>
-                    </label>
-                </div>
-            </div>
-
-            <!-- 1. Google Tag Manager (GTM) & Server Container (Stape.io) -->
-            <div class="p-6 rounded-2xl bg-[#161922] border border-[#252a36] space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-[#252a36]">
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-[#4285F4]"></span>
-                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">1. Google Tag Manager & Stape.io Server Container</h4>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="gtm_enabled" value="1" 
-                               {{ ($settings['gtm_enabled'] ?? '1') == '1' ? 'checked' : '' }} 
-                               class="sr-only peer">
-                        <div class="w-11 h-6 bg-[#252a36] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#214E34]"></div>
-                    </label>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">GTM Container ID (ওয়েব কন্টেইনার আইডি)</label>
-                        <input type="text" name="gtm_id" value="{{ $settings['gtm_id'] ?? 'GTM-W62NQS6R' }}" 
-                               placeholder="GTM-XXXXXXX"
-                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#4285F4] focus:outline-none font-mono">
-                        <span class="text-[10px] text-gray-500 mt-1 block">Google Tag Manager একাউন্টের Container ID দিন (যেমন: GTM-W62NQS6R)।</span>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Server Container URL (Stape.io / Custom Domain)</label>
-                        <input type="text" name="server_container_url" value="{{ $settings['server_container_url'] ?? '' }}" 
-                               placeholder="https://load.sorolata.com অথবা https://xxxx.stape.io"
-                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#4285F4] focus:outline-none font-mono">
-                        <span class="text-[10px] text-gray-500 mt-1 block">পিডিএফ অনুযায়ী Stape.io সার্ভার কন্টেইনার ডোমেইন থাকলে এখানে বসান। না থাকলে খালি রাখুন।</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. Google Analytics 4 (GA4) -->
-            <div class="p-6 rounded-2xl bg-[#161922] border border-[#252a36] space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-[#252a36]">
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-[#F9AB00]"></span>
-                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">2. Google Analytics 4 (GA4)</h4>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" name="ga4_enabled" value="1" 
-                               {{ ($settings['ga4_enabled'] ?? '0') == '1' ? 'checked' : '' }} 
-                               class="sr-only peer">
-                        <div class="w-11 h-6 bg-[#252a36] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#214E34]"></div>
-                    </label>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">GA4 Measurement ID (পরিমাপ আইডি)</label>
-                    <input type="text" name="ga4_measurement_id" value="{{ $settings['ga4_measurement_id'] ?? '' }}" 
-                           placeholder="G-XXXXXXXXXX"
-                           class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#F9AB00] focus:outline-none font-mono">
-                    <span class="text-[10px] text-gray-500 mt-1 block">গুগল অ্যানালিটিক্স ৪ এর মেজারমেন্ট আইডি দিন (যেমন: G-ABC1234567)। GTM ব্যবহার করলে ট্যাগ ম্যানেজারের মাধ্যমেও হ্যান্ডেল করতে পারবেন।</span>
-                </div>
-            </div>
-
-            <!-- 3. Facebook (Meta) Pixel & Conversions API (CAPI) -->
-            <div class="p-6 rounded-2xl bg-[#161922] border border-[#252a36] space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-[#252a36]">
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-[#1877F2]"></span>
-                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">3. Meta (Facebook) Pixel & Conversions API (CAPI)</h4>
                     </div>
                     <div class="flex items-center gap-3">
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="fb_pixel_enabled" value="1" 
-                                   {{ ($settings['fb_pixel_enabled'] ?? '0') == '1' ? 'checked' : '' }} 
+                            <input type="checkbox" name="gtm_enabled" value="1" 
+                                   {{ ($settings['gtm_enabled'] ?? '1') == '1' ? 'checked' : '' }} 
                                    class="sr-only peer">
                             <div class="w-11 h-6 bg-[#252a36] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#214E34]"></div>
                         </label>
-                        <span class="text-xs text-gray-400">Pixel Active</span>
+                        <span class="text-xs text-emerald-400 font-semibold">Active</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Meta Pixel / Dataset ID (পিক্সেল আইডি)</label>
-                        <input type="text" name="fb_pixel_id" value="{{ $settings['fb_pixel_id'] ?? '' }}" 
-                               placeholder="123456789012345"
-                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#1877F2] focus:outline-none font-mono">
-                        <span class="text-[10px] text-gray-500 mt-1 block">Meta Events Manager থেকে আপনার পিক্সেল বা ডেটাসেট আইডি দিন।</span>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Test Event Code (ঐচ্ছিক - টেস্ট ইভেন্ট দেখার জন্য)</label>
-                        <input type="text" name="fb_capi_test_code" value="{{ $settings['fb_capi_test_code'] ?? '' }}" 
-                               placeholder="TEST12345"
-                               class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#1877F2] focus:outline-none font-mono">
-                        <span class="text-[10px] text-gray-500 mt-1 block">Events Manager > Test Events ট্যাবের কোড বসালে লাইভ টেস্ট ইভেন্ট লগ দেখতে পাবেন।</span>
-                    </div>
+                <!-- GTM Container ID Input -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-gray-200">GTM Container ID (কন্টেইনার আইডি)</label>
+                    <input type="text" name="gtm_id" value="{{ $settings['gtm_id'] ?? 'GTM-W62NQS6R' }}" 
+                           placeholder="GTM-XXXXXXX"
+                           class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-sm text-white px-4 py-3 focus:border-[#4285F4] focus:outline-none font-mono">
+                    <p class="text-[11px] text-gray-400 mt-1">
+                        Google Tag Manager অ্যাকাউন্টের কন্টেইনার আইডি দিন (যেমন: <span class="text-[#4285F4] font-mono font-semibold">GTM-W62NQS6R</span>)। আপনার সমস্ত ট্র্যাকিং ট্যাগ (GA4, Meta Pixel, Google Ads ইত্যাদি) সরাসরি GTM থেকেই নিয়ন্ত্রিত হবে।
+                    </p>
                 </div>
 
-                <!-- Conversions API (Server-Side) -->
-                <div class="p-4 rounded-xl bg-[#0f1115] border border-[#282d37] space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-xs font-bold text-white block">Server-Side Conversions API (CAPI) Integration</span>
-                            <span class="text-[10px] text-gray-400 block mt-0.5">ব্রাউজার এডব্লকার থাকলেও সার্ভার থেকে সরাসরি ফেসবুক গ্রাফ এপিআই-তে পারচেজ ইভেন্ট পাঠায় এবং ইভেন্ট আইডি দিয়ে ডুপ্লিকেশন ঠেকায় (Deduplication)।</span>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="fb_capi_enabled" value="1" 
-                                   {{ ($settings['fb_capi_enabled'] ?? '0') == '1' ? 'checked' : '' }} 
-                                   class="sr-only peer">
-                            <div class="w-11 h-6 bg-[#252a36] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                        </label>
-                    </div>
+                <!-- Hidden inputs to keep tracking & datalayer permanently active -->
+                <input type="hidden" name="tracking_enabled" value="1">
+                <input type="hidden" name="datalayer_enabled" value="1">
 
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Meta Graph API Access Token (সিস্টেম ইউজার এক্সেস টোকেন)</label>
-                        <input type="password" name="fb_capi_token" value="{{ $settings['fb_capi_token'] ?? '' }}" 
-                               placeholder="EAAGm0PX4ZC... (দীর্ঘ এক্সেস টোকেন)"
-                               class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#1877F2] focus:outline-none font-mono">
-                        <span class="text-[10px] text-gray-500 mt-1 block">Meta Business Manager > Events Manager > Settings > Conversions API > Generate Access Token থেকে সংগ্রহ করুন।</span>
+                <!-- Live Integration Confirmation Card -->
+                <div class="p-4 rounded-xl bg-[#0f1115] border border-[#282d37] flex items-start gap-3">
+                    <span class="text-emerald-400 text-base mt-0.5">✓</span>
+                    <div class="text-xs text-gray-300 leading-relaxed">
+                        <strong class="text-white block mb-0.5">ই-কমার্স ডেটালেয়ার সম্পূর্ণ সংযুক্ত:</strong>
+                        ভিজিটরদের পেজভিউ (<span class="font-mono text-emerald-400">page_view</span>), প্রোডাক্ট দর্শন (<span class="font-mono text-emerald-400">view_item</span>), কার্টে যোগ (<span class="font-mono text-emerald-400">add_to_cart</span>), চেকআউট শুরু (<span class="font-mono text-emerald-400">begin_checkout</span>) এবং কেনাকাটা সম্পন্ন (<span class="font-mono text-emerald-400">purchase</span>) ইভেন্টগুলো স্বয়ংক্রিয়ভাবে লাইভ ওয়েবসাইটে ফায়ার হয়ে এই GTM কন্টেইনারে চলে যাবে।
                     </div>
                 </div>
             </div>
-
-            <!-- 4. Custom Scripts (Head & Body) -->
-            <div class="p-6 rounded-2xl bg-[#161922] border border-[#252a36] space-y-4">
-                <h4 class="text-xs font-bold text-white uppercase tracking-wider">4. Custom Tracking Scripts (অতিরিক্ত স্ক্রিপ্ট ইনজেকশন)</h4>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Custom Header Script (&lt;head&gt; ট্যাগের মধ্যে)</label>
-                        <textarea rows="4" name="custom_head_script" 
-                                  placeholder="<!-- Microsoft Clarity, TikTok Pixel, Pinterest ইত্যাদি -->"
-                                  class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white p-3 focus:border-[#214E34] focus:outline-none font-mono">{{ $settings['custom_head_script'] ?? '' }}</textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Custom Body Script (&lt;body&gt; শুরুর পরপর)</label>
-                        <textarea rows="4" name="custom_body_script" 
-                                  placeholder="<!-- অতিরিক্ত কোনো নো-স্ক্রিপ্ট বা বডি কোড -->"
-                                  class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white p-3 focus:border-[#214E34] focus:outline-none font-mono">{{ $settings['custom_body_script'] ?? '' }}</textarea>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. Active Event Specification Checklist (Based on PDF) -->
-            <div class="p-6 rounded-2xl bg-[#141720] border border-[#252a36] space-y-3">
-                <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <span class="text-emerald-400">✓</span>
-                    <span>পিডিএফ গাইড অনুযায়ী স্বয়ংক্রিয়ভাবে সক্রিয় ডাটালেয়ার ইভেন্টসমূহ</span>
-                </h4>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs text-gray-300">
-                    <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37]">
-                        <span class="font-mono text-emerald-400 block text-[11px] font-bold">1. page_view</span>
-                        <p class="text-[10px] text-gray-400 mt-0.5">সব পেজে স্বয়ংক্রিয়ভাবে event_id, _fbp, _fbc এবং server_container_url সহ লোড হয়।</p>
-                    </div>
-                    <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37]">
-                        <span class="font-mono text-emerald-400 block text-[11px] font-bold">2. view_item (ViewContent)</span>
-                        <p class="text-[10px] text-gray-400 mt-0.5">প্রোডাক্ট পেজ ভিজিট করলেই আইডি, নাম, মূল্য ও ক্যাটাগরি ডাটালেয়ারে যায়।</p>
-                    </div>
-                    <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37]">
-                        <span class="font-mono text-emerald-400 block text-[11px] font-bold">3. add_to_cart (AddToCart)</span>
-                        <p class="text-[10px] text-gray-400 mt-0.5">যেকোনো উপায়ে কার্টে আইটেম যুক্ত করলেই সাথে সাথে রিয়েল-টাইম ইভেন্ট ফায়ার হয়।</p>
-                    </div>
-                    <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37]">
-                        <span class="font-mono text-emerald-400 block text-[11px] font-bold">4. begin_checkout (InitiateCheckout)</span>
-                        <p class="text-[10px] text-gray-400 mt-0.5">চেকআউট পেজে সব আইটেম লিস্ট, মোট মূল্য এবং পণ্যের সংখ্যা ফায়ার হয়।</p>
-                    </div>
-                    <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37]">
-                        <span class="font-mono text-emerald-400 block text-[11px] font-bold">5. purchase (Purchase)</span>
-                        <p class="text-[10px] text-gray-400 mt-0.5">অর্ডার সম্পন্ন হলে ট্রানজাকশন আইডি, কাস্টমার বিলিং তথ্য ও এনহ্যান্সড কনভার্সন সহ সেন্ড হয়।</p>
-                    </div>
-                    <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37]">
-                        <span class="font-mono text-emerald-400 block text-[11px] font-bold">6. contact_click (Phone / WhatsApp)</span>
-                        <p class="text-[10px] text-gray-400 mt-0.5">পিডিএফ এর Step 14 অনুযায়ী সরাসরি কল (tel:) বা হোয়াটসঅ্যাপে ক্লিক স্বয়ংক্রিয় ট্র্যাক হয়।</p>
-                    </div>
-                </div>
-            </div>
-
         </div>
             <button type="submit" class="px-6 py-2.5 rounded-xl bg-[#214E34] hover:bg-[#2c6846] text-white text-xs font-semibold shadow-sm transition-all">
                 Save All Settings
