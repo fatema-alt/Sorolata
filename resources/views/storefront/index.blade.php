@@ -105,14 +105,14 @@
                     :title="__('The Royal Muslin & Jamdani Drop')"
                     :subtitle="__('300-count gossamer threads spun along the misty morning banks of the Shitalakshya River.')"
                     :image="'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1000'"
-                    :link="route('collections.show', 'royal-muslin')"
+                    :link="route('collection.show', 'royal-muslin')"
                     tag="Limited 50 Pieces"
                 />
                 <x-collection-card 
                     :title="__('Ancestral Bell-Metal & Kansa Tableware')"
                     :subtitle="__('Hammer-beaten pure acoustic bell-metal from Dhamrai artisan guilds.')"
                     :image="'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=1000'"
-                    :link="route('collections.show', 'dhamrai-bell-metal')"
+                    :link="route('collection.show', 'dhamrai-bell-metal')"
                     tag="Generational Foundry"
                 />
             </div>

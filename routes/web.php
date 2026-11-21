@@ -73,7 +73,7 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/category/{slug}', [CategoryPageController::class, 'show'])->name('category.show');
 Route::get('/categories/{slug}', fn(string $slug) => redirect()->route('category.show', $slug, 301));
 Route::get('/collection/{slug}', [CollectionPageController::class, 'show'])->name('collection.show');
-Route::get('/collections/{slug}', fn(string $slug) => redirect()->route('collection.show', $slug, 301));
+Route::get('/collections/{slug}', fn(string $slug) => redirect()->route('collection.show', $slug, 301))->name('collections.show');
 
 // Geographical & Human Heritage Hubs
 Route::get('/districts', [DistrictPageController::class, 'index'])->name('districts.index');
