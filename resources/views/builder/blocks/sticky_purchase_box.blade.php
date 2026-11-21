@@ -26,7 +26,7 @@
                     </div>
                     <div>
                         <span class="font-semibold text-[#1D1D1D] block">{{ __('Insured Courier') }}</span>
-                        <span>{{ __('Delivered in tamper-evident wooden or botanical box.') }}</span>
+                        <span>{{ !empty($settings['perk_1']) ? $settings['perk_1'] : __('Delivered in tamper-evident wooden or botanical box.') }}</span>
                     </div>
                 </div>
 
@@ -36,7 +36,7 @@
                     </div>
                     <div>
                         <span class="font-semibold text-[#1D1D1D] block">{{ __('Artisan Royalty') }}</span>
-                        <span>{{ __('Fair remuneration contractually deposited to artisan guild.') }}</span>
+                        <span>{{ !empty($settings['perk_2']) ? $settings['perk_2'] : __('Fair remuneration contractually deposited to artisan guild.') }}</span>
                     </div>
                 </div>
 
@@ -46,7 +46,7 @@
                     </div>
                     <div>
                         <span class="font-semibold text-[#1D1D1D] block">{{ __('Provenance Certificate') }}</span>
-                        <span>{{ __('Numbered certificate signed by the craftsman and guild leader.') }}</span>
+                        <span>{{ !empty($settings['perk_3']) ? $settings['perk_3'] : __('Numbered certificate signed by the craftsman and guild leader.') }}</span>
                     </div>
                 </div>
             </div>

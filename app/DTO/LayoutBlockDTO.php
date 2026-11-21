@@ -24,12 +24,17 @@ final readonly class LayoutBlockDTO
      */
     public static function fromArray(array $data): self
     {
+        $settings = (array) ($data['settings'] ?? []);
+        if (!empty($data['elements'])) {
+            $settings['elements'] = $data['elements'];
+        }
+
         return new self(
             id: (string) ($data['id'] ?? uniqid('blk_')),
             type: BlockType::from($data['type']),
             order: (int) ($data['order'] ?? 0),
             isActive: (bool) ($data['is_active'] ?? true),
-            settings: (array) ($data['settings'] ?? [])
+            settings: $settings
         );
     }
 

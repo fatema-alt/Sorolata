@@ -176,6 +176,16 @@ class VisualPageBuilder extends Component
 
     public function addElement(string $elementType): void
     {
+        if ($this->selectedSectionId) {
+            $this->addElementToSection($this->selectedSectionId, $elementType);
+            return;
+        }
+
+        if (!empty($this->sections)) {
+            $this->addElementToSection($this->sections[count($this->sections) - 1]['id'], $elementType);
+            return;
+        }
+
         $newId = 'el_' . Str::random(8);
         $blockType = BlockType::tryFrom($elementType) ?? BlockType::ELEMENT_HEADING;
 
@@ -210,12 +220,12 @@ class VisualPageBuilder extends Component
             },
             'text_color' => '#1D1D1D',
             'headline_size' => match ($elementType) {
-                'element_heading' => 'text-4xl sm:text-5xl',
-                'element_paragraph' => 'text-base',
-                default => 'text-2xl sm:text-3xl',
+                'element_heading' => 'text-3xl',
+                'element_paragraph' => 'text-sm sm:text-base',
+                default => 'text-xl sm:text-2xl',
             },
-            'padding_top' => '24px',
-            'padding_bottom' => '24px',
+            'padding_top' => '16px',
+            'padding_bottom' => '16px',
             'bg_color' => '#FFFFFF',
             'container_width' => 'boxed',
         ];
@@ -232,6 +242,84 @@ class VisualPageBuilder extends Component
         $this->selectedSectionId = $newId;
         $this->autoSave();
         $this->statusMessage = 'Element added to canvas';
+    }
+
+    public function addElementToSection(string $sectionId, string $elementType): void
+    {
+        $newId = 'el_' . Str::random(8);
+        $blockType = BlockType::tryFrom($elementType) ?? BlockType::ELEMENT_HEADING;
+
+        $defaultSettings = [
+            'headline' => match ($elementType) {
+                'element_heading' => 'New Editorial Heading',
+                'element_button' => 'Explore Masterpieces',
+                'element_product_card' => 'GI Certified Jamdani Sari',
+                'element_artisan_quote' => 'Ustad Alimullah Dewan',
+                default => $blockType->defaultTitle(),
+            },
+            'subheadline' => match ($elementType) {
+                'element_paragraph' => 'Preserving ancestral loom lineages, river basin metallurgy, and living master craftsmanship across historical Bengal.',
+                'element_artisan_quote' => 'Our hands carry the memory of three centuries of loom heritage on the Shitalakshya river banks.',
+                default => '',
+            },
+            'badge_text' => match ($elementType) {
+                'element_artisan_quote' => 'Royal Weaver Guild',
+                'element_product_card' => 'GI Certified',
+                default => 'Heritage',
+            },
+            'price' => '৳ 18,500',
+            'primary_cta_text' => 'Explore Piece',
+            'primary_cta_url' => '/shop',
+            'image_url' => $elementType === 'element_product_card' ? 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600' : '',
+            'video_url' => $elementType === 'element_video' ? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' : '',
+            'alignment' => match ($elementType) {
+                'element_paragraph' => 'left',
+                'element_artisan_quote' => 'left',
+                default => 'center',
+            },
+            'text_color' => '#1D1D1D',
+            'headline_size' => match ($elementType) {
+                'element_heading' => 'text-2xl',
+                'element_paragraph' => 'text-sm sm:text-base',
+                default => 'text-lg',
+            },
+        ];
+
+        $newChild = [
+            'id' => $newId,
+            'type' => $blockType->value,
+            'is_active' => true,
+            'settings' => $defaultSettings,
+        ];
+
+        foreach ($this->sections as &$sec) {
+            if ($sec['id'] === $sectionId) {
+                if (!isset($sec['elements']) || !is_array($sec['elements'])) {
+                    $sec['elements'] = [];
+                }
+                $sec['elements'][] = $newChild;
+                break;
+            }
+        }
+        unset($sec);
+
+        $this->selectedSectionId = $sectionId;
+        $this->autoSave();
+        $this->statusMessage = 'Element fitted inside section';
+    }
+
+    public function removeElementFromSection(string $sectionId, int $elementIndex): void
+    {
+        foreach ($this->sections as &$sec) {
+            if ($sec['id'] === $sectionId && isset($sec['elements'][$elementIndex])) {
+                array_splice($sec['elements'], $elementIndex, 1);
+                break;
+            }
+        }
+        unset($sec);
+
+        $this->autoSave();
+        $this->statusMessage = 'Element removed from section';
     }
 
     public function insertElementAt(string $elementType, int $targetIndex): void

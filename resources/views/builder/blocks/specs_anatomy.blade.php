@@ -13,12 +13,12 @@
         <div class="bg-white rounded-[32px] p-8 sm:p-12 border border-[#E8E8E8] shadow-soft-md divide-y divide-[#E8E8E8]">
             @php
                 $defaultSpecs = [
-                    'Fiber / Material' => '100% Hand-Ginned Indigenous Cotton / Mulberry Silk',
-                    'Weave Density' => '120 × 120 thread count pit-loom configuration',
-                    'Dye Formulation' => 'Botanical Madder Root, Pomegranate Rind, Indigo Fermentation',
-                    'Crafting Duration' => '180 hours of handloom dedication per single piece',
-                    'Dimensions' => '220 cm × 75 cm (Generous Archival Drape)',
-                    'Care Instructions' => 'Delicate cold hand rinse with natural soapnut, shade dry',
+                    'Fiber / Material' => $settings['spec_fiber'] ?? '100% Hand-Ginned Indigenous Cotton / Mulberry Silk',
+                    'Weave Density' => $settings['spec_density'] ?? '120 × 120 thread count pit-loom configuration',
+                    'Dye Formulation' => $settings['spec_dye'] ?? 'Botanical Madder Root, Pomegranate Rind, Indigo Fermentation',
+                    'Crafting Duration' => $settings['spec_duration'] ?? '180 hours of handloom dedication per single piece',
+                    'Dimensions' => $settings['spec_dimensions'] ?? '220 cm × 75 cm (Generous Archival Drape)',
+                    'Care Instructions' => $settings['spec_care'] ?? 'Delicate cold hand rinse with natural soapnut, shade dry',
                 ];
                 $activeSpecs = !empty($specs) ? array_merge($defaultSpecs, $specs) : $defaultSpecs;
             @endphp

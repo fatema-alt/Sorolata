@@ -21,7 +21,7 @@
                 </div>
                 <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">{{ __('GI Heritage Specialty') }}</h3>
                 <p class="text-sm text-[#555555] leading-relaxed">
-                    {{ $district?->gi_specialty ?? __('World-renowned handloom textile weaving registered under national geographical indication.') }}
+                    {{ !empty($settings['gi_specialty']) ? $settings['gi_specialty'] : ($district?->gi_specialty ?? __('World-renowned handloom textile weaving registered under national geographical indication.')) }}
                 </p>
             </div>
 
@@ -32,7 +32,7 @@
                 </div>
                 <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">{{ __('River Basin & Microclimate') }}</h3>
                 <p class="text-sm text-[#555555] leading-relaxed">
-                    {{ $district?->river_basin ?? __('Shitalakshya & Jamuna River Basin') }} — {{ __('the ambient river air provides the exact morning humidity essential for ultra-fine thread tension without snapping.') }}
+                    {{ !empty($settings['river_basin']) ? $settings['river_basin'] : (($district?->river_basin ?? __('Shitalakshya & Jamuna River Basin')) . ' — ' . __('the ambient river air provides the exact morning humidity essential for ultra-fine thread tension without snapping.')) }}
                 </p>
             </div>
 
@@ -43,7 +43,7 @@
                 </div>
                 <h3 class="font-editorial-heading text-2xl font-light text-[#1D1D1D]">{{ __('Historical Chronicle') }}</h3>
                 <p class="text-sm text-[#555555] leading-relaxed">
-                    {{ $district?->historical_narrative ?? __('Documented in traveler chronicles since the 14th century, cultivated by imperial patronage and preserved through generational resilience.') }}
+                    {{ !empty($settings['historical_narrative']) ? $settings['historical_narrative'] : ($district?->historical_narrative ?? __('Documented in traveler chronicles since the 14th century, cultivated by imperial patronage and preserved through generational resilience.')) }}
                 </p>
             </div>
         </div>

@@ -7,6 +7,8 @@
                 <div class="relative rounded-[32px] overflow-hidden bg-white aspect-[4/5] shadow-soft-lg">
                     @php
                         $portrait = !empty($settings['image_url']) ? $settings['image_url'] : ($artisan?->portrait_url ?? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1000&auto=format&fit=crop');
+                        $atelierName = !empty($settings['atelier_name']) ? $settings['atelier_name'] : ($artisan?->atelier_name ?? __('Bengal Heritage Loom'));
+                        $yearsMastery = !empty($settings['experience']) ? $settings['experience'] : ($artisan?->years_of_mastery ?? 35);
                     @endphp
                     <img 
                         src="{{ $portrait }}" 
@@ -18,10 +20,10 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <span class="text-[10px] uppercase tracking-widest text-[#AAAAAA]">{{ __('Atelier') }}</span>
-                                <h4 class="font-editorial-heading text-xl font-light">{{ $artisan?->atelier_name ?? __('Bengal Heritage Loom') }}</h4>
+                                <h4 class="font-editorial-heading text-xl font-light">{{ $atelierName }}</h4>
                             </div>
                             <span class="text-xs px-3 py-1 bg-[#214E34] text-white rounded-full font-medium">
-                                {{ __(':years Years Mastery', ['years' => $artisan?->years_of_mastery ?? 35]) }}
+                                {{ __(':years Years Mastery', ['years' => $yearsMastery]) }}
                             </span>
                         </div>
                     </div>
@@ -40,7 +42,7 @@
                 </h2>
 
                 <p class="text-xs uppercase tracking-widest text-[#888888]">
-                    {{ __('Specialty:') }} {{ $artisan?->craft_type?->title() ?? __('Heritage Handloom Weaving') }} • {{ $district?->getLocalized('name') ?? __('Tangail') }}, {{ __('Bangladesh') }}
+                    {{ __('Specialty:') }} {{ !empty($settings['craft_type']) ? $settings['craft_type'] : ($artisan?->craft_type?->title() ?? __('Heritage Handloom Weaving')) }} • {{ $district?->getLocalized('name') ?? __('Tangail') }}, {{ __('Bangladesh') }}
                 </p>
 
                 <!-- Editorial Pull Quote -->
@@ -55,7 +57,7 @@
 
                 <div class="text-[#555555] text-base leading-relaxed space-y-4 font-editorial-body">
                     <p>
-                        {{ $artisan?->getLocalized('biography') ?? __('Carrying forward an uninterrupted lineage of artisan mastery. Every piece represents weeks of patient handcrafting using indigenous techniques passed down through generations of guild masters.') }}
+                        {{ !empty($settings['biography']) ? $settings['biography'] : ($artisan?->getLocalized('biography') ?? __('Carrying forward an uninterrupted lineage of artisan mastery. Every piece represents weeks of patient handcrafting using indigenous techniques passed down through generations of guild masters.')) }}
                     </p>
                 </div>
 

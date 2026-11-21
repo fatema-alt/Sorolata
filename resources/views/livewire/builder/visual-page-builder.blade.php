@@ -1599,6 +1599,80 @@
                                     </div>
                                 @endif
 
+                                <!-- Embedded Child Elements in this Section -->
+                                @if(!empty($section['elements']))
+                                    <div class="mt-6 pt-4 border-t border-dashed border-stone-300 space-y-3 pointer-events-auto">
+                                        @foreach($section['elements'] as $elIdx => $childEl)
+                                            @php
+                                                $childType = $childEl['type'] ?? 'element_heading';
+                                                $childSettings = $childEl['settings'] ?? [];
+                                            @endphp
+                                            <div wire:key="child-{{ $childEl['id'] }}"
+                                                 class="relative group/child p-3 rounded-xl border border-stone-200 hover:border-[#214E34] bg-white/80 transition-all text-left">
+                                                <div class="absolute -top-2.5 right-2 z-20 hidden group-hover/child:flex items-center space-x-1">
+                                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-[#1a1d24] text-[#A3D9B1]">
+                                                        {{ str_replace('element_', '', $childType) }}
+                                                    </span>
+                                                    <button type="button" 
+                                                            wire:click.stop="removeElementFromSection('{{ $secId }}', {{ $elIdx }})"
+                                                            class="p-1 rounded bg-red-600 hover:bg-red-700 text-white text-[10px]"
+                                                            title="Delete element">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                    </button>
+                                                </div>
+
+                                                @if ($childType === 'element_heading')
+                                                    <h3 class="font-editorial-heading {{ $childSettings['headline_size'] ?? 'text-2xl' }} font-bold text-[#1D1D1D] text-{{ $childSettings['alignment'] ?? 'center' }}">
+                                                        {{ $childSettings['headline'] ?? 'New Heading' }}
+                                                    </h3>
+                                                @elseif ($childType === 'element_paragraph')
+                                                    <p class="text-sm text-[#555555] leading-relaxed text-{{ $childSettings['alignment'] ?? 'left' }}">
+                                                        {{ $childSettings['subheadline'] ?? 'Storytelling and craft description narrative text.' }}
+                                                    </p>
+                                                @elseif ($childType === 'element_image' && !empty($childSettings['image_url']))
+                                                    <div class="flex justify-{{ $childSettings['alignment'] ?? 'center' }}">
+                                                        <img src="{{ $childSettings['image_url'] }}" class="max-w-md h-auto rounded-xl shadow-sm">
+                                                    </div>
+                                                @elseif ($childType === 'element_video' && !empty($childSettings['video_url']))
+                                                    <div class="max-w-2xl mx-auto aspect-video rounded-xl overflow-hidden bg-black">
+                                                        <iframe src="{{ $childSettings['video_url'] }}" class="w-full h-full"></iframe>
+                                                    </div>
+                                                @elseif ($childType === 'element_button')
+                                                    <div class="flex justify-{{ $childSettings['alignment'] ?? 'center' }}">
+                                                        <span class="px-6 py-2.5 rounded-full bg-[#214E34] text-white text-xs font-semibold">
+                                                            {{ $childSettings['primary_cta_text'] ?? 'Explore Now' }}
+                                                        </span>
+                                                    </div>
+                                                @elseif ($childType === 'element_artisan_quote')
+                                                    <div class="p-4 rounded-xl bg-[#F8F6F2] border-l-4 border-[#214E34]">
+                                                        <p class="italic font-editorial-heading text-base text-gray-800">"{{ $childSettings['subheadline'] ?? '' }}"</p>
+                                                        <span class="text-xs font-bold text-gray-900 mt-1 block">— {{ $childSettings['headline'] ?? '' }}</span>
+                                                    </div>
+                                                @elseif ($childType === 'element_divider')
+                                                    <div class="my-2 border-t border-stone-200"></div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                                <!-- Section Inner Dropzone for Elements -->
+                                <div x-data="{ isInnerDrop: false }"
+                                     @dragover.prevent="isInnerDrop = true; event.dataTransfer.dropEffect = 'copy'"
+                                     @dragleave.prevent="isInnerDrop = false"
+                                     @drop.prevent="
+                                         isInnerDrop = false;
+                                         const itemType = event.dataTransfer.getData('text/plain');
+                                         if (itemType) {
+                                             $wire.addElementToSection('{{ $secId }}', itemType);
+                                         }
+                                     "
+                                     class="w-full mt-4 py-2 px-3 rounded-xl border border-dashed transition-all text-center flex items-center justify-center space-x-1.5 text-xs pointer-events-auto cursor-pointer"
+                                     :class="isInnerDrop ? 'border-[#214E34] bg-[#214E34]/20 text-[#214E34] font-bold py-3.5 shadow-md scale-[1.01]' : 'border-stone-300 text-stone-400 hover:border-[#214E34] hover:text-[#214E34] hover:bg-[#214E34]/5'">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                    <span>Drag & drop elements from left to fit inside this section</span>
+                                </div>
+
                             </div>
                         </section>
 
@@ -1693,11 +1767,17 @@
             <div class="p-3 border-b border-[#282d37] bg-[#14161d] flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-white">Elementor Inspector</span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-white">
+                        @if ($selectedSection)
+                            {{ ucwords(str_replace('_', ' ', $selectedSection['type'])) }}
+                        @else
+                            Inspector
+                        @endif
+                    </span>
                 </div>
                 @if ($selectedSection)
-                    <span class="text-[10px] px-2 py-0.5 rounded bg-[#282d37] text-gray-300 font-mono">
-                        {{ $selectedSection['id'] }}
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-[#282d37] text-emerald-400 font-mono">
+                        Active Section
                     </span>
                 @endif
             </div>
@@ -1771,160 +1851,514 @@
                             </div>
                         </div>
 
-                        <!-- Block Headline -->
-                        <div>
-                            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline Text</label>
-                            <input type="text" 
-                                   wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
-                                   placeholder="e.g. Living Traditions of Sonargaon"
-                                   class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
-                        </div>
+                        @php
+                            $secType = $sections[$sIndex]['type'] ?? '';
+                        @endphp
 
-                        <!-- Subheadline / Body Story -->
-                        <div>
-                            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subheadline / Narrative Description</label>
-                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
-                                      rows="3"
-                                      placeholder="Write or insert dynamic storytelling tags..."
-                                      class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
-                        </div>
+                        {{-- 1. TESTIMONIAL EDITORIAL --}}
+                        @if ($secType === 'testimonial_editorial')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Testimonial / Collector Impression
+                                </div>
 
-                        <!-- Badge Text -->
-                        <div>
-                            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Heritage Badge / Small Label</label>
-                            <input type="text" 
-                                   wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
-                                   placeholder="e.g. GI Certified Heritage Artifact"
-                                   class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
-                        </div>
-
-                        <!-- Special Controls for Shoppable Product Card -->
-                        @if (($sections[$sIndex]['type'] ?? '') === 'element_product_card')
-                            <div class="p-3 rounded-lg bg-[#14161d] border border-amber-500/30 space-y-2">
-                                <span class="text-[10px] uppercase font-bold tracking-wider text-amber-400 block">Select Shoppable Product</span>
-                                <select wire:change="$set('sections.{{ $sIndex }}.settings.headline', $event.target.options[$event.target.selectedIndex].text)"
-                                        class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
-                                    <option value="">-- Choose from Catalog --</option>
-                                    @foreach ($catalogProducts as $catProd)
-                                        <option value="{{ $catProd->id }}">{{ $catProd->title }} ({{ $catProd->formatted_price ?? '৳ ' . number_format($catProd->price) }})</option>
-                                    @endforeach
-                                </select>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Display Price</label>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text (লেবেল)</label>
                                     <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.price" 
-                                           placeholder="e.g. ৳ 18,500"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
+                                           placeholder="e.g. Collector Impressions"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Collector Review / Quote (প্রশংসা বা মতামত)</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
+                                              rows="4"
+                                              placeholder="Unboxing this piece in London was a transcendent experience..."
+                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Collector / Reviewer Name (নাম)</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
+                                           placeholder="e.g. Dr. Eleanor Vance"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Designation & Location (পদবী ও অবস্থান)</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.collector_location" 
+                                           placeholder="e.g. Textile Historian & Collector • Kensington, London"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                            </div>
+
+                        {{-- 2. SPECS ANATOMY --}}
+                        @elseif ($secType === 'specs_anatomy')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Pure Formulation & Metrics Table
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
+                                           placeholder="e.g. Material Formulation"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Table Title (শিরোনাম)</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
+                                           placeholder="e.g. Pure Formulation & Metrics"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subtitle / Description</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
+                                              rows="2"
+                                              placeholder="Transparent composition details..."
+                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+
+                                <!-- 6 Specific formulation items -->
+                                <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-3">
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">
+                                        Specification Details (উপাদান টেবিল এডিট করুন)
+                                    </span>
+                                    
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Fiber / Material (আঁশ / উপাদান)</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.spec_fiber" 
+                                               placeholder="100% Hand-Ginned Indigenous Cotton"
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Weave Density (বুনন ঘনত্ব)</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.spec_density" 
+                                               placeholder="120 × 120 thread count pit-loom configuration"
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Dye Formulation (রং প্রক্রিয়া)</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.spec_dye" 
+                                               placeholder="Botanical Madder Root, Pomegranate Rind..."
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Crafting Duration (সময়কাল)</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.spec_duration" 
+                                               placeholder="180 hours of handloom dedication"
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Dimensions (পরিমাপ)</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.spec_dimensions" 
+                                               placeholder="220 cm × 75 cm"
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Care Instructions (যত্ন নির্দেশিকা)</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.spec_care" 
+                                               placeholder="Delicate cold hand rinse with natural soapnut, shade dry"
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                        {{-- 3. ARTISAN SPOTLIGHT --}}
+                        @elseif ($secType === 'artisan_spotlight')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Master Artisan Spotlight
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Label</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
+                                           placeholder="The Master Artisan Behind This Piece"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Artisan Name (কারিগরের নাম)</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
+                                           placeholder="Rabeya Begum"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Artisan Pull Quote (উক্তি)</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
+                                              rows="3"
+                                              placeholder="Our hands carry the memory of three centuries of loom heritage..."
+                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Atelier / Loom Name</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.atelier_name" 
+                                               placeholder="Dewan Royal Loom"
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Years of Mastery</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.experience" 
+                                               placeholder="38"
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <!-- Photo Upload -->
+                                <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-2">
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">Artisan Portrait Photo (ছবি)</span>
+                                    <input type="file" wire:model="uploadedImage" accept="image/*" class="text-xs text-gray-400">
+                                    @if (!empty($sections[$sIndex]['settings']['image_url']))
+                                        <div class="flex items-center space-x-2 pt-2">
+                                            <img src="{{ $sections[$sIndex]['settings']['image_url'] }}" class="w-12 h-12 rounded-lg object-cover">
+                                            <button type="button" wire:click="removeImage" class="text-[10px] text-red-400">Remove Photo</button>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Biography (জীবনকথা)</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.biography" 
+                                              rows="3"
+                                              placeholder="Carrying forward an uninterrupted lineage of artisan mastery..."
+                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+                            </div>
+
+                        {{-- 4. HERO CINEMATIC --}}
+                        @elseif ($secType === 'hero_cinematic')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Cinematic Hero Showcase
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
+                                           placeholder="GI Certified Heritage Artifact"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Product Headline</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
+                                           placeholder="{{ product.title }}"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subtitle / Narrative</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
+                                              rows="3"
+                                              placeholder="Write storytelling or subtitle..."
+                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">CTA Button Text & Price</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" 
+                                           placeholder="Acquire Piece • {{ product.price }}"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <!-- Hero Photography Upload -->
+                                <div class="p-3.5 rounded-xl bg-[#14161d] border border-[#282d37] space-y-3">
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">Hero Photo / Video</span>
+                                    <input type="file" wire:model="uploadedImage" accept="image/*" class="text-xs text-gray-400">
+                                    @if (!empty($sections[$sIndex]['settings']['image_url']))
+                                        <div class="flex items-center space-x-2 pt-1">
+                                            <img src="{{ $sections[$sIndex]['settings']['image_url'] }}" class="w-12 h-12 rounded-lg object-cover">
+                                            <button type="button" wire:click="removeImage" class="text-[10px] text-red-400">Remove Image</button>
+                                        </div>
+                                    @endif
+                                    <div class="pt-2 border-t border-[#282d37]">
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Video URL (Optional)</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.400ms="sections.{{ $sIndex }}.settings.video_url" 
+                                               placeholder="https://www.youtube.com/watch?v=..."
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                    </div>
+                                </div>
+                            </div>
+
+                        {{-- 5. STICKY PURCHASE BOX --}}
+                        @elseif ($secType === 'sticky_purchase_box')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Purchase Box & Guarantee
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
+                                           placeholder="Immediate Acquisition"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Title</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
+                                           placeholder="{{ product.title }}"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subtitle</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
+                                           placeholder="Single Batch Archive Edition..."
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Checkout Button Text</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" 
+                                           placeholder="Add to Archival Box • Instant Checkout"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-2.5">
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">3 Guarantee Perks (সুবিধাসমূহ)</span>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Perk 1: Insured Courier</label>
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.perk_1" placeholder="Delivered in tamper-evident box." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Perk 2: Artisan Royalty</label>
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.perk_2" placeholder="Fair remuneration deposited to guild." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Perk 3: Certificate</label>
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.perk_3" placeholder="Numbered certificate signed by craftsman." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                        {{-- 6. INTERACTIVE GALLERY --}}
+                        @elseif ($secType === 'interactive_gallery')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Macro Visual Gallery
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
+                                           placeholder="Macro Visual Study"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Gallery Title (শিরোনাম)</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
+                                           placeholder="Tactile Intricacies"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subtitle</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
+                                              rows="2"
+                                              placeholder="Notice the deliberate irregularities that prove human hand execution..."
+                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+
+                                <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-2.5">
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">Gallery Image URLs</span>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Image 1 URL</label>
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.gallery_img_1" placeholder="https://..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Image 2 URL</label>
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.gallery_img_2" placeholder="https://..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Image 3 URL</label>
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.gallery_img_3" placeholder="https://..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                    </div>
+                                </div>
+                            </div>
+
+                        {{-- 7. HERITAGE PROVENANCE --}}
+                        @elseif ($secType === 'heritage_provenance')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Regional Provenance & GI
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
+                                           placeholder="Geographical Indication & Regional Provenance"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Heading</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
+                                           placeholder="Rooted in {{ district.name }}"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Narrative Subtitle</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
+                                              rows="2"
+                                              placeholder="Soil, microclimate, and river humidity shape the personality..."
+                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+
+                                <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-2.5">
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">3 Provenance Cards</span>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Card 1: GI Specialty Text</label>
+                                        <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.gi_specialty" placeholder="World-renowned handloom textile..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Card 2: River Basin & Climate</label>
+                                        <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.river_basin" placeholder="Shitalakshya river air provides morning humidity..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Card 3: Historical Chronicle</label>
+                                        <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.historical_narrative" placeholder="Documented in traveler chronicles since 14th century..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {{-- 8. ATOMIC ELEMENTS --}}
+                        @elseif ($secType === 'element_heading')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Heading Widget
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Heading Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Heading text..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                            </div>
+
+                        @elseif ($secType === 'element_paragraph')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Paragraph Widget
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Paragraph Text</label>
+                                    <textarea rows="4" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Paragraph text..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+                            </div>
+
+                        @elseif ($secType === 'element_image')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Image Widget
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Upload Image</label>
+                                    <input type="file" wire:model="uploadedImage" accept="image/*" class="text-xs text-gray-400">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Image URL (or paste external link)</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.image_url" placeholder="https://..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                </div>
+                            </div>
+
+                        @elseif ($secType === 'element_video')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Video Player Widget
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Video URL (YouTube, Vimeo, MP4)</label>
+                                    <input type="text" wire:model.live.debounce.400ms="sections.{{ $sIndex }}.settings.video_url" placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                </div>
+                            </div>
+
+                        @elseif ($secType === 'element_button')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Action Button
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Button Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="Click Here" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Button Link URL</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_url" placeholder="/shop" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                </div>
+                            </div>
+
+                        {{-- 9. DEFAULT / FALLBACK FOR OTHER SECTIONS --}}
+                        @else
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline Text</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
+                                           placeholder="e.g. Section Headline"
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subheadline / Narrative</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
+                                              rows="3"
+                                              placeholder="Description..."
+                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" 
+                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
+                                           placeholder="Label..."
+                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-2">
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">Media & Uploads</span>
+                                    <input type="file" wire:model="uploadedImage" accept="image/*" class="text-xs text-gray-400">
                                 </div>
                             </div>
                         @endif
-
-                        <!-- Media Controls: Direct File Upload & Video Embed -->
-                        <div class="p-3.5 rounded-xl bg-[#14161d] border border-[#282d37] space-y-3">
-                            <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block flex items-center justify-between">
-                                <span class="flex items-center space-x-1.5">
-                                    <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <span>Direct Image Upload System</span>
-                                </span>
-                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-semibold">Local Storage</span>
-                            </span>
-
-                            <!-- Real Image Upload Dropzone -->
-                            <div>
-                                <label class="block text-[11px] font-semibold text-gray-300 mb-1.5">Upload Image from Device (ছবি আপলোড করুন)</label>
-                                <div class="relative border-2 border-dashed border-[#282d37] hover:border-[#214E34] rounded-xl p-3.5 text-center bg-[#12141a] transition-all cursor-pointer group">
-                                    <input type="file" 
-                                           wire:model="uploadedImage" 
-                                           accept="image/png, image/jpeg, image/jpg, image/webp"
-                                           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                                    
-                                    <div wire:loading.remove wire:target="uploadedImage" class="flex flex-col items-center">
-                                        <div class="w-8 h-8 rounded-full bg-[#222731] group-hover:bg-[#214E34]/30 text-gray-400 group-hover:text-emerald-400 flex items-center justify-center mb-1.5 transition-colors">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                            </svg>
-                                        </div>
-                                        <span class="text-xs text-white font-medium">Click or Drag & Drop Photo Here</span>
-                                        <span class="text-[10px] text-gray-400 mt-0.5">JPG, PNG, WebP (up to 10MB)</span>
-                                    </div>
-
-                                    <div wire:loading wire:target="uploadedImage" class="flex flex-col items-center py-2">
-                                        <svg class="animate-spin w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                                        </svg>
-                                        <span class="text-xs text-emerald-400 font-semibold mt-1.5">Uploading & Storing...</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Uploaded Image Active Preview -->
-                            @if (!empty($sections[$sIndex]['settings']['image_url']))
-                                <div class="rounded-xl border border-emerald-500/40 bg-[#12141a] p-2.5 flex items-center space-x-3">
-                                    <div class="w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-gray-700 bg-stone-900">
-                                        <img src="{{ $sections[$sIndex]['settings']['image_url'] }}" alt="Uploaded" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="text-xs font-semibold text-emerald-400 flex items-center space-x-1">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                            </svg>
-                                            <span>Image Active</span>
-                                        </div>
-                                        <span class="text-[10px] text-gray-400 truncate block font-mono mt-0.5">{{ basename($sections[$sIndex]['settings']['image_url']) }}</span>
-                                    </div>
-                                    <button type="button" 
-                                            wire:click="removeImage" 
-                                            class="p-1.5 text-red-400 hover:text-red-300 hover:bg-[#282d37] rounded-lg transition-colors"
-                                            title="Remove Image">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            @endif
-
-                            <!-- Video Embed (YouTube, Vimeo, MP4) -->
-                            <div class="pt-2 border-t border-[#282d37]">
-                                <label class="block text-[11px] font-semibold text-gray-300 mb-1">Video URL (YouTube, Vimeo, or MP4)</label>
-                                <input type="text" 
-                                       wire:model.live.debounce.400ms="sections.{{ $sIndex }}.settings.video_url" 
-                                       placeholder="e.g. https://www.youtube.com/watch?v=..."
-                                       class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
-                                <p class="text-[10px] text-gray-500 mt-1">Paste any video URL — auto embeds responsive player on canvas.</p>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons (CTA) -->
-                        <div class="space-y-2.5">
-                            <label class="block text-[11px] font-semibold text-gray-300">Action Buttons (CTA)</label>
-                            
-                            <!-- Primary CTA -->
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="text" 
-                                       wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" 
-                                       placeholder="Button Text"
-                                       class="bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
-                                <input type="text" 
-                                       wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_url" 
-                                       placeholder="Button URL (/shop)"
-                                       class="bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
-                            </div>
-
-                            <!-- Secondary CTA -->
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="text" 
-                                       wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.secondary_cta_text" 
-                                       placeholder="Secondary Text"
-                                       class="bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
-                                <input type="text" 
-                                       wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.secondary_cta_url" 
-                                       placeholder="Secondary URL"
-                                       class="bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
-                            </div>
-                        </div>
                     @endif
 
                     <!-- TAB 2: STYLE (স্টাইল) -->

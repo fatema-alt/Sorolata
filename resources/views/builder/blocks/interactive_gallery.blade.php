@@ -15,13 +15,10 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             @php
                 $sampleImages = [
-                    'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1000&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop',
+                    $settings['gallery_img_1'] ?? (!empty($settings['image_url']) ? $settings['image_url'] : 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1000&auto=format&fit=crop'),
+                    $settings['gallery_img_2'] ?? 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop',
+                    $settings['gallery_img_3'] ?? 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop',
                 ];
-                if (!empty($settings['image_url'])) {
-                    $sampleImages[0] = $settings['image_url'];
-                }
             @endphp
 
             @foreach($sampleImages as $index => $img)
