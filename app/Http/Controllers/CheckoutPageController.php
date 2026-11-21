@@ -73,6 +73,17 @@ class CheckoutPageController extends Controller
 
         $total = max(0.0, $subtotal - $discountAmount) + $dhakaFee;
 
+        $checkoutAnalyticsItems = $items->map(function ($it) {
+            $prod = $it['product'];
+            return [
+                'item_id' => (string) $prod->id,
+                'item_name' => $prod->title,
+                'price' => (float) $prod->price,
+                'item_category' => $prod->category?->name ?? 'Heritage Handcraft',
+                'quantity' => (int) $it['quantity'],
+            ];
+        })->values()->toArray();
+
         return view('checkout.index', [
             'items' => $items,
             'subtotal' => $subtotal,
@@ -83,6 +94,7 @@ class CheckoutPageController extends Controller
             'coupon' => $coupon,
             'discountAmount' => $discountAmount,
             'total' => $total,
+            'checkoutAnalyticsItems' => $checkoutAnalyticsItems,
         ]);
     }
 
@@ -232,6 +244,72 @@ class CheckoutPageController extends Controller
         } catch (\Throwable $e) {
             Log::warning("Order confirmation email failed: " . $e->getMessage());
         }
+
+        // Analytics Tracking: DataLayer & Meta Conversions API (CAPI)
+        $purchaseEventId = 'evt_pur_' . $order->id . '_' . time() . '_' . substr(bin2hex(random_bytes(3)), 0, 6);
+        $itemsData = [];
+        foreach ($order->items as $it) {
+            $itemsData[] = [
+                'item_id' => (string) $it->product_id,
+                'item_name' => $it->product_title,
+                'price' => (float) $it->unit_price,
+                'quantity' => (int) $it->quantity,
+                'item_category' => 'Heritage Handcraft',
+            ];
+        }
+
+        $nameParts = explode(' ', trim((string) $order->customer_name));
+        $firstName = $nameParts[0] ?? '';
+        $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
+        $district = $order->shipping_address['district'] ?? '';
+
+        try {
+            $capiService = app(\App\Services\Analytics\FacebookCapiService::class);
+            $capiItems = array_map(fn($it) => [
+                'id' => $it['item_id'],
+                'quantity' => $it['quantity'],
+                'item_price' => $it['price'],
+            ], $itemsData);
+
+            $capiService->sendEvent(
+                eventName: 'Purchase',
+                customData: [
+                    'value' => (float) $order->total_amount,
+                    'currency' => 'BDT',
+                    'contents' => $capiItems,
+                    'content_type' => 'product',
+                    'order_id' => $order->order_number,
+                    'num_items' => (int) $order->items->sum('quantity'),
+                ],
+                userData: [
+                    'email' => $order->customer_email,
+                    'phone' => $order->customer_phone,
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
+                    'city' => $district,
+                    'country' => 'bd',
+                ],
+                eventId: $purchaseEventId
+            );
+        } catch (\Throwable $e) {
+            Log::warning("Purchase CAPI dispatch skipped/failed: " . $e->getMessage());
+        }
+
+        session()->flash('analytics_purchase', [
+            'event_id' => $purchaseEventId,
+            'order_number' => $order->order_number,
+            'total' => (float) $order->total_amount,
+            'subtotal' => (float) $order->subtotal_amount,
+            'shipping' => (float) $order->shipping_fee,
+            'coupon' => $coupon['code'] ?? '',
+            'customer_name' => $order->customer_name,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'customer_email' => $order->customer_email,
+            'customer_phone' => $order->customer_phone,
+            'district' => $district,
+            'items' => $itemsData,
+        ]);
 
         return redirect()->route('payment.manual.instruction', ['order' => $orderNumber]);
     }

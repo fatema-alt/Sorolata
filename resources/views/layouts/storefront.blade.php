@@ -16,6 +16,9 @@
     <!-- Styles & Scripts via Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+
+    <!-- Dynamic Tracking, GTM, Meta Pixel & DataLayer (PDF Spec) -->
+    @include('components.analytics.tracking-head')
 </head>
 <body 
     x-data="{ 
@@ -27,6 +30,9 @@
     @scroll.window="scrolled = (window.pageYOffset > 20); showTop = (window.pageYOffset > 400)"
     class="bg-[#F8F6F2] text-[#555555] font-editorial-body min-h-screen flex flex-col selection:bg-[#DE7D4E]/20 selection:text-[#214E34]"
 >
+
+    <!-- Tracking NoScript & Body Injections -->
+    @include('components.analytics.tracking-body')
 
     <!-- 1. Announcement Bar -->
     <aside class="bg-[#214E34] text-[#F8F6F2] text-xs py-2 px-4 text-center tracking-widest uppercase font-medium flex items-center justify-center gap-4">

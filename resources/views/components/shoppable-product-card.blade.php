@@ -32,6 +32,9 @@
                 this.added = true;
                 this.buttonText = '✓ ' + @json(__('Added to Bag'), JSON_UNESCAPED_UNICODE);
                 window.dispatchEvent(new CustomEvent('cart-count-updated', { detail: { count: data.cart_count } }));
+                if (window.sorolataAnalytics && data.analytics) {
+                    window.sorolataAnalytics.pushAddToCart(data.analytics.item, data.analytics.item.quantity, data.analytics.event_id);
+                }
                 setTimeout(() => {
                     this.added = false;
                     this.buttonText = @json(__('Add to Bag'), JSON_UNESCAPED_UNICODE);

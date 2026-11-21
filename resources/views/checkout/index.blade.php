@@ -445,6 +445,14 @@
                     }
                 }, true);
             }
+
+            // Trigger DataLayer begin_checkout & Meta InitiateCheckout (PDF Step 07)
+            if (window.sorolataAnalytics) {
+                window.sorolataAnalytics.pushBeginCheckout(
+                    @json($checkoutAnalyticsItems ?? []),
+                    {{ (float) ($subtotal ?? 0) }}
+                );
+            }
         });
     </script>
 @endsection

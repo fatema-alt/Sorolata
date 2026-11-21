@@ -86,10 +86,20 @@ class AdminSettingController extends Controller
             'payment_sslcommerz_enabled',
             'sms_enabled',
             'floating_contact_enabled',
+            'tracking_enabled',
+            'datalayer_enabled',
+            'gtm_enabled',
+            'ga4_enabled',
+            'fb_pixel_enabled',
+            'fb_capi_enabled',
         ];
 
         foreach ($toggles as $toggle) {
-            $group = str_contains($toggle, 'sms_') ? 'general' : 'payment';
+            $group = str_contains($toggle, 'sms_') 
+                ? 'general' 
+                : (str_contains($toggle, 'tracking_') || str_contains($toggle, 'datalayer_') || str_contains($toggle, 'gtm_') || str_contains($toggle, 'ga4_') || str_contains($toggle, 'fb_')
+                    ? 'analytics'
+                    : 'payment');
             $this->settingService->set($toggle, $request->has($toggle) ? '1' : '0', $group);
         }
 
@@ -103,7 +113,11 @@ class AdminSettingController extends Controller
             }
             $group = (str_contains($key, 'payment_') || str_contains($key, 'manual_') || str_contains($key, 'sslcommerz_') || str_contains($key, 'cod_'))
                 ? 'payment' 
-                : (str_contains($key, 'shipping_') || str_contains($key, 'steadfast_') ? 'shipping' : 'general');
+                : (str_contains($key, 'shipping_') || str_contains($key, 'steadfast_') 
+                    ? 'shipping' 
+                    : (str_contains($key, 'gtm_') || str_contains($key, 'ga4_') || str_contains($key, 'fb_') || str_contains($key, 'tracking_') || str_contains($key, 'custom_head_') || str_contains($key, 'custom_body_') || str_contains($key, 'stape_') || str_contains($key, 'server_container_') || str_contains($key, 'datalayer_')
+                        ? 'analytics'
+                        : 'general'));
             
             $this->settingService->set($key, is_array($val) ? json_encode($val) : (string) $val, $group);
         }

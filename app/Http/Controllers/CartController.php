@@ -49,12 +49,29 @@ class CartController extends Controller
             'quantity' => 'nullable|integer|min:1',
         ]);
 
-        $product = Product::findOrFail($validated['product_id']);
+        $product = Product::with('category')->findOrFail($validated['product_id']);
         $quantity = (int) ($validated['quantity'] ?? 1);
 
         $cart = session()->get('sorolata_collector_bag', []);
         $cart[$product->id] = ($cart[$product->id] ?? 0) + $quantity;
         session()->put('sorolata_collector_bag', $cart);
+
+        $analyticsItem = [
+            'item_id' => (string) $product->id,
+            'item_name' => $product->title,
+            'price' => (float) $product->price,
+            'item_category' => $product->category?->name ?? 'Heritage Handcraft',
+            'quantity' => $quantity,
+        ];
+
+        $analyticsPayload = [
+            'event_id' => 'evt_atc_' . $product->id . '_' . time() . '_' . substr(bin2hex(random_bytes(3)), 0, 6),
+            'item' => $analyticsItem,
+            'value' => (float) $product->price * $quantity,
+            'currency' => 'BDT',
+        ];
+
+        session()->flash('analytics_add_to_cart', $analyticsPayload);
 
         if ($request->expectsJson() || $request->ajax()) {
             $totalCount = array_sum(session()->get('sorolata_collector_bag', []));
@@ -67,6 +84,7 @@ class CartController extends Controller
                     'title' => $product->title,
                     'price' => $product->formatted_price,
                 ],
+                'analytics' => $analyticsPayload,
             ]);
         }
 

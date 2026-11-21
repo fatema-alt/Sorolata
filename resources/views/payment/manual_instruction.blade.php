@@ -619,4 +619,44 @@
     </div>
 
 </div>
+
+{{-- Trigger DataLayer Purchase & Meta Purchase (PDF Step 08, 10, 11) --}}
+@php
+    $purchaseItems = ($order->items ?? collect())->map(function($it) {
+        return [
+            'item_id' => (string) $it->product_id,
+            'item_name' => $it->product_title,
+            'price' => (float) $it->unit_price,
+            'quantity' => (int) $it->quantity,
+            'item_category' => 'Heritage Handcraft',
+        ];
+    })->values()->toArray();
+
+    $nameParts = explode(' ', trim((string) $order->customer_name));
+    $fn = $nameParts[0] ?? '';
+    $ln = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
+@endphp
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var orderNum = '{{ $order->order_number }}';
+        var firedKey = 'sorolata_purchase_fired_' + orderNum;
+        if (window.sorolataAnalytics && !sessionStorage.getItem(firedKey)) {
+            sessionStorage.setItem(firedKey, '1');
+            window.sorolataAnalytics.pushPurchase({
+                order_number: orderNum,
+                total: {{ (float) $order->total_amount }},
+                subtotal: {{ (float) $order->subtotal_amount }},
+                shipping: {{ (float) $order->shipping_fee }},
+                customer_name: @json($order->customer_name),
+                first_name: @json($fn),
+                last_name: @json($ln),
+                customer_email: @json($order->customer_email),
+                customer_phone: @json($order->customer_phone),
+                district: @json($order->shipping_address['district'] ?? ''),
+                items: @json($purchaseItems)
+            }, '{{ session('analytics_purchase')['event_id'] ?? ('evt_pur_' . $order->id . '_' . time()) }}');
+        }
+    });
+</script>
 @endsection

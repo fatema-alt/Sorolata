@@ -212,7 +212,7 @@ class PaymentController extends Controller
      */
     public function manualInstruction(Request $request, string $order): View
     {
-        $orderModel = Order::where('order_number', $order)->firstOrFail();
+        $orderModel = Order::with('items')->where('order_number', $order)->firstOrFail();
         $settings = \App\Models\AdminSetting::all()->pluck('value', 'key')->toArray();
 
         $isCod = in_array(strtolower($orderModel->payment_gateway?->value ?? ''), ['cash_on_delivery', 'cod'], true);

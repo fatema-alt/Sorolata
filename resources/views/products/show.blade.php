@@ -249,4 +249,18 @@
             </div>
         </section>
     </article>
+
+    {{-- Trigger DataLayer view_item & Meta ViewContent (PDF Step 05) --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.sorolataAnalytics) {
+                window.sorolataAnalytics.pushViewItem({
+                    id: '{{ $product->id }}',
+                    name: @json($product->getLocalized('title')),
+                    price: {{ (float) $product->price }},
+                    category: @json($product->category?->name ?? 'Heritage Handcraft')
+                });
+            }
+        });
+    </script>
 @endsection
