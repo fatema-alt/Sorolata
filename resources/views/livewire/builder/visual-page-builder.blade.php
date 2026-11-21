@@ -1740,17 +1740,34 @@
                     <!-- TAB 1: CONTENT (কনটেন্ট) -->
                     @if ($inspectorTab === 'content')
                         <!-- Dynamic Heritage Tags Helper -->
+                        @php
+                            $dynamicTagList = [
+                                ['label' => 'Title', 'code' => '{{ product.title }}'],
+                                ['label' => 'Price', 'code' => '{{ product.price }}'],
+                                ['label' => 'Artisan', 'code' => '{{ artisan.name }}'],
+                                ['label' => 'District', 'code' => '{{ district.name }}'],
+                                ['label' => 'Atelier', 'code' => '{{ artisan.atelier }}'],
+                                ['label' => 'GI Specialty', 'code' => '{{ district.gi_specialty }}'],
+                            ];
+                        @endphp
                         <div class="p-2.5 rounded-lg bg-[#14161d] border border-[#282d37]">
-                            <span class="text-[10px] uppercase font-bold tracking-wider text-emerald-400 block mb-1.5">Dynamic Tags (Click to copy)</span>
-                            <div class="flex flex-wrap gap-1" x-data="{ copied: '' }">
-                                @foreach (['{{ product.title }}', '{{ product.price }}', '{{ artisan.name }}', '{{ district.name }}', '{{ artisan.atelier }}', '{{ district.gi_specialty }}'] as $tag)
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-[10px] uppercase font-bold tracking-wider text-emerald-400">Dynamic Tags (Click to copy)</span>
+                                <span class="text-[9px] text-gray-500">Auto-fills from Product Data</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5" x-data="{ copied: '' }">
+                                @foreach ($dynamicTagList as $dTag)
                                     <button type="button" 
-                                            @click="navigator.clipboard.writeText('{{ $tag }}'); copied = '{{ $tag }}'; setTimeout(() => copied = '', 1500)"
-                                            class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[#222731] hover:bg-[#214E34] text-gray-300 hover:text-white border border-[#282d37] transition-colors">
-                                        {{ $tag }}
+                                            @click="navigator.clipboard.writeText('{{ $dTag['code'] }}'); copied = '{{ $dTag['code'] }}'; setTimeout(() => copied = '', 1500)"
+                                            class="px-2 py-1 rounded text-[10px] font-mono bg-[#222731] hover:bg-[#214E34] text-gray-200 hover:text-white border border-[#282d37] transition-all flex items-center space-x-1"
+                                            title="Click to copy {{ $dTag['code'] }}">
+                                        <span>@php echo htmlspecialchars($dTag['code']); @endphp</span>
                                     </button>
                                 @endforeach
-                                <div x-show="copied" class="text-[10px] text-emerald-400 w-full mt-1">Copied tag!</div>
+                                <div x-show="copied" x-cloak class="text-[10px] text-emerald-400 w-full mt-1 flex items-center space-x-1">
+                                    <span>✓ Copied:</span>
+                                    <span class="font-mono" x-text="copied"></span>
+                                </div>
                             </div>
                         </div>
 
