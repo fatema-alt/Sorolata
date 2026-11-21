@@ -18,6 +18,14 @@ enum BlockType: string
     case ACCORDION_DETAILS = 'accordion_details';
     case CURATED_PAIRING = 'curated_pairing';
 
+    // Storefront Core Architectural Blocks
+    case FEATURED_COLLECTIONS = 'featured_collections';
+    case CATEGORY_GRID = 'category_grid';
+    case PRODUCT_CAROUSEL = 'product_carousel';
+    case BEST_SELLERS = 'best_sellers';
+    case EDITOR_CHOICE = 'editor_choice';
+    case EDITORIAL_MANIFESTO = 'editorial_manifesto';
+
     // Shajgoj Content-to-Commerce Magazine Blocks
     case MAGAZINE_HERO_GRID = 'magazine_hero_grid';
     case TOPIC_BUBBLES = 'topic_bubbles';
@@ -49,6 +57,14 @@ enum BlockType: string
             self::TESTIMONIAL_EDITORIAL => 'Collector Impressions & Authenticity',
             self::ACCORDION_DETAILS => 'Heritage Care & Provenance FAQ',
             self::CURATED_PAIRING => 'Curated Complementary Pieces',
+
+            // Storefront Core Architectural Blocks
+            self::FEATURED_COLLECTIONS => 'Curated Collections Showcase',
+            self::CATEGORY_GRID => 'Shop by Traditional Guild Grid',
+            self::PRODUCT_CAROUSEL => 'New Arrivals Product Carousel',
+            self::BEST_SELLERS => 'Archival Best Sellers Grid',
+            self::EDITOR_CHOICE => "Curator's Choice Hero Showcase",
+            self::EDITORIAL_MANIFESTO => 'Living Heritage Manifesto Banner',
 
             // Shajgoj Content-to-Commerce Magazine Blocks
             self::MAGAZINE_HERO_GRID => 'Editorial Magazine Hero Showcase',

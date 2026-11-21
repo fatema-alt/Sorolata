@@ -24,18 +24,11 @@ class ProductController extends Controller
 
     public function index(): View
     {
-        // 1. Check if Homepage has published builder sections
-        $homePage = Page::where('slug', 'home')->where('status', 'published')->first();
-        if ($homePage && !empty($homePage->layout_json['sections'])) {
-            $sections = array_filter($homePage->layout_json['sections'], fn ($s) => $s['is_active'] ?? true);
-            if (!empty($sections)) {
-                return view('builder.landing', [
-                    'page' => $homePage,
-                    'sections' => $sections,
-                    'parser' => app(\App\Services\Builder\DynamicDataParserService::class),
-                ]);
-            }
-        }
+        // 1. Fetch published builder sections if configured for Home page
+        $homePage = Page::where('slug', 'home')->first();
+        $builderSections = collect($homePage?->layout_json['sections'] ?? [])
+            ->filter(fn ($s) => $s['is_active'] ?? true)
+            ->keyBy('type');
 
         $featuredProducts = Product::with(['artisan', 'district', 'media'])
             ->where('status', 'published')
@@ -75,6 +68,8 @@ class ProductController extends Controller
             'districts' => $heritageDistricts,
             'artisans' => $masterArtisans,
             'collections' => $collections,
+            'builderSections' => $builderSections,
+            'homePage' => $homePage,
         ]);
     }
 

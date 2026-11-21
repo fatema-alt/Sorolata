@@ -915,80 +915,354 @@
                             <div class="{{ $containerWidth }} pointer-events-none">
                                 
                                 @if ($section['type'] === 'hero_cinematic')
-                                    <div class="py-6 lg:py-10 text-left">
-                                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                                            
-                                            <!-- Left Editorial Text Block -->
-                                            <div class="lg:col-span-5 space-y-5">
-                                                <!-- Heritage Badge -->
-                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#C96A3D]/10 text-[#C96A3D] border border-[#C96A3D]/25">
-                                                    <span class="w-1.5 h-1.5 rounded-full bg-[#C96A3D]"></span>
-                                                    <span>{{ $parsedBadge ?: ($settings['badge_text'] ?? 'GI Certified Heritage Artifact') }}</span>
-                                                </span>
+                                    @if ($isHomePage ?? false)
+                                        <div class="py-6 lg:py-10 text-left">
+                                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+                                                <!-- Left Editorial Text Block -->
+                                                <div class="lg:col-span-7 space-y-6">
+                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#C96A3D]/10 text-[#C96A3D] border border-[#C96A3D]/25">
+                                                        <svg class="w-3.5 h-3.5 text-[#C96A3D]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                        <span>{{ $parsedBadge ?: ($settings['badge_text'] ?? 'বেঙ্গল হেরিটেজ স্যাংকচুয়ারি • ভলিয়ম ০১') }}</span>
+                                                    </span>
+                                                    
+                                                    <h1 class="font-editorial-heading {{ $headlineSize }} font-light leading-[1.08] tracking-tight" style="color: {{ $textColor }};">
+                                                        {{ $parsedHeadline ?: ($settings['headline'] ?? 'যেখানে প্রতিটি স্মৃতি বলে এক অনন্য ইতিহাস।') }}
+                                                    </h1>
 
-                                                <!-- Product Title & Subtitle -->
-                                                <h1 class="font-editorial-heading {{ $headlineSize }} font-light leading-[1.12]" style="color: {{ $textColor }};">
-                                                    {{ $parsedHeadline ?: ($product?->getLocalized('title') ?? $product?->title ?? 'Bengali Heritage Masterpiece') }}
-                                                </h1>
-
-                                                @php
-                                                    $displaySubtitle = $parsedSubheadline ?: ($product?->getLocalized('subtitle') ?? $product?->subtitle ?? '');
-                                                @endphp
-                                                @if(!empty($displaySubtitle))
-                                                    <p class="font-editorial-body text-base text-[#555555] font-light leading-relaxed">
-                                                        {{ $displaySubtitle }}
+                                                    <p class="font-editorial-body text-lg sm:text-xl text-[#555555] font-light max-w-2xl leading-relaxed">
+                                                        {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'শতবর্ষের তাঁতশিল্প, কাঁসা-পিতলের নিখুঁত ভাস্কর্য এবং প্রাকৃতিক উপাদানের জাদু—সংরক্ষিত তাদের জন্য, যারা যান্ত্রিক উৎপাদনের চেয়ে মানুষের হাতের স্পর্শকে মূল্যবান মনে করেন।') }}
                                                     </p>
-                                                @endif
 
-                                                <!-- Provenance Summary -->
-                                                <div class="pt-4 border-t border-[#E8E8E8] grid grid-cols-2 gap-4 text-xs text-[#555555]">
-                                                    <div>
-                                                        <span class="block uppercase tracking-wider text-[10px] text-[#888888]">Master Artisan</span>
-                                                        <span class="font-medium text-[#1D1D1D]">{{ $product?->artisan?->getLocalized('full_name') ?? $product?->artisan?->full_name ?? 'Generational Guild' }}</span>
+                                                    <div class="pt-4 flex flex-wrap items-center gap-4">
+                                                        <span class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#214E34] text-white text-sm font-medium shadow-sm">
+                                                            {{ $settings['primary_cta_text'] ?? 'Explore Archival Pieces' }} →
+                                                        </span>
+                                                        <span class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-[#1D1D1D]/20 text-[#1D1D1D] text-sm font-medium">
+                                                            {{ $settings['secondary_cta_text'] ?? 'Explore By District' }}
+                                                        </span>
                                                     </div>
-                                                    <div>
-                                                        <span class="block uppercase tracking-wider text-[10px] text-[#888888]">Origin & District</span>
-                                                        <span class="font-medium text-[#1D1D1D]">{{ $product?->district?->getLocalized('name') ?? $product?->district?->name_en ?? 'Bengal Heritage Basin' }}</span>
-                                                    </div>
-                                                </div>
 
-                                                <!-- Quick Action CTA -->
-                                                <div class="pt-3 flex flex-wrap items-center gap-4">
-                                                    <span class="px-6 py-3 rounded-full bg-[#214E34] text-white text-xs font-semibold tracking-wide shadow-sm">
-                                                        {{ $settings['primary_cta_text'] ?? ($product ? 'Acquire Piece • ' . $product->formatted_price : 'Acquire Piece • ৳ 18,500') }}
-                                                    </span>
-                                                    <span class="text-xs uppercase tracking-widest text-[#555555] underline underline-offset-4 font-medium">
-                                                        Read Atelier Story ↓
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <!-- Right Hero Photography Column -->
-                                            <div class="lg:col-span-7">
-                                                <div class="relative rounded-[32px] overflow-hidden bg-white shadow-soft-lg aspect-[4/3] lg:aspect-[16/11]">
-                                                    @php
-                                                        $primaryMedia = $product?->media?->first();
-                                                        $heroDisplayImg = !empty($imageUrl) ? $imageUrl : ($primaryMedia ? url($primaryMedia->file_path) : 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1600&auto=format&fit=crop');
-                                                    @endphp
-                                                    @if ($videoData && $videoData['type'] !== 'none')
-                                                        <div class="w-full h-full bg-black flex items-center justify-center">
-                                                            @if ($videoData['type'] === 'mp4')
-                                                                <video controls class="w-full h-full object-cover">
-                                                                    <source src="{{ $videoData['embed_url'] }}" type="video/mp4">
-                                                                </video>
-                                                            @else
-                                                                <iframe src="{{ $videoData['embed_url'] }}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
-                                                            @endif
+                                                    <!-- Trust Metrics Ribbon -->
+                                                    <div class="pt-8 border-t border-[#E8E8E8] grid grid-cols-3 gap-6 text-xs text-[#555555]">
+                                                        <div>
+                                                            <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">{{ $settings['metric_1_val'] ?? '100%' }}</span>
+                                                            <span class="text-[#888888]">{{ $settings['metric_1_lbl'] ?? 'GI Provenance' }}</span>
                                                         </div>
-                                                    @else
-                                                        <img src="{{ $heroDisplayImg }}" alt="Hero Media" class="w-full h-full object-cover object-center">
-                                                    @endif
-                                                    <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[10px] text-[#1D1D1D] font-medium tracking-wide shadow-sm">
-                                                        Original Heritage Photography
+                                                        <div>
+                                                            <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">{{ $settings['metric_2_val'] ?? '64' }}</span>
+                                                            <span class="text-[#888888]">{{ $settings['metric_2_lbl'] ?? 'Bengal Districts' }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">{{ $settings['metric_3_val'] ?? 'Direct' }}</span>
+                                                            <span class="text-[#888888]">{{ $settings['metric_3_lbl'] ?? 'Artisan Royalty' }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Right Hero Visual Stage -->
+                                                <div class="lg:col-span-5">
+                                                    <div class="relative rounded-[32px] overflow-hidden bg-[#F8F6F2] shadow-soft-lg aspect-[4/5]">
+                                                        <img 
+                                                            src="{{ !empty($imageUrl) ? $imageUrl : 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1200&auto=format&fit=crop' }}" 
+                                                            alt="Master Handloom Sonargaon Muslin" 
+                                                            class="w-full h-full object-cover object-center"
+                                                        >
+                                                        <div class="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md rounded-[24px] p-4 text-[#1D1D1D] shadow-md border border-white/50">
+                                                            <span class="text-[10px] uppercase tracking-widest text-[#214E34] font-bold block">{{ $settings['card_badge'] ?? 'Featured Archival Piece' }}</span>
+                                                            <h4 class="font-editorial-heading text-xl font-light">{{ $settings['card_title'] ?? 'Imperial Sonargaon Muslin Scarf' }}</h4>
+                                                            <div class="flex items-center justify-between mt-2 pt-2 border-t border-[#E8E8E8]/70 text-xs">
+                                                                <span class="text-[#888888]">{{ $settings['card_artisan'] ?? 'Master Weaver Alimuddin' }}</span>
+                                                                <span class="font-bold text-[#214E34]">{{ $settings['card_price'] ?? '৳ 18,500' }}</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    @else
+                                        <div class="py-6 lg:py-10 text-left">
+                                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                                                
+                                                <!-- Left Editorial Text Block -->
+                                                <div class="lg:col-span-5 space-y-5">
+                                                    <!-- Heritage Badge -->
+                                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#C96A3D]/10 text-[#C96A3D] border border-[#C96A3D]/25">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-[#C96A3D]"></span>
+                                                        <span>{{ $parsedBadge ?: ($settings['badge_text'] ?? 'GI Certified Heritage Artifact') }}</span>
+                                                    </span>
 
+                                                    <!-- Product Title & Subtitle -->
+                                                    <h1 class="font-editorial-heading {{ $headlineSize }} font-light leading-[1.12]" style="color: {{ $textColor }};">
+                                                        {{ $parsedHeadline ?: ($product?->getLocalized('title') ?? $product?->title ?? 'Bengali Heritage Masterpiece') }}
+                                                    </h1>
+
+                                                    @php
+                                                        $displaySubtitle = $parsedSubheadline ?: ($product?->getLocalized('subtitle') ?? $product?->subtitle ?? '');
+                                                    @endphp
+                                                    @if(!empty($displaySubtitle))
+                                                        <p class="font-editorial-body text-base text-[#555555] font-light leading-relaxed">
+                                                            {{ $displaySubtitle }}
+                                                        </p>
+                                                    @endif
+
+                                                    <!-- Provenance Summary -->
+                                                    <div class="pt-4 border-t border-[#E8E8E8] grid grid-cols-2 gap-4 text-xs text-[#555555]">
+                                                        <div>
+                                                            <span class="block uppercase tracking-wider text-[10px] text-[#888888]">Master Artisan</span>
+                                                            <span class="font-medium text-[#1D1D1D]">{{ $product?->artisan?->getLocalized('full_name') ?? $product?->artisan?->full_name ?? 'Generational Guild' }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <span class="block uppercase tracking-wider text-[10px] text-[#888888]">Origin & District</span>
+                                                            <span class="font-medium text-[#1D1D1D]">{{ $product?->district?->getLocalized('name') ?? $product?->district?->name_en ?? 'Bengal Heritage Basin' }}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Quick Action CTA -->
+                                                    <div class="pt-3 flex flex-wrap items-center gap-4">
+                                                        <span class="px-6 py-3 rounded-full bg-[#214E34] text-white text-xs font-semibold tracking-wide shadow-sm">
+                                                            {{ $settings['primary_cta_text'] ?? ($product ? 'Acquire Piece • ' . $product->formatted_price : 'Acquire Piece • ৳ 18,500') }}
+                                                        </span>
+                                                        <span class="text-xs uppercase tracking-widest text-[#555555] underline underline-offset-4 font-medium">
+                                                            Read Atelier Story ↓
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Right Hero Photography Column -->
+                                                <div class="lg:col-span-7">
+                                                    <div class="relative rounded-[32px] overflow-hidden bg-white shadow-soft-lg aspect-[4/3] lg:aspect-[16/11]">
+                                                        @php
+                                                            $primaryMedia = $product?->media?->first();
+                                                            $heroDisplayImg = !empty($imageUrl) ? $imageUrl : ($primaryMedia ? url($primaryMedia->file_path) : 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1600&auto=format&fit=crop');
+                                                        @endphp
+                                                        @if ($videoData && $videoData['type'] !== 'none')
+                                                            <div class="w-full h-full bg-black flex items-center justify-center">
+                                                                @if ($videoData['type'] === 'mp4')
+                                                                    <video controls class="w-full h-full object-cover">
+                                                                        <source src="{{ $videoData['embed_url'] }}" type="video/mp4">
+                                                                    </video>
+                                                                @else
+                                                                    <iframe src="{{ $videoData['embed_url'] }}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                                                                @endif
+                                                            </div>
+                                                        @else
+                                                            <img src="{{ $heroDisplayImg }}" alt="Hero Media" class="w-full h-full object-cover object-center">
+                                                        @endif
+                                                        <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[10px] text-[#1D1D1D] font-medium tracking-wide shadow-sm">
+                                                            Original Heritage Photography
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                @elseif ($section['type'] === 'featured_collections')
+                                    <div class="py-12 text-left">
+                                        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
+                                            <div>
+                                                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'নির্বাচিত কালেকশনসমূহ') }}</span>
+                                                <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
+                                                    {{ $parsedHeadline ?: ($settings['headline'] ?? 'বিশেষ কালেকশন') }}
+                                                </h2>
+                                            </div>
+                                            <p class="text-xs uppercase tracking-widest text-[#888888] mt-4 sm:mt-0 font-medium">
+                                                {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'Curated for Living Room, Dining, Bedroom & Festival Gifting') }}
+                                            </p>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <div class="group relative rounded-[28px] overflow-hidden bg-[#F8F6F2] border border-[#E8E8E8] p-8 flex flex-col justify-between min-h-[360px] shadow-soft-xs">
+                                                <div class="space-y-3 z-10">
+                                                    <span class="inline-block text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full bg-[#214E34] text-white">Limited 50 Pieces</span>
+                                                    <h3 class="font-editorial-heading text-3xl font-light text-[#1D1D1D]">The Royal Muslin & Jamdani Drop</h3>
+                                                    <p class="text-sm text-[#555555] max-w-sm">300-count gossamer threads spun along the misty morning banks of the Shitalakshya River.</p>
+                                                </div>
+                                                <div class="pt-6 z-10 flex items-center justify-between">
+                                                    <span class="text-xs font-semibold text-[#214E34] uppercase tracking-wider">Explore Curation →</span>
+                                                    <span class="text-xs text-[#888888]">From ৳ 18,500</span>
+                                                </div>
+                                                <div class="absolute inset-0 z-0 opacity-15">
+                                                    <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1000" class="w-full h-full object-cover">
+                                                </div>
+                                            </div>
+
+                                            <div class="group relative rounded-[28px] overflow-hidden bg-[#F8F6F2] border border-[#E8E8E8] p-8 flex flex-col justify-between min-h-[360px] shadow-soft-xs">
+                                                <div class="space-y-3 z-10">
+                                                    <span class="inline-block text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full bg-[#DE7D4E] text-white">Generational Foundry</span>
+                                                    <h3 class="font-editorial-heading text-3xl font-light text-[#1D1D1D]">Ancestral Bell-Metal & Kansa Tableware</h3>
+                                                    <p class="text-sm text-[#555555] max-w-sm">Hammer-beaten pure acoustic bell-metal from Dhamrai artisan guilds.</p>
+                                                </div>
+                                                <div class="pt-6 z-10 flex items-center justify-between">
+                                                    <span class="text-xs font-semibold text-[#DE7D4E] uppercase tracking-wider">Explore Curation →</span>
+                                                    <span class="text-xs text-[#888888]">From ৳ 6,200</span>
+                                                </div>
+                                                <div class="absolute inset-0 z-0 opacity-15">
+                                                    <img src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=1000" class="w-full h-full object-cover">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                @elseif ($section['type'] === 'category_grid')
+                                    <div class="py-12 text-center">
+                                        <div class="max-w-2xl mx-auto mb-12">
+                                            <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'কারুশিল্প শাখা') }}</span>
+                                            <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
+                                                {{ $parsedHeadline ?: ($settings['headline'] ?? 'ঐতিহ্যের শ্রেষ্ঠ কারুশিল্প সম্ভার') }}
+                                            </h2>
+                                            <p class="text-sm text-[#555555] mt-3 leading-relaxed">
+                                                {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'Explore centuries-old techniques perfected across generations of master craftsmen.') }}
+                                            </p>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+                                            @php
+                                                $demoCategories = [
+                                                    ['name' => 'Jamdani & Fine Weaving', 'craft' => 'Shitalakshya River Basin', 'count' => '58 Masterworks', 'img' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800'],
+                                                    ['name' => 'Heritage Kansa & Bell Metal', 'craft' => 'Dhamrai Generational Foundries', 'count' => '24 Foundry Masterworks', 'img' => 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=800'],
+                                                    ['name' => 'Nakshi Kantha & Embroidery', 'craft' => 'Jessore Botanical Stitch Guilds', 'count' => '36 Tapestries', 'img' => 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800'],
+                                                ];
+                                            @endphp
+                                            @foreach($demoCategories as $cat)
+                                                <div class="bg-white rounded-[28px] overflow-hidden border border-[#E8E8E8] shadow-soft-xs">
+                                                    <div class="aspect-[4/3] bg-stone-100 overflow-hidden">
+                                                        <img src="{{ $cat['img'] }}" class="w-full h-full object-cover">
+                                                    </div>
+                                                    <div class="p-6 space-y-1">
+                                                        <span class="text-[10px] uppercase font-bold text-[#214E34] tracking-widest">{{ $cat['craft'] }}</span>
+                                                        <h4 class="font-editorial-heading text-xl font-light text-[#1D1D1D]">{{ $cat['name'] }}</h4>
+                                                        <p class="text-xs text-[#888888] pt-1">{{ $cat['count'] }}</p>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                @elseif ($section['type'] === 'product_carousel')
+                                    <div class="py-12 text-left">
+                                        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8">
+                                            <div>
+                                                <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'নতুন সংগ্রহ') }}</span>
+                                                <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
+                                                    {{ $parsedHeadline ?: ($settings['headline'] ?? 'নতুন আগমন') }}
+                                                </h2>
+                                            </div>
+                                            <div class="flex items-center gap-3 mt-4 sm:mt-0 text-xs text-[#888888]">
+                                                <span>{{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'Touch-friendly horizontal scroll →') }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                            @php
+                                                $demoProducts = [
+                                                    ['title' => 'Dhamrai Bell-Metal Water Pitcher', 'artisan' => 'Ostad Jagadish Karmakar', 'price' => '৳ 14,200', 'img' => 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=800'],
+                                                    ['title' => 'Tangail Organic Mulberry Silk Saree', 'artisan' => 'Rabeya Begum', 'price' => '৳ 22,500', 'img' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800'],
+                                                    ['title' => 'Sonargaon Imperial Muslin Scarf', 'artisan' => 'Master Weaver Alimuddin', 'price' => '৳ 18,500', 'img' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=800'],
+                                                    ['title' => 'Bogura Hand-Forged Brass Kadhai', 'artisan' => 'Haripada Paul', 'price' => '৳ 8,900', 'img' => 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800'],
+                                                ];
+                                            @endphp
+                                            @foreach($demoProducts as $item)
+                                                <div class="bg-white rounded-[24px] overflow-hidden border border-[#E8E8E8] shadow-soft-xs p-4 flex flex-col justify-between">
+                                                    <div class="aspect-square rounded-[18px] overflow-hidden bg-stone-100 mb-4">
+                                                        <img src="{{ $item['img'] }}" class="w-full h-full object-cover">
+                                                    </div>
+                                                    <div class="space-y-1">
+                                                        <span class="text-[10px] text-[#888888] uppercase tracking-wider">{{ $item['artisan'] }}</span>
+                                                        <h4 class="font-editorial-heading text-base font-light text-[#1D1D1D]">{{ $item['title'] }}</h4>
+                                                        <p class="font-bold text-sm text-[#214E34] pt-2">{{ $item['price'] }}</p>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                @elseif ($section['type'] === 'best_sellers')
+                                    <div class="py-12 text-left">
+                                        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10">
+                                            <div>
+                                                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'সংগ্রাহকদের প্রিয়') }}</span>
+                                                <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
+                                                    {{ $parsedHeadline ?: ($settings['headline'] ?? 'আমাদের বিশেষ সংকলন') }}
+                                                </h2>
+                                            </div>
+                                            <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold underline underline-offset-4 mt-4 sm:mt-0">
+                                                {{ $settings['primary_cta_text'] ?? 'View Entire Catalog →' }}
+                                            </span>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                            @php
+                                                $demoBest = [
+                                                    ['title' => 'Handmade Pure Kansa Thali Set', 'artisan' => 'Dhamrai Metal Guild', 'price' => '৳ 16,500', 'img' => 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=800'],
+                                                    ['title' => 'Botanical Dyed Nakshi Kantha Blanket', 'artisan' => 'Jessore Artisans', 'price' => '৳ 11,800', 'img' => 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800'],
+                                                    ['title' => 'Heritage Jamdani Gold Weave Dupatta', 'artisan' => 'Sonargaon Loom', 'price' => '৳ 15,200', 'img' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800'],
+                                                    ['title' => 'Chiseled Bogura Brass Tea Kettle', 'artisan' => 'Ostad Tapan Karmakar', 'price' => '৳ 9,400', 'img' => 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800'],
+                                                ];
+                                            @endphp
+                                            @foreach($demoBest as $item)
+                                                <div class="bg-white rounded-[24px] overflow-hidden border border-[#E8E8E8] shadow-soft-xs p-4 flex flex-col justify-between">
+                                                    <div class="aspect-square rounded-[18px] overflow-hidden bg-stone-100 mb-4">
+                                                        <img src="{{ $item['img'] }}" class="w-full h-full object-cover">
+                                                    </div>
+                                                    <div class="space-y-1">
+                                                        <span class="text-[10px] text-[#888888] uppercase tracking-wider">{{ $item['artisan'] }}</span>
+                                                        <h4 class="font-editorial-heading text-base font-light text-[#1D1D1D]">{{ $item['title'] }}</h4>
+                                                        <p class="font-bold text-sm text-[#214E34] pt-2">{{ $item['price'] }}</p>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                @elseif ($section['type'] === 'editor_choice')
+                                    <div class="py-12 text-left">
+                                        <div class="bg-[#F8F6F2] rounded-[32px] p-8 sm:p-12 border border-[#E8E8E8] grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                                            <div class="lg:col-span-6 space-y-5">
+                                                <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'কিউরেটর স্পেশাল') }}</span>
+                                                <h2 class="font-editorial-heading text-3xl sm:text-4xl font-light text-[#1D1D1D] leading-tight">
+                                                    {{ $parsedHeadline ?: ($settings['headline'] ?? "এডিটরস চয়েস: টাঙ্গাইল পিওর মালবেরি সিল্ক জামদানি") }}
+                                                </h2>
+                                                <p class="font-editorial-body text-sm sm:text-base text-[#555555] leading-relaxed">
+                                                    {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'অর্গানিক মালবেরি সিল্কে হাতে বোনা জ্যামিতিক মোটিফ। দেলদুয়ারের ওস্তাদ তাঁতি রাবেয়া বেগমের ছয় সপ্তাহের সাধনার ফসল।') }}
+                                                </p>
+                                                <div class="pt-2 flex items-center gap-6">
+                                                    <span class="px-6 py-3 rounded-full bg-[#214E34] text-white text-xs font-semibold tracking-wide shadow-sm">
+                                                        {{ $settings['primary_cta_text'] ?? 'সংগ্রহ করুন →' }}
+                                                    </span>
+                                                    <div class="flex items-baseline gap-2">
+                                                        <span class="font-bold text-lg text-[#214E34]">৳ {{ number_format((float)($settings['price'] ?? 24500)) }}</span>
+                                                        <span class="text-xs text-gray-400 line-through">৳ {{ number_format((float)($settings['compare_price'] ?? 29000)) }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="lg:col-span-6">
+                                                <div class="rounded-[24px] overflow-hidden aspect-[4/3] shadow-soft-md bg-white">
+                                                    <img src="{{ !empty($imageUrl) ? $imageUrl : 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1000' }}" alt="Editor Choice" class="w-full h-full object-cover">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                @elseif ($section['type'] === 'editorial_manifesto')
+                                    <div class="py-16 text-center rounded-[32px] bg-[#214E34] text-[#F8F6F2] px-6 sm:px-12 my-4">
+                                        <div class="max-w-4xl mx-auto space-y-6">
+                                            <span class="text-xs uppercase tracking-widest text-[#DE7D4E] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'আমাদের ঐতিহ্য ঘোষণা') }}</span>
+                                            
+                                            <blockquote class="font-editorial-heading text-2xl sm:text-4xl lg:text-5xl font-light text-[#F8F6F2] leading-[1.2]">
+                                                {{ $parsedHeadline ?: ($settings['headline'] ?? '"আমাদের কারুশিল্প কেবল কোনো পণ্য নয়; এটি আমাদের পূর্বপুরুষদের আত্মা, নিঃশ্বাস এবং বেঁচে থাকার লড়াইয়ের অমর গাথা। শিল্পের এই স্পর্শ আমরা হারিয়ে যেতে দেব না।"') }}
+                                            </blockquote>
+
+                                            <p class="font-editorial-body text-sm sm:text-base text-[#F8F6F2]/80 max-w-2xl mx-auto leading-relaxed">
+                                                {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'কৃত্রিম ফাস্ট ফ্যাশন ও যান্ত্রিক প্রতিলিপির যুগে সরলতা বিলুপ্তপ্রায় ঐতিহ্যবাহী শিল্পের আশ্রয়স্থল। গ্রামীণ কারিগরদের ন্যায্য মূল্যায়ন নিশ্চিত করে আমরা বাংলার জীবন্ত ঐতিহ্যকে বাঁচিয়ে রাখি।') }}
+                                            </p>
+
+                                            <div class="pt-4">
+                                                <span class="inline-block px-8 py-3.5 rounded-full bg-[#DE7D4E] text-white text-xs font-semibold tracking-wide shadow-md">
+                                                    {{ $settings['primary_cta_text'] ?? 'সম্পূর্ণ ম্যানিফেস্টো পড়ুন →' }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -1058,162 +1332,275 @@
                                     </div>
 
                                 @elseif ($section['type'] === 'artisan_spotlight')
-                                    <div class="py-8 text-left">
-                                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                                            <!-- Artisan Portrait -->
-                                            <div class="lg:col-span-5 order-2 lg:order-1">
-                                                <div class="relative rounded-[32px] overflow-hidden bg-white aspect-[4/5] shadow-soft-lg">
-                                                    @php
-                                                        $portraitImg = !empty($imageUrl) ? $imageUrl : ($product?->artisan?->portrait_url ?? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800');
-                                                    @endphp
-                                                    <img src="{{ $portraitImg }}" alt="Artisan" class="w-full h-full object-cover grayscale contrast-125">
-                                                    <div class="absolute bottom-5 left-5 right-5 bg-[#1D1D1D]/80 backdrop-blur-md p-4 rounded-[20px] text-white">
-                                                        <div class="flex items-center justify-between">
-                                                            <div>
-                                                                <span class="text-[9px] uppercase tracking-widest text-[#AAAAAA]">Atelier</span>
-                                                                <h4 class="font-editorial-heading text-base font-light">{{ $product?->artisan?->atelier_name ?? 'Dewan Royal Loom' }}</h4>
+                                    @if ($isHomePage ?? false)
+                                        <div class="py-12 text-center">
+                                            <div class="max-w-2xl mx-auto mb-10">
+                                                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'বংশানুক্রমিক ওস্তাদ') }}</span>
+                                                <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
+                                                    {{ $parsedHeadline ?: ($settings['headline'] ?? 'জীবন্ত কিংবদন্তি: ওস্তাদ কারিগরবৃন্দ') }}
+                                                </h2>
+                                                <p class="text-sm text-[#555555] mt-3 leading-relaxed">
+                                                    {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'প্রতিটি শিল্পকর্মের পেছনে রয়েছে একজন শিল্পীর নাম, স্টুডিও এবং আজীবনের সাধনা।') }}
+                                                </p>
+                                            </div>
+
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+                                                @php
+                                                    $homeArtisans = [
+                                                        ['name' => 'Master Alimuddin', 'craft' => 'Muslin Master', 'origin' => 'Sonargaon • 48 Years', 'quote' => 'সুতা যখন মাকু ছুঁয়ে যায়, নদী কথা বলে।', 'img' => 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600'],
+                                                        ['name' => 'Rabeya Begum', 'craft' => 'Jamdani Weaver', 'origin' => 'Tangail • 34 Years', 'quote' => 'প্রতিটি নকশা আমাদের পারিবারিক উত্তরাধিকার।', 'img' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600'],
+                                                        ['name' => 'Jagadish Karmakar', 'craft' => 'Bell-Metal Foundry', 'origin' => 'Dhamrai • 52 Years', 'quote' => 'কাঁসার সুরে পূর্বপুরুষদের অস্তিত্ব বাজে।', 'img' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600'],
+                                                        ['name' => 'Haripada Paul', 'craft' => 'Pottery & Brass', 'origin' => 'Bogura • 40 Years', 'quote' => 'মাটি ও আগুনের সাথে আমার আজন্ম বন্ধুত্ব।', 'img' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600'],
+                                                    ];
+                                                @endphp
+                                                @foreach($homeArtisans as $art)
+                                                    <div class="bg-[#F8F6F2] rounded-[28px] p-5 shadow-soft-xs space-y-3">
+                                                        <div class="aspect-square rounded-[20px] overflow-hidden bg-stone-200">
+                                                            <img src="{{ $art['img'] }}" class="w-full h-full object-cover grayscale">
+                                                        </div>
+                                                        <div>
+                                                            <span class="text-[10px] uppercase font-bold text-[#214E34] tracking-widest">{{ $art['craft'] }}</span>
+                                                            <h4 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">{{ $art['name'] }}</h4>
+                                                            <p class="text-[11px] text-[#888888]">{{ $art['origin'] }}</p>
+                                                            <p class="text-xs text-[#555555] italic pt-1">"{{ $art['quote'] }}"</p>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="py-8 text-left">
+                                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                                                <!-- Artisan Portrait -->
+                                                <div class="lg:col-span-5 order-2 lg:order-1">
+                                                    <div class="relative rounded-[32px] overflow-hidden bg-white aspect-[4/5] shadow-soft-lg">
+                                                        @php
+                                                            $portraitImg = !empty($imageUrl) ? $imageUrl : ($product?->artisan?->portrait_url ?? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800');
+                                                        @endphp
+                                                        <img src="{{ $portraitImg }}" alt="Artisan" class="w-full h-full object-cover grayscale contrast-125">
+                                                        <div class="absolute bottom-5 left-5 right-5 bg-[#1D1D1D]/80 backdrop-blur-md p-4 rounded-[20px] text-white">
+                                                            <div class="flex items-center justify-between">
+                                                                <div>
+                                                                    <span class="text-[9px] uppercase tracking-widest text-[#AAAAAA]">Atelier</span>
+                                                                    <h4 class="font-editorial-heading text-base font-light">{{ $product?->artisan?->atelier_name ?? 'Dewan Royal Loom' }}</h4>
+                                                                </div>
+                                                                <span class="text-[11px] px-2.5 py-0.5 bg-[#214E34] text-white rounded-full font-medium">
+                                                                    {{ $product?->artisan?->years_of_mastery ?? 35 }} Years Mastery
+                                                                </span>
                                                             </div>
-                                                            <span class="text-[11px] px-2.5 py-0.5 bg-[#214E34] text-white rounded-full font-medium">
-                                                                {{ $product?->artisan?->years_of_mastery ?? 35 }} Years Mastery
-                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Biographical Narrative -->
+                                                <div class="lg:col-span-7 order-1 lg:order-2 space-y-4">
+                                                    <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#C96A3D] font-bold">
+                                                        <span class="w-2 h-2 rounded-full bg-[#C96A3D]"></span>
+                                                        <span>{{ $parsedBadge ?: ($settings['badge_text'] ?? 'The Master Artisan Behind This Piece') }}</span>
+                                                    </div>
+
+                                                    <h2 class="font-editorial-heading {{ $headlineSize }} font-light leading-tight" style="color: {{ $textColor }};">
+                                                        {{ $parsedHeadline ?: ($product?->artisan?->getLocalized('full_name') ?? $product?->artisan?->full_name ?? 'Ustad Alimullah Dewan') }}
+                                                    </h2>
+
+                                                    <p class="text-xs uppercase tracking-widest text-[#888888]">
+                                                        Specialty: {{ $product?->artisan?->craft_type?->title() ?? 'Heritage Handloom Weaving' }} • {{ $product?->district?->getLocalized('name') ?? $product?->district?->name_en ?? 'Tangail' }}, Bangladesh
+                                                    </p>
+
+                                                    @php
+                                                        $artisanQuote = $parsedSubheadline ?: ($product?->artisan?->getLocalized('quote') ?? $product?->artisan?->quote ?? '');
+                                                    @endphp
+                                                    @if(!empty($artisanQuote))
+                                                        <blockquote class="pl-5 border-l-2 border-[#C96A3D] italic font-editorial-heading text-lg sm:text-xl text-[#1D1D1D] my-4 leading-relaxed">
+                                                            "{{ $artisanQuote }}"
+                                                        </blockquote>
+                                                    @endif
+
+                                                    <p class="text-[#555555] text-xs sm:text-sm leading-relaxed font-editorial-body">
+                                                        {{ $product?->artisan?->getLocalized('biography') ?? $product?->artisan?->biography ?? 'Carrying forward an uninterrupted lineage of artisan mastery. Every piece represents weeks of patient handcrafting using indigenous techniques passed down through generations of guild masters.' }}
+                                                    </p>
+
+                                                    <!-- Provenance & Fair Trade -->
+                                                    <div class="pt-4 grid grid-cols-3 gap-4 border-t border-[#E8E8E8] text-xs">
+                                                        <div>
+                                                            <span class="block text-[#888888] uppercase tracking-wider text-[9px]">Artisan Royalty</span>
+                                                            <span class="font-medium text-[#1D1D1D] text-[11px]">Direct Compensation</span>
+                                                        </div>
+                                                        <div>
+                                                            <span class="block text-[#888888] uppercase tracking-wider text-[9px]">Verification</span>
+                                                            <span class="font-medium text-[#2D6A4F] text-[11px]">Verified Guild ✓</span>
+                                                        </div>
+                                                        <div>
+                                                            <span class="block text-[#888888] uppercase tracking-wider text-[9px]">Origin Tag</span>
+                                                            <span class="font-medium text-[#1D1D1D] text-[11px]">100% Traceable</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <!-- Biographical Narrative -->
-                                            <div class="lg:col-span-7 order-1 lg:order-2 space-y-4">
-                                                <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#C96A3D] font-bold">
-                                                    <span class="w-2 h-2 rounded-full bg-[#C96A3D]"></span>
-                                                    <span>{{ $parsedBadge ?: ($settings['badge_text'] ?? 'The Master Artisan Behind This Piece') }}</span>
-                                                </div>
-
-                                                <h2 class="font-editorial-heading {{ $headlineSize }} font-light leading-tight" style="color: {{ $textColor }};">
-                                                    {{ $parsedHeadline ?: ($product?->artisan?->getLocalized('full_name') ?? $product?->artisan?->full_name ?? 'Ustad Alimullah Dewan') }}
-                                                </h2>
-
-                                                <p class="text-xs uppercase tracking-widest text-[#888888]">
-                                                    Specialty: {{ $product?->artisan?->craft_type?->title() ?? 'Heritage Handloom Weaving' }} • {{ $product?->district?->getLocalized('name') ?? $product?->district?->name_en ?? 'Tangail' }}, Bangladesh
-                                                </p>
-
-                                                @php
-                                                    $artisanQuote = $parsedSubheadline ?: ($product?->artisan?->getLocalized('quote') ?? $product?->artisan?->quote ?? '');
-                                                @endphp
-                                                @if(!empty($artisanQuote))
-                                                    <blockquote class="pl-5 border-l-2 border-[#C96A3D] italic font-editorial-heading text-lg sm:text-xl text-[#1D1D1D] my-4 leading-relaxed">
-                                                        "{{ $artisanQuote }}"
-                                                    </blockquote>
-                                                @endif
-
-                                                <p class="text-[#555555] text-xs sm:text-sm leading-relaxed font-editorial-body">
-                                                    {{ $product?->artisan?->getLocalized('biography') ?? $product?->artisan?->biography ?? 'Carrying forward an uninterrupted lineage of artisan mastery. Every piece represents weeks of patient handcrafting using indigenous techniques passed down through generations of guild masters.' }}
-                                                </p>
-
-                                                <!-- Provenance & Fair Trade -->
-                                                <div class="pt-4 grid grid-cols-3 gap-4 border-t border-[#E8E8E8] text-xs">
-                                                    <div>
-                                                        <span class="block text-[#888888] uppercase tracking-wider text-[9px]">Artisan Royalty</span>
-                                                        <span class="font-medium text-[#1D1D1D] text-[11px]">Direct Compensation</span>
-                                                    </div>
-                                                    <div>
-                                                        <span class="block text-[#888888] uppercase tracking-wider text-[9px]">Verification</span>
-                                                        <span class="font-medium text-[#2D6A4F] text-[11px]">Verified Guild ✓</span>
-                                                    </div>
-                                                    <div>
-                                                        <span class="block text-[#888888] uppercase tracking-wider text-[9px]">Origin Tag</span>
-                                                        <span class="font-medium text-[#1D1D1D] text-[11px]">100% Traceable</span>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
 
                                 @elseif ($section['type'] === 'interactive_gallery')
-                                    <div class="py-10 text-left">
-                                        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
-                                            <div>
-                                                <span class="text-xs uppercase tracking-widest text-[#9E4732] font-semibold">
-                                                    {{ $parsedBadge ?: ($settings['badge_text'] ?? 'Macro Visual Study') }}
-                                                </span>
-                                                <h2 class="font-serif-luxury text-2xl sm:text-3xl lg:text-4xl font-light text-[#241F1E] mt-1" style="color: {{ $textColor }};">
-                                                    {{ $parsedHeadline ?: ($settings['headline'] ?? 'Tactile Intricacies') }}
-                                                </h2>
-                                            </div>
-                                            <p class="text-xs sm:text-sm text-[#786C65] max-w-sm mt-2 md:mt-0 font-serif-luxury italic">
-                                                {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'Notice the deliberate irregularities that prove human hand execution over automated mechanics.') }}
-                                            </p>
-                                        </div>
-
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                            @php
-                                                $gallerySample = [
-                                                    'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1000&auto=format&fit=crop',
-                                                    'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop',
-                                                    'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop',
-                                                ];
-                                                if (!empty($imageUrl)) {
-                                                    $gallerySample[0] = $imageUrl;
-                                                }
-                                            @endphp
-                                            @foreach($gallerySample as $gIndex => $gImg)
-                                                <div class="group relative rounded-3xl overflow-hidden bg-[#E2DBD3] aspect-[3/4] shadow-sm">
-                                                    <img src="{{ $gImg }}" alt="Gallery Image {{ $gIndex + 1 }}" class="w-full h-full object-cover">
-                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-4">
-                                                        <span class="text-white text-xs font-medium tracking-wide">Macro Detail {{ sprintf('%02d', $gIndex + 1) }} • Hand Loom Tension</span>
-                                                    </div>
+                                    @if ($isHomePage ?? false)
+                                        <div class="py-12 text-left">
+                                            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8">
+                                                <div>
+                                                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'ভিজ্যুয়াল ক্রনিকল') }}</span>
+                                                    <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
+                                                        {{ $parsedHeadline ?: ($settings['headline'] ?? '@SorolataHeritage') }}
+                                                    </h2>
                                                 </div>
-                                            @endforeach
+                                                <p class="text-xs text-[#888888] mt-4 sm:mt-0">
+                                                    {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'আমাদের তাঁতি ও কারিগর পল্লীর দৈনন্দিন জীবনের গল্প ও ছন্দ') }}
+                                                </p>
+                                            </div>
+
+                                            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                                                @php
+                                                    $homeShots = [
+                                                        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600',
+                                                        'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=600',
+                                                        'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=600',
+                                                        'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600',
+                                                        'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600',
+                                                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=600',
+                                                    ];
+                                                @endphp
+                                                @foreach($homeShots as $shot)
+                                                    <div class="rounded-[18px] overflow-hidden aspect-square bg-stone-100 shadow-soft-xs">
+                                                        <img src="{{ $shot }}" class="w-full h-full object-cover">
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
-                                    </div>
+                                    @else
+                                        <div class="py-10 text-left">
+                                            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+                                                <div>
+                                                    <span class="text-xs uppercase tracking-widest text-[#9E4732] font-semibold">
+                                                        {{ $parsedBadge ?: ($settings['badge_text'] ?? 'Macro Visual Study') }}
+                                                    </span>
+                                                    <h2 class="font-serif-luxury text-2xl sm:text-3xl lg:text-4xl font-light text-[#241F1E] mt-1" style="color: {{ $textColor }};">
+                                                        {{ $parsedHeadline ?: ($settings['headline'] ?? 'Tactile Intricacies') }}
+                                                    </h2>
+                                                </div>
+                                                <p class="text-xs sm:text-sm text-[#786C65] max-w-sm mt-2 md:mt-0 font-serif-luxury italic">
+                                                    {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'Notice the deliberate irregularities that prove human hand execution over automated mechanics.') }}
+                                                </p>
+                                            </div>
+
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                                @php
+                                                    $gallerySample = [
+                                                        'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1000&auto=format&fit=crop',
+                                                        'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1000&auto=format&fit=crop',
+                                                        'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop',
+                                                    ];
+                                                    if (!empty($imageUrl)) {
+                                                        $gallerySample[0] = $imageUrl;
+                                                    }
+                                                @endphp
+                                                @foreach($gallerySample as $gIndex => $gImg)
+                                                    <div class="group relative rounded-3xl overflow-hidden bg-[#E2DBD3] aspect-[3/4] shadow-sm">
+                                                        <img src="{{ $gImg }}" alt="Gallery Image {{ $gIndex + 1 }}" class="w-full h-full object-cover">
+                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-4">
+                                                            <span class="text-white text-xs font-medium tracking-wide">Macro Detail {{ sprintf('%02d', $gIndex + 1) }} • Hand Loom Tension</span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
 
                                 @elseif ($section['type'] === 'heritage_provenance')
-                                    <div class="py-10 text-left">
-                                        <div class="max-w-3xl mb-8">
-                                            <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#214E34] font-bold mb-2">
-                                                <span class="w-2 h-2 rounded-full bg-[#214E34]"></span>
-                                                <span>{{ $parsedBadge ?: ($settings['badge_text'] ?? 'Geographical Indication & Regional Provenance') }}</span>
+                                    @if ($isHomePage ?? false)
+                                        <div class="py-12 text-left">
+                                            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10">
+                                                <div>
+                                                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'ভৌগোলিক পরিচয়') }}</span>
+                                                    <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
+                                                        {{ $parsedHeadline ?: ($settings['headline'] ?? 'বাংলার ৬৪ জেলার ভৌগোলিক ঐতিহ্য') }}
+                                                    </h2>
+                                                </div>
+                                                <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold underline underline-offset-4 mt-4 sm:mt-0">
+                                                    {{ $settings['secondary_cta_text'] ?? 'সবগুলো জেলা দেখুন →' }}
+                                                </span>
                                             </div>
-                                            <h2 class="font-editorial-heading text-2xl sm:text-3xl lg:text-4xl font-light text-[#1D1D1D]" style="color: {{ $textColor }};">
-                                                {{ $parsedHeadline ?: ('Rooted in ' . ($product?->district?->name_en ?? 'Bengal') . ' (' . ($product?->district?->name_bn ?? 'বাংলাদেশ') . ')') }}
-                                            </h2>
-                                            <p class="font-editorial-body text-xs sm:text-sm text-[#555555] mt-2 leading-relaxed">
-                                                {{ $parsedSubheadline ?: 'Soil, microclimate, and river humidity shape the personality of every craft in Bangladesh. Learn why this exact district is the irreplaceable cradle of this tradition.' }}
-                                            </p>
+
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                                @php
+                                                    $homeDistricts = [
+                                                        ['name' => 'Sonargaon', 'craft' => 'Ancient Muslin & Fine Cotton', 'active' => '42 Guilds', 'img' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=600'],
+                                                        ['name' => 'Tangail', 'craft' => 'Jacquard & Mulberry Silk Weaves', 'active' => '86 Guilds', 'img' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600'],
+                                                        ['name' => 'Dhamrai', 'craft' => 'Lost-Wax Acoustic Bell Metal', 'active' => '18 Foundries', 'img' => 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=600'],
+                                                        ['name' => 'Bogura', 'craft' => 'Hand-Turned Chiseled Red Brass', 'active' => '24 Foundries', 'img' => 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600'],
+                                                    ];
+                                                @endphp
+                                                @foreach($homeDistricts as $d)
+                                                    <div class="bg-white rounded-[24px] p-5 border border-[#E8E8E8] shadow-soft-xs space-y-3">
+                                                        <div class="aspect-video rounded-[16px] overflow-hidden bg-stone-100">
+                                                            <img src="{{ $d['img'] }}" class="w-full h-full object-cover">
+                                                        </div>
+                                                        <div>
+                                                            <h4 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">{{ $d['name'] }}</h4>
+                                                            <p class="text-xs text-[#555555]">{{ $d['craft'] }}</p>
+                                                            <span class="text-[10px] text-[#214E34] font-semibold block mt-1">{{ $d['active'] }}</span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
-
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                            <!-- Card 1: GI Specialty -->
-                                            <div class="p-6 rounded-[28px] bg-[#F8F6F2] border border-[#E8E8E8] space-y-3 shadow-soft-xs text-left">
-                                                <div class="w-9 h-9 rounded-full bg-[#214E34]/10 flex items-center justify-center text-[#214E34] font-bold text-sm">
-                                                    ✓
+                                    @else
+                                        <div class="py-10 text-left">
+                                            <div class="max-w-3xl mb-8">
+                                                <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#214E34] font-bold mb-2">
+                                                    <span class="w-2 h-2 rounded-full bg-[#214E34]"></span>
+                                                    <span>{{ $parsedBadge ?: ($settings['badge_text'] ?? 'Geographical Indication & Regional Provenance') }}</span>
                                                 </div>
-                                                <h3 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">GI Heritage Specialty</h3>
-                                                <p class="text-xs text-[#555555] leading-relaxed">
-                                                    {{ $product?->district?->gi_specialty ?? 'World-renowned handloom textile weaving registered under national geographical indication.' }}
+                                                <h2 class="font-editorial-heading text-2xl sm:text-3xl lg:text-4xl font-light text-[#1D1D1D]" style="color: {{ $textColor }};">
+                                                    {{ $parsedHeadline ?: ('Rooted in ' . ($product?->district?->name_en ?? 'Bengal') . ' (' . ($product?->district?->name_bn ?? 'বাংলাদেশ') . ')') }}
+                                                </h2>
+                                                <p class="font-editorial-body text-xs sm:text-sm text-[#555555] mt-2 leading-relaxed">
+                                                    {{ $parsedSubheadline ?: 'Soil, microclimate, and river humidity shape the personality of every craft in Bangladesh. Learn why this exact district is the irreplaceable cradle of this tradition.' }}
                                                 </p>
                                             </div>
 
-                                            <!-- Card 2: River Basin Climate -->
-                                            <div class="p-6 rounded-[28px] bg-[#F8F6F2] border border-[#E8E8E8] space-y-3 shadow-soft-xs text-left">
-                                                <div class="w-9 h-9 rounded-full bg-[#C96A3D]/10 flex items-center justify-center text-[#C96A3D] font-bold text-sm">
-                                                    ✦
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                <!-- Card 1: GI Specialty -->
+                                                <div class="p-6 rounded-[28px] bg-[#F8F6F2] border border-[#E8E8E8] space-y-3 shadow-soft-xs text-left">
+                                                    <div class="w-9 h-9 rounded-full bg-[#214E34]/10 flex items-center justify-center text-[#214E34] font-bold text-sm">
+                                                        ✓
+                                                    </div>
+                                                    <h3 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">GI Heritage Specialty</h3>
+                                                    <p class="text-xs text-[#555555] leading-relaxed">
+                                                        {{ $product?->district?->gi_specialty ?? 'World-renowned handloom textile weaving registered under national geographical indication.' }}
+                                                    </p>
                                                 </div>
-                                                <h3 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">River Basin & Microclimate</h3>
-                                                <p class="text-xs text-[#555555] leading-relaxed">
-                                                    {{ $product?->district?->river_basin ?? 'Shitalakshya & Jamuna River Basin' }} — the ambient river air provides the exact morning humidity essential for ultra-fine thread tension.
-                                                </p>
-                                            </div>
 
-                                            <!-- Card 3: Historical Chronicle -->
-                                            <div class="p-6 rounded-[28px] bg-[#F8F6F2] border border-[#E8E8E8] space-y-3 shadow-soft-xs text-left">
-                                                <div class="w-9 h-9 rounded-full bg-[#214E34]/10 flex items-center justify-center text-[#214E34] font-bold text-sm">
-                                                    📍
+                                                <!-- Card 2: River Basin Climate -->
+                                                <div class="p-6 rounded-[28px] bg-[#F8F6F2] border border-[#E8E8E8] space-y-3 shadow-soft-xs text-left">
+                                                    <div class="w-9 h-9 rounded-full bg-[#C96A3D]/10 flex items-center justify-center text-[#C96A3D] font-bold text-sm">
+                                                        ✦
+                                                    </div>
+                                                    <h3 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">River Basin & Microclimate</h3>
+                                                    <p class="text-xs text-[#555555] leading-relaxed">
+                                                        {{ $product?->district?->river_basin ?? 'Shitalakshya & Jamuna River Basin' }} — the ambient river air provides the exact morning humidity essential for ultra-fine thread tension.
+                                                    </p>
                                                 </div>
-                                                <h3 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">Historical Chronicle</h3>
-                                                <p class="text-xs text-[#555555] leading-relaxed">
-                                                    {{ $product?->district?->historical_narrative ?? 'Documented in traveler chronicles since the 14th century, cultivated by imperial patronage.' }}
-                                                </p>
+
+                                                <!-- Card 3: Historical Chronicle -->
+                                                <div class="p-6 rounded-[28px] bg-[#F8F6F2] border border-[#E8E8E8] space-y-3 shadow-soft-xs text-left">
+                                                    <div class="w-9 h-9 rounded-full bg-[#214E34]/10 flex items-center justify-center text-[#214E34] font-bold text-sm">
+                                                        📍
+                                                    </div>
+                                                    <h3 class="font-editorial-heading text-lg font-light text-[#1D1D1D]">Historical Chronicle</h3>
+                                                    <p class="text-xs text-[#555555] leading-relaxed">
+                                                        {{ $product?->district?->historical_narrative ?? 'Documented in traveler chronicles since the 14th century, cultivated by imperial patronage.' }}
+                                                    </p>
+                                                </div>
                                             </div>
+                                        </div>
+                                    @endif
                                         </div>
                                     </div>
 
@@ -1255,24 +1642,57 @@
                                     </div>
 
                                 @elseif ($section['type'] === 'testimonial_editorial')
-                                    <div class="py-10 max-w-3xl mx-auto text-center space-y-4">
-                                        <span class="text-xs uppercase tracking-widest text-[#9E4732] font-semibold block">
-                                            {{ $parsedBadge ?: ($settings['badge_text'] ?? 'Collector Impressions') }}
-                                        </span>
+                                    @if ($isHomePage ?? false)
+                                        <div class="py-12 text-center">
+                                            <div class="max-w-2xl mx-auto mb-10">
+                                                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'সংগ্রাহকদের মতামত') }}</span>
+                                                <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
+                                                    {{ $parsedHeadline ?: ($settings['headline'] ?? 'সংগ্রাহকদের অনুভূতি ও স্মৃতিচারণ') }}
+                                                </h2>
+                                                <p class="text-sm text-[#555555] mt-3 leading-relaxed">
+                                                    {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'টেক্সটাইল গবেষক, ইন্টেরিয়র ডিজাইনার এবং বৈশ্বিক শিল্প সংগ্রাহকদের অকৃত্রিম প্রতিক্রিয়া।') }}
+                                                </p>
+                                            </div>
 
-                                        <blockquote class="font-serif-luxury text-xl sm:text-2xl lg:text-3xl italic text-[#241F1E] font-light leading-snug">
-                                            "{{ $parsedSubheadline ?: ($settings['impression'] ?? 'Unboxing this piece in London was a transcendent experience. The tactile weight, the aroma of natural river washed cotton, and the signed provenance letter from Master Weaver Alimuddin makes it the most prized textile in my entire collection.') }}"
-                                        </blockquote>
-
-                                        <div class="pt-2">
-                                            <span class="block font-medium text-sm text-[#241F1E]">
-                                                {{ $parsedHeadline ?: ($settings['collector_name'] ?? 'Dr. Eleanor Vance') }}
-                                            </span>
-                                            <span class="block text-xs text-[#8C837D] mt-0.5">
-                                                {{ $settings['collector_location'] ?? 'Textile Historian & Collector • Kensington, London' }}
-                                            </span>
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                                                @php
+                                                    $homeReviews = [
+                                                        ['quote' => 'Unboxing the Sonargaon Muslin scarf in London was breathtaking. The signed provenance certificate and the unrefined botanical ecru texture is simply incomparable.', 'author' => 'Dr. Eleanor Vance', 'loc' => 'Textile Historian • Kensington, London'],
+                                                        ['quote' => 'The hand-chiseled Bogura brass kettle serves as the crown jewel of our dining room. It holds heat with incredible acoustic resonance.', 'author' => 'Tariqul Rahman', 'loc' => 'Architect & Expat Collector • Toronto, Canada'],
+                                                        ['quote' => 'The Tangail Mulberry Jamdani is a museum-grade textile. Knowing the exact weaver who crafted it makes it our family\'s most valued heirloom.', 'author' => 'Farhana Chowdhury', 'loc' => 'Art Collector • Gulshan, Dhaka'],
+                                                    ];
+                                                @endphp
+                                                @foreach($homeReviews as $rev)
+                                                    <div class="bg-white rounded-[24px] p-6 border border-[#E8E8E8] shadow-soft-xs space-y-4 flex flex-col justify-between">
+                                                        <p class="font-editorial-heading text-sm text-[#333333] leading-relaxed italic">"{{ $rev['quote'] }}"</p>
+                                                        <div class="border-t border-[#E8E8E8] pt-3">
+                                                            <h5 class="font-editorial-heading text-base font-light text-[#1D1D1D]">{{ $rev['author'] }}</h5>
+                                                            <p class="text-[11px] text-[#888888]">{{ $rev['loc'] }}</p>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
-                                    </div>
+                                    @else
+                                        <div class="py-10 max-w-3xl mx-auto text-center space-y-4">
+                                            <span class="text-xs uppercase tracking-widest text-[#9E4732] font-semibold block">
+                                                {{ $parsedBadge ?: ($settings['badge_text'] ?? 'Collector Impressions') }}
+                                            </span>
+
+                                            <blockquote class="font-serif-luxury text-xl sm:text-2xl lg:text-3xl italic text-[#241F1E] font-light leading-snug">
+                                                "{{ $parsedSubheadline ?: ($settings['impression'] ?? 'Unboxing this piece in London was a transcendent experience. The tactile weight, the aroma of natural river washed cotton, and the signed provenance letter from Master Weaver Alimuddin makes it the most prized textile in my entire collection.') }}"
+                                            </blockquote>
+
+                                            <div class="pt-2">
+                                                <span class="block font-medium text-sm text-[#241F1E]">
+                                                    {{ $parsedHeadline ?: ($settings['collector_name'] ?? 'Dr. Eleanor Vance') }}
+                                                </span>
+                                                <span class="block text-xs text-[#8C837D] mt-0.5">
+                                                    {{ $settings['collector_location'] ?? 'Textile Historian & Collector • Kensington, London' }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    @endif
 
                                 @elseif ($section['type'] === 'element_heading')
                                     <div class="flex flex-col {{ $alignClass }} py-2">
@@ -1493,33 +1913,72 @@
                                     </div>
 
                                 @elseif ($section['type'] === 'shoppable_product_shelf')
-                                    <div class="py-6 max-w-6xl mx-auto w-full">
-                                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-stone-200">
-                                             <div>
-                                                 <span class="text-[10px] font-bold uppercase tracking-widest text-[#C96A3D]">AS FEATURED IN STORIES</span>
-                                                 <h4 class="font-editorial-heading text-xl font-bold text-gray-900">{{ $parsedHeadline ?: 'From Story to Hand: Acquire the Pieces' }}</h4>
-                                             </div>
-                                             <span class="text-xs text-[#214E34] font-semibold">Browse Archive →</span>
+                                    @if ($isHomePage ?? false)
+                                        <div class="py-12 text-left">
+                                            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8">
+                                                <div>
+                                                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'তাজা শিল্পকর্ম') }}</span>
+                                                    <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
+                                                        {{ $parsedHeadline ?: ($settings['headline'] ?? 'জনপ্রিয় ঐতিহ্যবাহী শিল্পকর্ম') }}
+                                                    </h2>
+                                                </div>
+                                                <p class="text-xs uppercase tracking-widest text-[#888888] mt-4 sm:mt-0 font-medium">
+                                                    {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'Limited pieces ready for immediate international dispatch') }}
+                                                </p>
+                                            </div>
+
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                                @php
+                                                    $homeShelf = [
+                                                        ['title' => 'Vintage Jamdani Stole', 'craft' => 'Sonargaon Muslin', 'price' => '৳ 12,500', 'img' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800'],
+                                                        ['title' => 'Bell-Metal Pooja Bell', 'craft' => 'Dhamrai Foundry', 'price' => '৳ 4,800', 'img' => 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=800'],
+                                                        ['title' => 'Silk Embroidered Clutch', 'craft' => 'Botanical Threads', 'price' => '৳ 6,200', 'img' => 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=800'],
+                                                        ['title' => 'Handmade Brass Candle Stand', 'craft' => 'Bogura Atelier', 'price' => '৳ 5,500', 'img' => 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800'],
+                                                    ];
+                                                @endphp
+                                                @foreach($homeShelf as $item)
+                                                    <div class="bg-white rounded-[24px] overflow-hidden border border-[#E8E8E8] shadow-soft-xs p-4 flex flex-col justify-between">
+                                                        <div class="aspect-square rounded-[18px] overflow-hidden bg-stone-100 mb-4">
+                                                            <img src="{{ $item['img'] }}" class="w-full h-full object-cover">
+                                                        </div>
+                                                        <div class="space-y-1">
+                                                            <span class="text-[10px] text-[#888888] uppercase tracking-wider">{{ $item['craft'] }}</span>
+                                                            <h4 class="font-editorial-heading text-base font-light text-[#1D1D1D]">{{ $item['title'] }}</h4>
+                                                            <p class="font-bold text-sm text-[#214E34] pt-2">{{ $item['price'] }}</p>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
-                                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                                             @foreach ([
-                                                 ['title' => 'Imperial Sonargaon Muslin', 'price' => '৳ 18,500', 'badge' => 'Sonargaon', 'img' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=400'],
-                                                 ['title' => 'Tangail Mulberry Silk Jamdani', 'price' => '৳ 24,500', 'badge' => 'Tangail', 'img' => 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=400'],
-                                                 ['title' => 'Royal Bogura Brass Kettle', 'price' => '৳ 12,800', 'badge' => 'Bogura', 'img' => 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=400'],
-                                                 ['title' => 'Rangpur Royal Shatranji', 'price' => '৳ 15,600', 'badge' => 'Rangpur', 'img' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=400'],
-                                             ] as $p)
-                                                 <div class="rounded-2xl bg-white border border-stone-200 p-3 shadow-sm flex flex-col justify-between">
-                                                     <div class="h-40 rounded-xl overflow-hidden bg-stone-100 mb-2 relative">
-                                                         <img src="{{ $p['img'] }}" class="w-full h-full object-cover">
-                                                         <span class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-white text-[#214E34]">{{ $p['badge'] }}</span>
-                                                     </div>
-                                                     <div class="font-bold text-xs text-gray-900 truncate">{{ $p['title'] }}</div>
-                                                     <div class="text-xs font-bold text-[#C96A3D] my-1">{{ $p['price'] }}</div>
-                                                     <button class="w-full py-1.5 rounded-full bg-[#214E34] text-white text-[10px] font-semibold">Acquire Piece</button>
+                                    @else
+                                        <div class="py-6 max-w-6xl mx-auto w-full">
+                                            <div class="flex items-center justify-between mb-4 pb-2 border-b border-stone-200">
+                                                 <div>
+                                                     <span class="text-[10px] font-bold uppercase tracking-widest text-[#C96A3D]">AS FEATURED IN STORIES</span>
+                                                     <h4 class="font-editorial-heading text-xl font-bold text-gray-900">{{ $parsedHeadline ?: 'From Story to Hand: Acquire the Pieces' }}</h4>
                                                  </div>
-                                             @endforeach
+                                                 <span class="text-xs text-[#214E34] font-semibold">Browse Archive →</span>
+                                            </div>
+                                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                                 @foreach ([
+                                                     ['title' => 'Imperial Sonargaon Muslin', 'price' => '৳ 18,500', 'badge' => 'Sonargaon', 'img' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=400'],
+                                                     ['title' => 'Tangail Mulberry Silk Jamdani', 'price' => '৳ 24,500', 'badge' => 'Tangail', 'img' => 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=400'],
+                                                     ['title' => 'Royal Bogura Brass Kettle', 'price' => '৳ 12,800', 'badge' => 'Bogura', 'img' => 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=400'],
+                                                     ['title' => 'Rangpur Royal Shatranji', 'price' => '৳ 15,600', 'badge' => 'Rangpur', 'img' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=400'],
+                                                 ] as $p)
+                                                     <div class="rounded-2xl bg-white border border-stone-200 p-3 shadow-sm flex flex-col justify-between">
+                                                         <div class="h-40 rounded-xl overflow-hidden bg-stone-100 mb-2 relative">
+                                                             <img src="{{ $p['img'] }}" class="w-full h-full object-cover">
+                                                             <span class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-white text-[#214E34]">{{ $p['badge'] }}</span>
+                                                         </div>
+                                                         <div class="font-bold text-xs text-gray-900 truncate">{{ $p['title'] }}</div>
+                                                         <div class="text-xs font-bold text-[#C96A3D] my-1">{{ $p['price'] }}</div>
+                                                         <button class="w-full py-1.5 rounded-full bg-[#214E34] text-white text-[10px] font-semibold">Acquire Piece</button>
+                                                     </div>
+                                                 @endforeach
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
 
                                 @elseif ($section['type'] === 'video_reels_showcase')
                                     <div class="py-6 max-w-6xl mx-auto w-full">
@@ -1547,17 +2006,44 @@
                                     </div>
 
                                 @elseif ($section['type'] === 'heritage_club_newsletter')
-                                    <div class="py-6 max-w-5xl mx-auto w-full">
-                                        <div class="rounded-2xl bg-[#214E34] text-white p-6 sm:p-8 text-center shadow-lg">
-                                             <span class="text-[10px] font-bold uppercase tracking-widest text-[#A3D9B1]">SOROLATA HERITAGE GUILD</span>
-                                             <h3 class="font-editorial-heading text-2xl font-bold mt-1">{{ $parsedHeadline ?: 'Join the Heritage Gazette & Collector Circle' }}</h3>
-                                             <p class="text-xs text-white/80 max-w-xl mx-auto mt-2 mb-4">{{ $parsedSubheadline ?: 'Receive our monthly investigative craft essays, private notifications for limited loom harvests, and invitations to exhibitions.' }}</p>
-                                             <div class="max-w-md mx-auto flex gap-2">
-                                                 <input type="email" placeholder="Enter your email address..." class="flex-1 px-4 py-2 rounded-full bg-white/10 border border-white/25 text-xs text-white placeholder-white/60">
-                                                 <button class="px-5 py-2 rounded-full bg-[#C96A3D] text-white text-xs font-bold uppercase">Subscribe</button>
-                                             </div>
+                                    @if ($isHomePage ?? false)
+                                        <div class="py-12 text-center max-w-3xl mx-auto space-y-6">
+                                            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ $parsedBadge ?: ($settings['badge_text'] ?? 'সংগ্রাহক সার্কেল') }}</span>
+                                            
+                                            <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D]">
+                                                {{ $parsedHeadline ?: ($settings['headline'] ?? 'সংগ্রাহক সার্কেলে যোগ দিন') }}
+                                            </h2>
+
+                                            <p class="font-editorial-body text-base text-[#555555] leading-relaxed">
+                                                {{ $parsedSubheadline ?: ($settings['subheadline'] ?? 'Join our private circle of patrons. We dispatch thoughtful notes when a generational weaver prepares a rare loom, with exclusive early access to one-off pieces.') }}
+                                            </p>
+
+                                            <div class="pt-4 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                                                <input 
+                                                    type="email" 
+                                                    placeholder="Enter your email address..." 
+                                                    class="flex-grow px-6 py-4 rounded-full border border-[#E8E8E8] bg-[#F8F6F2] text-sm text-[#1D1D1D] placeholder-[#888888]"
+                                                    readonly
+                                                >
+                                                <span class="px-8 py-4 rounded-full bg-[#214E34] text-white text-sm font-medium whitespace-nowrap shadow-sm">
+                                                    {{ $settings['primary_cta_text'] ?? 'Join Collector Desk' }}
+                                                </span>
+                                            </div>
+                                            <p class="text-[11px] text-[#888888]">We honor your privacy. Unsubscribe at any moment with a single click.</p>
                                         </div>
-                                    </div>
+                                    @else
+                                        <div class="py-6 max-w-5xl mx-auto w-full">
+                                            <div class="rounded-2xl bg-[#214E34] text-white p-6 sm:p-8 text-center shadow-lg">
+                                                 <span class="text-[10px] font-bold uppercase tracking-widest text-[#A3D9B1]">SOROLATA HERITAGE GUILD</span>
+                                                 <h3 class="font-editorial-heading text-2xl font-bold mt-1">{{ $parsedHeadline ?: 'Join the Heritage Gazette & Collector Circle' }}</h3>
+                                                 <p class="text-xs text-white/80 max-w-xl mx-auto mt-2 mb-4">{{ $parsedSubheadline ?: 'Receive our monthly investigative craft essays, private notifications for limited loom harvests, and invitations to exhibitions.' }}</p>
+                                                 <div class="max-w-md mx-auto flex gap-2">
+                                                     <input type="email" placeholder="Enter your email address..." class="flex-1 px-4 py-2 rounded-full bg-white/10 border border-white/25 text-xs text-white placeholder-white/60">
+                                                     <button class="px-5 py-2 rounded-full bg-[#C96A3D] text-white text-xs font-bold uppercase">Subscribe</button>
+                                                 </div>
+                                            </div>
+                                        </div>
+                                    @endif
 
                                 @else
                                     <!-- Dynamic Flexible Block Renderer (Elementor Style) -->
@@ -2059,40 +2545,64 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text (লেবেল)</label>
                                     <input type="text" 
                                            wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
-                                           placeholder="GI Certified Heritage Artifact"
+                                           placeholder="বেঙ্গল হেরিটেজ স্যাংকচুয়ারি • ভলিয়ম ০১"
                                            class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Product Headline</label>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Main Headline (শিরোনাম)</label>
                                     <input type="text" 
                                            wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
-                                           placeholder="@{{ product.title }}"
+                                           placeholder="যেখানে প্রতিটি স্মৃতি বলে এক অনন্য ইতিহাস।"
                                            class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subtitle / Narrative</label>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subtitle / Narrative (বিবরণ)</label>
                                     <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
                                               rows="3"
-                                              placeholder="Write storytelling or subtitle..."
+                                              placeholder="শতবর্ষের তাঁতশিল্প, কাঁসা-পিতলের নিখুঁত ভাস্কর্য..."
                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
                                 </div>
 
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">CTA Button Text & Price</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" 
-                                           placeholder="Acquire Piece • @{{ product.price }}"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] font-semibold text-gray-300 mb-1">Primary Button</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" 
+                                               placeholder="Explore Archival Pieces"
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-semibold text-gray-300 mb-1">Secondary Button</label>
+                                        <input type="text" 
+                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.secondary_cta_text" 
+                                               placeholder="Explore By District"
+                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <!-- Trust Metrics -->
+                                <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-2">
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">Trust Metrics (3 Points)</span>
+                                    <div class="grid grid-cols-3 gap-1.5">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_1_val" placeholder="100%" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[11px] text-white">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_2_val" placeholder="64" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[11px] text-white">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_3_val" placeholder="Direct" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[11px] text-white">
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-1.5">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_1_lbl" placeholder="GI Provenance" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-gray-400">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_2_lbl" placeholder="Bengal Districts" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-gray-400">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_3_lbl" placeholder="Artisan Royalty" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-gray-400">
+                                    </div>
                                 </div>
 
                                 <!-- Hero Photography Upload -->
                                 <div class="p-3.5 rounded-xl bg-[#14161d] border border-[#282d37] space-y-3">
-                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">Hero Photo / Video</span>
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">Hero Photo / Visual</span>
                                     <input type="file" wire:model="uploadedImage" accept="image/*" class="text-xs text-gray-400">
                                     @if (!empty($sections[$sIndex]['settings']['image_url']))
                                         <div class="flex items-center space-x-2 pt-1">
@@ -2100,13 +2610,158 @@
                                             <button type="button" wire:click="removeImage" class="text-[10px] text-red-400">Remove Image</button>
                                         </div>
                                     @endif
-                                    <div class="pt-2 border-t border-[#282d37]">
-                                        <label class="block text-[10px] text-gray-400 mb-0.5">Video URL (Optional)</label>
-                                        <input type="text" 
-                                               wire:model.live.debounce.400ms="sections.{{ $sIndex }}.settings.video_url" 
-                                               placeholder="https://www.youtube.com/watch?v=..."
-                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                </div>
+
+                                <!-- Right Glass Card Data -->
+                                <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-2">
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">Featured Piece Card</span>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.card_title" placeholder="Imperial Sonargaon Muslin Scarf" class="w-full bg-[#12141a] border border-[#282d37] rounded p-1.5 text-xs text-white">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.card_artisan" placeholder="Master Weaver Alimuddin" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-xs text-white">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.card_price" placeholder="৳ 18,500" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-xs text-white">
                                     </div>
+                                </div>
+                            </div>
+
+                        {{-- FEATURED COLLECTIONS --}}
+                        @elseif ($secType === 'featured_collections')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Featured Collections (বিশেষ কালেকশন)
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="নির্বাচিত কালেকশনসমূহ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="বিশেষ কালেকশন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subheadline</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="2" placeholder="Curated for Living Room, Dining..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2"></textarea>
+                                </div>
+                            </div>
+
+                        {{-- CATEGORY GRID --}}
+                        @elseif ($secType === 'category_grid')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Traditional Guild / Categories Grid
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="কারুশিল্প শাখা" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="ঐতিহ্যের শ্রেষ্ঠ কারুশিল্প সম্ভার" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subheadline</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="2" placeholder="Explore centuries-old techniques..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2"></textarea>
+                                </div>
+                            </div>
+
+                        {{-- PRODUCT CAROUSEL (NEW ARRIVALS) --}}
+                        @elseif ($secType === 'product_carousel')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing New Arrivals Carousel (নতুন আগমন)
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="নতুন সংগ্রহ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="নতুন আগমন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subheadline</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Touch-friendly horizontal scroll →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                            </div>
+
+                        {{-- BEST SELLERS --}}
+                        @elseif ($secType === 'best_sellers')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Archival Best Sellers (আমাদের বিশেষ সংকলন)
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="সংগ্রাহকদের প্রিয়" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="আমাদের বিশেষ সংকলন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">CTA Button Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="View Entire Catalog" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                            </div>
+
+                        {{-- EDITOR CHOICE --}}
+                        @elseif ($secType === 'editor_choice')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Curator's Distinction (এডিটরস চয়েস)
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="কিউরেটর স্পেশাল" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="এডিটরস চয়েস: টাঙ্গাইল পিওর মালবেরি সিল্ক জামদানি" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Narrative / Description</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="3" placeholder="অর্গানিক মালবেরি সিল্কে হাতে বোনা..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Button Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="সংগ্রহ করুন →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] text-gray-300 mb-1">Price (৳)</label>
+                                        <input type="number" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.price" placeholder="24500" class="w-full bg-[#12141a] border border-[#282d37] rounded p-1.5 text-xs text-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-300 mb-1">Compare Price (৳)</label>
+                                        <input type="number" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.compare_price" placeholder="29000" class="w-full bg-[#12141a] border border-[#282d37] rounded p-1.5 text-xs text-white">
+                                    </div>
+                                </div>
+                                <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-2">
+                                    <span class="text-[10px] uppercase font-bold text-[#A3D9B1] block">Showcase Image</span>
+                                    <input type="file" wire:model="uploadedImage" accept="image/*" class="text-xs text-gray-400">
+                                </div>
+                            </div>
+
+                        {{-- EDITORIAL MANIFESTO --}}
+                        @elseif ($secType === 'editorial_manifesto')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Heritage Manifesto Banner (ঐতিহ্য ঘোষণা)
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="আমাদের ঐতিহ্য ঘোষণা" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Manifesto Quote / Statement</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" rows="4" placeholder='"We do not mass produce..."' class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Manifesto Narrative Body</label>
+                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="3" placeholder="কৃত্রিম ফাস্ট ফ্যাশন ও যান্ত্রিক প্রতিলিপির যুগে..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Button Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="সম্পূর্ণ ম্যানিফেস্টো পড়ুন →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
                                 </div>
                             </div>
 
