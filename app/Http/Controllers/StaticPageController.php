@@ -157,6 +157,18 @@ class StaticPageController extends Controller
         ]);
     }
 
+    public function customerInvoice(string $orderNumber, Request $request): View
+    {
+        $order = Order::with(['items.product', 'user'])
+            ->where('order_number', $orderNumber)
+            ->orWhere('id', $orderNumber)
+            ->firstOrFail();
+
+        return view('orders.customer-invoice', [
+            'order' => $order,
+        ]);
+    }
+
     public function requestOrderCancellation(Request $request, string $orderNumber): RedirectResponse
     {
         $order = Order::where('order_number', $orderNumber)->firstOrFail();

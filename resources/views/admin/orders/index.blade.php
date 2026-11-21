@@ -9,6 +9,16 @@
             <h1 class="font-editorial-heading text-3xl text-white font-normal tracking-tight">Orders & Collector Logistics</h1>
             <p class="text-xs text-gray-400 mt-1">Review heirloom purchases, verify payment authenticity, and dispatch insured couriers.</p>
         </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('admin.abandoned-checkouts.index') }}" class="px-3.5 py-2 rounded-xl bg-[#222733] hover:bg-[#2c3343] border border-[#333a4d] text-xs font-semibold text-amber-300 transition-colors flex items-center gap-2">
+                <span>🛒</span>
+                <span>Abandoned Checkouts</span>
+            </a>
+            <a href="{{ route('admin.orders.export-csv', request()->query()) }}" class="px-3.5 py-2 rounded-xl bg-[#214E34] hover:bg-[#1b3f2a] text-xs font-semibold text-white transition-colors flex items-center gap-2 shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <span>Export Orders (CSV)</span>
+            </a>
+        </div>
     </div>
 
     <!-- Filter Toolbar -->

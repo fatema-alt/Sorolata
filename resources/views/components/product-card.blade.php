@@ -9,6 +9,7 @@
     $discountPercent = $hasDiscount ? round((($product->compare_at_price - $product->price) / $product->compare_at_price) * 100) : 0;
     $districtName = $product->district?->name_en ?? __('Heritage District');
     $craftTitle = $product->artisan?->craft_type?->title() ?? __('Heritage Handcraft');
+    $isOutOfStock = ! $product->is_in_stock || $product->status === 'out_of_stock' || (is_object($product->status) && $product->status->value === 'out_of_stock');
 @endphp
 
 <article {{ $attributes->merge(['class' => 'group relative bg-white rounded-[32px] p-4 shadow-soft-xs hover:shadow-soft-hover transition-luxury flex flex-col justify-between']) }}>
@@ -24,9 +25,13 @@
             >
         </a>
 
-        <!-- Floating Badges: Discount & District -->
+        <!-- Floating Badges: Out of Stock, Discount & District -->
         <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">
-            @if($hasDiscount)
+            @if($isOutOfStock)
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#1D1D1D]/90 text-white backdrop-blur-xs tracking-wider uppercase">
+                    {{ __('Sold Out / সমাপ্ত') }}
+                </span>
+            @elseif($hasDiscount)
                 <x-badge variant="terracotta" size="xs">
                     {{ __(':percent% Off', ['percent' => $discountPercent]) }}
                 </x-badge>

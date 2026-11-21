@@ -153,4 +153,31 @@ class ProductController extends Controller
 
         return back()->with('review_success', __('Your review and rating have been added successfully. Thank you for your feedback!'));
     }
+
+    public function notifyRestock(Request $request, string $slug): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+    {
+        $product = Product::where('slug', $slug)->orWhere('id', $slug)->firstOrFail();
+
+        $validated = $request->validate([
+            'phone' => 'required|string|max:20',
+            'customer_name' => 'nullable|string|max:100',
+            'email' => 'nullable|email|max:150',
+        ]);
+
+        \App\Models\ProductRestockRequest::create([
+            'product_id' => $product->id,
+            'phone' => $validated['phone'],
+            'customer_name' => $validated['customer_name'] ?? null,
+            'email' => $validated['email'] ?? null,
+        ]);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => __('ধন্যবাদ! পণ্যটি পুনরায় স্টকে আসলে আপনাকে জানানো হবে।'),
+            ]);
+        }
+
+        return back()->with('restock_success', __('ধন্যবাদ! পণ্যটি পুনরায় স্টকে আসলে আপনাকে জানানো হবে।'));
+    }
 }

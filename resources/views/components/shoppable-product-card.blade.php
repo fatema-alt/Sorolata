@@ -9,6 +9,7 @@
     $district = $product->district;
     $districtName = $district ? ($locale === 'bn' ? $district->name_bn : $district->name_en) : null;
     $image = $product->media->first()?->url ?? 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600';
+    $isOutOfStock = ! $product->is_in_stock || $product->status === 'out_of_stock' || (is_object($product->status) && $product->status->value === 'out_of_stock');
 @endphp
 
 <div x-data="{ 
@@ -73,10 +74,17 @@
                     </span>
                 @endif
                 <span class="text-xs text-[#888888]">•</span>
-                <span class="text-xs text-[#214E34] font-medium flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-                    {{ __('In Stock') }}
-                </span>
+                @if($isOutOfStock)
+                    <span class="text-xs text-[#DC2626] font-semibold flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-500 inline-block"></span>
+                        {{ __('Sold Out / সমাপ্ত') }}
+                    </span>
+                @else
+                    <span class="text-xs text-[#214E34] font-medium flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+                        {{ __('In Stock') }}
+                    </span>
+                @endif
             </div>
 
             <!-- Title -->
@@ -111,25 +119,34 @@
                 </div>
 
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <!-- Instant Add to Bag Button -->
-                    <button type="button"
-                            @click="addToCart()"
-                            :disabled="adding || added"
-                            class="flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-white transition-all shadow-sm active:scale-95"
-                            :class="added ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#214E34] hover:bg-[#1a3f2a]'">
-                        <template x-if="adding">
-                            <svg class="animate-spin -ml-1 mr-2 h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                        </template>
-                        <template x-if="!adding && !added">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
-                        </template>
-                        <span x-text="buttonText">{{ __('Add to Bag') }}</span>
-                    </button>
+                    @if($isOutOfStock)
+                        <!-- Out of stock indicator / notify link -->
+                        <a href="{{ route('products.show', $product->slug) }}#purchase-section"
+                           class="flex-1 sm:flex-initial inline-flex items-center justify-center space-x-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-amber-900 bg-amber-100 hover:bg-amber-200 transition-all border border-amber-300">
+                            <span>🔔</span>
+                            <span>{{ __('Notify Me') }}</span>
+                        </a>
+                    @else
+                        <!-- Instant Add to Bag Button -->
+                        <button type="button"
+                                @click="addToCart()"
+                                :disabled="adding || added"
+                                class="flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider text-white transition-all shadow-sm active:scale-95"
+                                :class="added ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#214E34] hover:bg-[#1a3f2a]'">
+                            <template x-if="adding">
+                                <svg class="animate-spin -ml-1 mr-2 h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </template>
+                            <template x-if="!adding && !added">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                            </template>
+                            <span x-text="buttonText">{{ __('Add to Bag') }}</span>
+                        </button>
+                    @endif
 
                     <!-- View Details Link -->
                     <a href="{{ route('products.show', $product->slug) }}"

@@ -20,8 +20,12 @@ class SeoEngineService implements SeoMetadataContract
             'name' => $product->title,
             'image' => [$imageUrl],
             'description' => $product->subtitle ?? "Authentic heritage craftsmanship: {$product->title}",
-            'sku' => $product->sku,
+            'sku' => $product->sku ?: 'SRL-' . $product->id,
             'mpn' => $product->uuid,
+            'brand' => [
+                '@type' => 'Brand',
+                'name' => 'Sorolata',
+            ],
             'countryOfOrigin' => [
                 '@type' => 'Country',
                 'name' => 'Bangladesh',
@@ -29,15 +33,29 @@ class SeoEngineService implements SeoMetadataContract
             'offers' => [
                 '@type' => 'Offer',
                 'url' => route('products.show', $product->slug),
-                'priceCurrency' => $product->currency->value,
-                'price' => number_format((float) $product->price, 2, '.', ''),
+                'priceCurrency' => $product->currency?->value ?? 'BDT',
+                'price' => number_format((float) ($product->price ?? 0), 2, '.', ''),
                 'priceValidUntil' => now()->addYear()->format('Y-m-d'),
                 'itemCondition' => 'https://schema.org/NewCondition',
-                'availability' => $product->stock_quantity > 0
+                'availability' => ($product->stock_quantity > 0 && $product->is_in_stock)
                     ? 'https://schema.org/InStock'
-                    : 'https://schema.org/PreOrder',
+                    : 'https://schema.org/OutOfStock',
+                'seller' => [
+                    '@type' => 'Organization',
+                    'name' => 'Sorolata Living Heritage',
+                ],
             ],
         ];
+
+        if ($product->reviews()->count() > 0) {
+            $avg = round((float) $product->reviews()->avg('rating'), 1);
+            $count = $product->reviews()->count();
+            $jsonLd['aggregateRating'] = [
+                '@type' => 'AggregateRating',
+                'ratingValue' => (string) max(1, $avg),
+                'reviewCount' => (string) max(1, $count),
+            ];
+        }
 
         if ($product->artisan) {
             $jsonLd['creator'] = [

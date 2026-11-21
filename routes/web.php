@@ -92,6 +92,7 @@ Route::get('/story/{slug}', fn(string $slug) => redirect()->route('stories.show'
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/products/{slug}', fn(string $slug) => redirect()->route('products.show', $slug, 301));
 Route::post('/product/{slug}/review', [ProductController::class, 'submitReview'])->name('products.review.submit');
+Route::post('/product/{slug}/notify-restock', [ProductController::class, 'notifyRestock'])->name('products.notify-restock');
 
 // Cart & Frictionless Checkout Flow
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -100,6 +101,7 @@ Route::post('/cart/remove/{productId}', [CartController::class, 'remove'])->name
 
 Route::get('/checkout', [CheckoutPageController::class, 'index'])->name('checkout.index');
 Route::post('/checkout/process', [CheckoutPageController::class, 'process'])->name('checkout.process');
+Route::post('/checkout/ping', [CheckoutPageController::class, 'ping'])->name('checkout.ping');
 Route::post('/checkout/coupon/apply', [CheckoutPageController::class, 'applyCoupon'])->name('checkout.coupon.apply');
 Route::post('/checkout/coupon/remove', [CheckoutPageController::class, 'removeCoupon'])->name('checkout.coupon.remove');
 
@@ -128,6 +130,7 @@ Route::post('/payment/sslcommerz/ipn', [\App\Http\Controllers\PaymentController:
 Route::get('/account', [AccountPageController::class, 'index'])->name('account.index');
 Route::post('/account/profile', [AccountPageController::class, 'updateProfile'])->name('account.profile.update');
 Route::get('/track-order', [StaticPageController::class, 'trackOrder'])->name('track.order');
+Route::get('/order/{orderNumber}/invoice', [StaticPageController::class, 'customerInvoice'])->name('order.invoice');
 Route::post('/track-order/cancel-request/{order}', [StaticPageController::class, 'requestOrderCancellation'])->name('track.order.cancel-request');
 
 // Curator Wishlist
@@ -187,6 +190,7 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
     Route::delete('/products/{id}/media/{mediaId}', [\App\Http\Controllers\Admin\AdminProductController::class, 'deleteMedia'])->name('products.media.destroy');
 
     // Orders & Collector Fulfillment
+    Route::get('/orders/export/csv', [\App\Http\Controllers\Admin\AdminOrderController::class, 'exportCsv'])->name('orders.export-csv');
     Route::get('/orders', [\App\Http\Controllers\Admin\AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [\App\Http\Controllers\Admin\AdminOrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{id}/status', [\App\Http\Controllers\Admin\AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
@@ -197,8 +201,14 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
     Route::post('/orders/{id}/cancellation-approve', [\App\Http\Controllers\Admin\AdminOrderController::class, 'approveCancellation'])->name('orders.cancellation-approve');
     Route::post('/orders/{id}/cancellation-decline', [\App\Http\Controllers\Admin\AdminOrderController::class, 'declineCancellation'])->name('orders.cancellation-decline');
     Route::get('/orders/{id}/invoice', [\App\Http\Controllers\Admin\AdminOrderController::class, 'invoice'])->name('orders.invoice');
+    Route::get('/orders/{id}/shipping-label', [\App\Http\Controllers\Admin\AdminOrderController::class, 'shippingLabel'])->name('orders.shipping-label');
+
+    // Abandoned Checkout Tracking & Recovery
+    Route::get('/abandoned-checkouts', [\App\Http\Controllers\Admin\AdminAbandonedCheckoutController::class, 'index'])->name('abandoned-checkouts.index');
+    Route::delete('/abandoned-checkouts/{id}', [\App\Http\Controllers\Admin\AdminAbandonedCheckoutController::class, 'destroy'])->name('abandoned-checkouts.destroy');
 
     // Collectors & Patrons Directory
+    Route::get('/customers/export/csv', [\App\Http\Controllers\Admin\AdminCustomerController::class, 'exportCsv'])->name('customers.export-csv');
     Route::get('/customers', [\App\Http\Controllers\Admin\AdminCustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/{id}', [\App\Http\Controllers\Admin\AdminCustomerController::class, 'show'])->name('customers.show');
 

@@ -3,9 +3,17 @@
 @section('content')
 <div class="space-y-6 max-w-7xl mx-auto">
     
-    <div>
-        <h1 class="font-editorial-heading text-3xl text-white font-normal tracking-tight">Collectors & Patrons</h1>
-        <p class="text-xs text-gray-400 mt-1">Directory of registered art patrons, lifetime acquisition values, and delivery profiles.</p>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="font-editorial-heading text-3xl text-white font-normal tracking-tight">Collectors & Patrons</h1>
+            <p class="text-xs text-gray-400 mt-1">Directory of registered art patrons, lifetime acquisition values, and delivery profiles.</p>
+        </div>
+        <div>
+            <a href="{{ route('admin.customers.export-csv', request()->query()) }}" class="px-3.5 py-2 rounded-xl bg-[#214E34] hover:bg-[#1b3f2a] text-xs font-semibold text-white transition-colors flex items-center gap-2 shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <span>Export Patrons (CSV)</span>
+            </a>
+        </div>
     </div>
 
     <!-- Filter Toolbar -->

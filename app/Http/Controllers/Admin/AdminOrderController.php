@@ -334,4 +334,102 @@ class AdminOrderController extends Controller
 
         return back()->with('error', "Payment marked as invalid for Order #{$order->order_number}.");
     }
+
+    public function exportCsv(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse
+    {
+        $query = Order::with(['items.product', 'user']);
+
+        if ($request->filled('search')) {
+            $term = $request->input('search');
+            $query->where(function ($q) use ($term) {
+                $q->where('order_number', 'like', "%{$term}%")
+                  ->orWhere('customer_name', 'like', "%{$term}%")
+                  ->orWhere('customer_phone', 'like', "%{$term}%")
+                  ->orWhere('customer_email', 'like', "%{$term}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('payment_status')) {
+            $query->where('payment_status', $request->input('payment_status'));
+        }
+
+        $filename = 'sorolata_orders_' . date('Y-m-d_His') . '.csv';
+
+        return response()->streamDownload(function () use ($query) {
+            $handle = fopen('php://output', 'w');
+            fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+            
+            fputcsv($handle, [
+                'Order Number',
+                'Date',
+                'Customer Name',
+                'Customer Phone',
+                'Customer Email',
+                'District',
+                'Shipping Address',
+                'Item Count',
+                'Items Summary',
+                'Subtotal (BDT)',
+                'Delivery Fee (BDT)',
+                'Discount (BDT)',
+                'Total Amount (BDT)',
+                'Paid Amount (BDT)',
+                'Due Amount (BDT)',
+                'Payment Method',
+                'Payment Status',
+                'Order Status',
+                'Steadfast Consignment ID',
+                'Steadfast Tracking Code',
+            ]);
+
+            $query->latest('created_at')->chunk(100, function ($orders) use ($handle) {
+                foreach ($orders as $order) {
+                    $itemsSummary = $order->items->map(fn($i) => "{$i->product_title} x{$i->quantity}")->implode('; ');
+                    $addr = is_array($order->shipping_address) ? ($order->shipping_address['line_1'] ?? json_encode($order->shipping_address)) : (string) $order->shipping_address;
+                    $due = $order->due_amount ?: max(0.0, (float) $order->total_amount - (float) $order->paid_amount);
+
+                    fputcsv($handle, [
+                        $order->order_number,
+                        $order->created_at->format('Y-m-d H:i:s'),
+                        $order->customer_name,
+                        $order->customer_phone,
+                        $order->customer_email,
+                        $order->district,
+                        $addr,
+                        $order->items->sum('quantity'),
+                        $itemsSummary,
+                        $order->subtotal_amount,
+                        $order->shipping_fee,
+                        $order->discount_amount,
+                        $order->total_amount,
+                        $order->paid_amount,
+                        $due,
+                        $order->payment_method?->value ?? (string)$order->payment_method,
+                        $order->payment_status?->value ?? (string)$order->payment_status,
+                        $order->status?->value ?? (string)$order->status,
+                        $order->steadfast_consignment_id,
+                        $order->steadfast_tracking_code,
+                    ]);
+                }
+            });
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Cache-Control' => 'no-store, no-cache',
+        ]);
+    }
+
+    public function shippingLabel(int $id): View
+    {
+        $order = Order::with(['items.product'])->findOrFail($id);
+
+        return view('admin.orders.shipping-label', [
+            'order' => $order,
+        ]);
+    }
 }

@@ -20,6 +20,11 @@
         </div>
 
         <div class="flex items-center space-x-3">
+            <a href="{{ route('admin.orders.shipping-label', $order->id) }}" target="_blank"
+               class="px-3.5 py-2 rounded-xl bg-[#214E34] hover:bg-[#1b3f2a] text-xs font-semibold text-white transition-all flex items-center space-x-2 shadow-sm">
+                <span>🏷️</span>
+                <span>Print 4x6 Label (স্টিকার)</span>
+            </a>
             <a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank"
                class="px-3.5 py-2 rounded-xl border border-[#2d3444] hover:border-gray-500 bg-[#161922] text-xs font-medium text-gray-300 hover:text-white transition-all flex items-center space-x-2">
                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>

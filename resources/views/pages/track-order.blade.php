@@ -162,8 +162,12 @@
                     </div>
                 </div>
 
-                <!-- Badges -->
+                <!-- Badges & Invoice -->
                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+                    <a href="{{ route('order.invoice', $order->order_number) }}" target="_blank" style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.35rem 0.95rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: #214E34; color: #fff; text-decoration: none; box-shadow: 0 1px 3px rgba(33,78,52,0.18);">
+                        <svg style="width: 13px; height: 13px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        {{ __('Download Invoice (চালান)') }}
+                    </a>
                     <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.85rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #FBF6ED; border: 1px solid #F2E5CE; color: #8C6424;">
                         <span style="width: 6px; height: 6px; border-radius: 9999px; background: #D4A359;"></span>
                         {{ $order->status->label() }}

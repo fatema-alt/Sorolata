@@ -243,6 +243,18 @@ class CheckoutPageController extends Controller
             session()->forget('checkout_coupon');
         }
 
+        // Mark Abandoned Checkout as recovered
+        try {
+            if ($request->filled('checkout_uuid')) {
+                \App\Models\AbandonedCheckout::where('uuid', $request->input('checkout_uuid'))
+                    ->update(['is_recovered' => true, 'recovered_at' => now()]);
+            } elseif ($request->filled('customer_phone')) {
+                \App\Models\AbandonedCheckout::where('customer_phone', $request->input('customer_phone'))
+                    ->where('is_recovered', false)
+                    ->update(['is_recovered' => true, 'recovered_at' => now()]);
+            }
+        } catch (\Throwable) {}
+
         // Automated SMS & Email Notification Dispatches
         try {
             $this->smsService->sendOrderPlacedSms($order);
@@ -376,5 +388,54 @@ class CheckoutPageController extends Controller
     {
         session()->forget('checkout_coupon');
         return back()->with('info', __('Coupon code removed.'));
+    }
+
+    public function ping(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $validated = $request->validate([
+            'uuid' => 'required|string|max:64',
+            'customer_name' => 'nullable|string|max:255',
+            'customer_phone' => 'nullable|string|max:50',
+            'customer_email' => 'nullable|string|max:255',
+            'delivery_address' => 'nullable|string|max:500',
+            'city_district' => 'nullable|string|max:100',
+            'total' => 'nullable|numeric',
+        ]);
+
+        $bag = session()->get('sorolata_collector_bag', []);
+        $items = [];
+        if (!empty($bag)) {
+            $products = Product::whereIn('id', array_keys($bag))->get();
+            foreach ($products as $p) {
+                $qty = $bag[$p->id] ?? 1;
+                $items[] = [
+                    'id' => $p->id,
+                    'title' => $p->title,
+                    'price' => (float)$p->price,
+                    'quantity' => $qty,
+                    'subtotal' => (float)$p->price * $qty,
+                ];
+            }
+        }
+
+        $subtotal = (float) collect($items)->sum('subtotal');
+        $total = (float) ($validated['total'] ?? ($subtotal + 80.00));
+
+        \App\Models\AbandonedCheckout::updateOrCreate(
+            ['uuid' => $validated['uuid']],
+            [
+                'customer_name' => $validated['customer_name'] ?? null,
+                'customer_phone' => $validated['customer_phone'] ?? null,
+                'customer_email' => $validated['customer_email'] ?? null,
+                'shipping_address' => $validated['delivery_address'] ?? null,
+                'district' => $validated['city_district'] ?? null,
+                'subtotal' => $subtotal,
+                'delivery_charge' => max(0, $total - $subtotal),
+                'total_amount' => $total,
+                'items_json' => $items,
+            ]
+        );
+
+        return response()->json(['status' => 'recorded']);
     }
 }

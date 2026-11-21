@@ -128,10 +128,15 @@
 
                         <div class="pt-3 border-t border-[#E8E8E8] flex flex-wrap items-center justify-between text-xs gap-2">
                             <span class="text-[#888888]">{{ __('Total Price:') }} <strong class="text-[#1D1D1D] font-bold">৳{{ number_format((float)$ord->total_amount, 2) }}</strong></span>
-                            <a href="{{ route('track.order', ['order_number' => $ord->order_number]) }}" class="text-[#214E34] font-bold hover:underline flex items-center gap-1">
-                                <span>{{ __('View Live Tracking Timeline') }}</span>
-                                <span>→</span>
-                            </a>
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('order.invoice', $ord->order_number) }}" target="_blank" class="text-xs text-gray-700 hover:text-[#214E34] font-semibold flex items-center gap-1 border border-gray-200 rounded-lg px-2.5 py-1 hover:border-[#214E34] transition">
+                                    <span>📄 {{ __('Invoice / চালান') }}</span>
+                                </a>
+                                <a href="{{ route('track.order', ['order_number' => $ord->order_number]) }}" class="text-[#214E34] font-bold hover:underline flex items-center gap-1">
+                                    <span>{{ __('Live Tracking') }}</span>
+                                    <span>→</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 @empty

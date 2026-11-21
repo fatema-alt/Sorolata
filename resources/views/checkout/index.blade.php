@@ -65,6 +65,7 @@
 
         <form id="checkout-order-form" action="{{ route('checkout.process') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
             @csrf
+            <input type="hidden" name="checkout_uuid" id="checkout_uuid">
 
             <!-- Left: Checkout Forms -->
             <div class="lg:col-span-7 space-y-8">
@@ -453,6 +454,48 @@
                     {{ (float) ($subtotal ?? 0) }}
                 );
             }
+
+            // Real-Time Abandoned Checkout Auto-Save
+            let checkoutUuid = localStorage.getItem('srl_checkout_uuid');
+            if (!checkoutUuid) {
+                checkoutUuid = 'chk_' + Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+                localStorage.setItem('srl_checkout_uuid', checkoutUuid);
+            }
+            const uuidInput = document.getElementById('checkout_uuid');
+            if (uuidInput) uuidInput.value = checkoutUuid;
+
+            function pingAbandoned() {
+                const name = document.querySelector('input[name="customer_name"]')?.value || '';
+                const phone = document.querySelector('input[name="customer_phone"]')?.value || '';
+                const email = document.querySelector('input[name="customer_email"]')?.value || '';
+                const addr = document.querySelector('input[name="delivery_address"], textarea[name="delivery_address"]')?.value || '';
+                const district = document.querySelector('select[name="city_district"]')?.value || '';
+
+                if (!phone && !name && !email) return;
+
+                fetch('{{ route('checkout.ping') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        uuid: checkoutUuid,
+                        customer_name: name,
+                        customer_phone: phone,
+                        customer_email: email,
+                        delivery_address: addr,
+                        city_district: district
+                    })
+                }).catch(() => {});
+            }
+
+            document.querySelectorAll('input[name="customer_name"], input[name="customer_phone"], input[name="customer_email"], select[name="city_district"], textarea[name="delivery_address"]')
+                .forEach(el => {
+                    el.addEventListener('blur', pingAbandoned);
+                });
+            setTimeout(pingAbandoned, 2000);
         });
     </script>
 @endsection
