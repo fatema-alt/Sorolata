@@ -1601,8 +1601,6 @@
                                             </div>
                                         </div>
                                     @endif
-                                        </div>
-                                    </div>
 
                                 @elseif ($section['type'] === 'specs_anatomy')
                                     <div class="py-10">
