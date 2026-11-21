@@ -69,6 +69,22 @@
                 </button>
             </div>
 
+            <!-- Canvas Language Preview Switcher (EN | বাং) -->
+            <div class="bg-[#12141a] p-1 rounded-lg border border-[#282d37] flex items-center space-x-1" title="Canvas Language Preview">
+                <button type="button" 
+                        wire:click="setPreviewLocale('bn')"
+                        class="px-2.5 py-1 rounded text-xs font-medium flex items-center space-x-1 transition-all {{ ($previewLocale ?? 'bn') === 'bn' ? 'bg-[#214E34] text-white shadow-sm font-bold' : 'text-gray-400 hover:text-gray-200 hover:bg-[#222731]' }}"
+                        title="বাংলা প্রিভিউ দেখুন">
+                    <span>🇧🇩 বাং</span>
+                </button>
+                <button type="button" 
+                        wire:click="setPreviewLocale('en')"
+                        class="px-2.5 py-1 rounded text-xs font-medium flex items-center space-x-1 transition-all {{ ($previewLocale ?? 'bn') === 'en' ? 'bg-[#214E34] text-white shadow-sm font-bold' : 'text-gray-400 hover:text-gray-200 hover:bg-[#222731]' }}"
+                        title="View English Preview">
+                    <span>🇬🇧 EN</span>
+                </button>
+            </div>
+
             <!-- Auto-save Status Indicator -->
             <div class="hidden lg:flex items-center space-x-2 text-xs text-gray-400">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -759,9 +775,16 @@
                             $isSelected = $selectedSectionId === $secId;
                             $isActive = $section['is_active'] ?? true;
                             $settings = $section['settings'] ?? [];
-                            $parsedHeadline = $parser->parse($settings['headline'] ?? '', $product);
-                            $parsedSubheadline = $parser->parse($settings['subheadline'] ?? '', $product);
-                            $parsedBadge = $parser->parse($settings['badge_text'] ?? '', $product);
+                            $isBnCanvas = ($previewLocale ?? 'bn') === 'bn';
+                            $getCanvasLoc = function(string $key, string $default = '') use ($settings, $isBnCanvas) {
+                                if ($isBnCanvas && !empty($settings[$key . '_bn'])) {
+                                    return $settings[$key . '_bn'];
+                                }
+                                return !empty($settings[$key]) ? $settings[$key] : $default;
+                            };
+                            $parsedHeadline = $parser->parse($getCanvasLoc('headline'), $product);
+                            $parsedSubheadline = $parser->parse($getCanvasLoc('subheadline'), $product);
+                            $parsedBadge = $parser->parse($getCanvasLoc('badge_text'), $product);
                         @endphp
 
                         <!-- Section Wrapper with Direct Section Dropzone -->
@@ -935,10 +958,10 @@
 
                                                     <div class="pt-4 flex flex-wrap items-center gap-4">
                                                         <span class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#214E34] text-white text-sm font-medium shadow-sm">
-                                                            {{ $settings['primary_cta_text'] ?? 'Explore Archival Pieces' }} →
+                                                            {{ $getCanvasLoc('primary_cta_text', 'Explore Archival Pieces') }} →
                                                         </span>
                                                         <span class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-[#1D1D1D]/20 text-[#1D1D1D] text-sm font-medium">
-                                                            {{ $settings['secondary_cta_text'] ?? 'Explore By District' }}
+                                                            {{ $getCanvasLoc('secondary_cta_text', 'Explore By District') }}
                                                         </span>
                                                     </div>
 
@@ -946,15 +969,15 @@
                                                     <div class="pt-8 border-t border-[#E8E8E8] grid grid-cols-3 gap-6 text-xs text-[#555555]">
                                                         <div>
                                                             <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">{{ $settings['metric_1_val'] ?? '100%' }}</span>
-                                                            <span class="text-[#888888]">{{ $settings['metric_1_lbl'] ?? 'GI Provenance' }}</span>
+                                                            <span class="text-[#888888]">{{ $getCanvasLoc('metric_1_lbl', 'GI Provenance') }}</span>
                                                         </div>
                                                         <div>
                                                             <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">{{ $settings['metric_2_val'] ?? '64' }}</span>
-                                                            <span class="text-[#888888]">{{ $settings['metric_2_lbl'] ?? 'Bengal Districts' }}</span>
+                                                            <span class="text-[#888888]">{{ $getCanvasLoc('metric_2_lbl', 'Bengal Districts') }}</span>
                                                         </div>
                                                         <div>
                                                             <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">{{ $settings['metric_3_val'] ?? 'Direct' }}</span>
-                                                            <span class="text-[#888888]">{{ $settings['metric_3_lbl'] ?? 'Artisan Royalty' }}</span>
+                                                            <span class="text-[#888888]">{{ $getCanvasLoc('metric_3_lbl', 'Artisan Royalty') }}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2343,31 +2366,58 @@
                         @if ($secType === 'testimonial_editorial')
                             <div class="space-y-4">
                                 <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
-                                    Editing Testimonial / Collector Impression
+                                    Editing Testimonial / Collector Impression (সংগ্রাহকদের মতামত)
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text (লেবেল)</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
-                                           placeholder="e.g. Collector Impressions"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ লেবেল</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Collector Impressions" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="সংগ্রাহকদের মতামত" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Collector Review / Quote (প্রশংসা বা মতামত)</label>
-                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
-                                              rows="4"
-                                              placeholder="Unboxing this piece in London was a transcendent experience..."
-                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Collector Review / Quote (প্রশংসা বা মতামত)</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Unboxing this piece in London was a transcendent experience..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" placeholder="লন্ডনে এই শিল্পকর্মটি পাওয়ার অভিজ্ঞতা ছিল অনন্য..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Collector / Reviewer Name (নাম)</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
-                                           placeholder="e.g. Dr. Eleanor Vance"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Collector Name / Title (শিরোনাম বা নাম)</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Reflections & Memories from Global Collectors" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="সংগ্রাহকদের অনুভূতি ও স্মৃতিচারণ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
@@ -2470,31 +2520,58 @@
                         @elseif ($secType === 'artisan_spotlight')
                             <div class="space-y-4">
                                 <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
-                                    Editing Master Artisan Spotlight
+                                    Editing Master Artisan Spotlight (ওস্তাদ কারিগরবৃন্দ)
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Label</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
-                                           placeholder="The Master Artisan Behind This Piece"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Label / ব্যাজ লেবেল</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Hereditary Masters" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="বংশানুক্রমিক ওস্তাদ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Artisan Name (কারিগরের নাম)</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
-                                           placeholder="Rabeya Begum"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Section Title / কারিগরের নাম বা শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Living Legends: The Master Artisans of Bengal" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="জীবন্ত কিংবদন্তি: ওস্তাদ কারিগরবৃন্দ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Artisan Pull Quote (উক্তি)</label>
-                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
-                                              rows="3"
-                                              placeholder="Our hands carry the memory of three centuries of loom heritage..."
-                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Subheadline / Pull Quote (বিবরণ বা উক্তি)</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Behind every museum-grade piece stands a lifetime of discipline..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" placeholder="প্রতিটি শিল্পকর্মের পেছনে রয়েছে একজন শিল্পীর নাম, স্টুডিও এবং আজীবনের সাধনা।" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-2">
@@ -2539,47 +2616,91 @@
                         @elseif ($secType === 'hero_cinematic')
                             <div class="space-y-4">
                                 <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
-                                    Editing Cinematic Hero Showcase
+                                    Editing Cinematic Hero Showcase (হিরো সেকশন)
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text (লেবেল)</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
-                                           placeholder="বেঙ্গল হেরিটেজ স্যাংকচুয়ারি • ভলিয়ম ০১"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
-                                </div>
-
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Main Headline (শিরোনাম)</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
-                                           placeholder="যেখানে প্রতিটি স্মৃতি বলে এক অনন্য ইতিহাস।"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
-                                </div>
-
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subtitle / Narrative (বিবরণ)</label>
-                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
-                                              rows="3"
-                                              placeholder="শতবর্ষের তাঁতশিল্প, কাঁসা-পিতলের নিখুঁত ভাস্কর্য..."
-                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <label class="block text-[10px] font-semibold text-gray-300 mb-1">Primary Button</label>
-                                        <input type="text" 
-                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" 
-                                               placeholder="Explore Archival Pieces"
-                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ লেবেল</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="BENGAL HERITAGE LIVING SANCTUARY • VOL 01" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="বেঙ্গল হেরিটেজ স্যাংকচুয়ারি • ভলিয়ম ০১" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label class="block text-[10px] font-semibold text-gray-300 mb-1">Secondary Button</label>
-                                        <input type="text" 
-                                               wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.secondary_cta_text" 
-                                               placeholder="Explore By District"
-                                               class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Main Headline / মূল শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Where Every Memory Recalls a Timeless History." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="যেখানে প্রতিটি স্মৃতি বলে এক অনন্য ইতিহাস।" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Subtitle / Narrative (বিবরণ)</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Centuries of master weaving, bell-metal forging..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" placeholder="শতবর্ষের তাঁতশিল্প, কাঁসা-পিতলের নিখুঁত ভাস্কর্য..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Primary Action Button / প্রধান বাটন</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div class="relative">
+                                            <span class="absolute left-2 top-1.5 text-[9px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="Explore Pieces" class="w-full bg-[#12141a] border border-[#282d37] rounded text-xs text-white pl-7 pr-2 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2 top-1.5 text-[9px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text_bn" placeholder="সংগ্রহশালা দেখুন" class="w-full bg-[#12141a] border border-[#282d37] rounded text-xs text-white pl-7 pr-2 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Secondary Button / দ্বিতীয় বাটন</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div class="relative">
+                                            <span class="absolute left-2 top-1.5 text-[9px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.secondary_cta_text" placeholder="Explore By District" class="w-full bg-[#12141a] border border-[#282d37] rounded text-xs text-white pl-7 pr-2 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2 top-1.5 text-[9px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.secondary_cta_text_bn" placeholder="জেলা ভিত্তিক অন্বেষণ" class="w-full bg-[#12141a] border border-[#282d37] rounded text-xs text-white pl-7 pr-2 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
                                     </div>
                                 </div>
 
@@ -2592,9 +2713,14 @@
                                         <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_3_val" placeholder="Direct" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[11px] text-white">
                                     </div>
                                     <div class="grid grid-cols-3 gap-1.5">
-                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_1_lbl" placeholder="GI Provenance" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-gray-400">
-                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_2_lbl" placeholder="Bengal Districts" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-gray-400">
-                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_3_lbl" placeholder="Artisan Royalty" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-gray-400">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_1_lbl" placeholder="GI Provenance (EN)" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-gray-400">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_2_lbl" placeholder="Bengal Districts (EN)" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-gray-400">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_3_lbl" placeholder="Artisan Royalty (EN)" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-gray-400">
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-1.5">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_1_lbl_bn" placeholder="জিআই সনদপ্রাপ্ত (বাং)" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-[#A3D9B1]">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_2_lbl_bn" placeholder="ঐতিহ্যবাহী জেলা (বাং)" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-[#A3D9B1]">
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.metric_3_lbl_bn" placeholder="ন্যায্যসম্মান (বাং)" class="bg-[#12141a] border border-[#282d37] rounded p-1 text-[10px] text-[#A3D9B1]">
                                     </div>
                                 </div>
 
@@ -2628,16 +2754,52 @@
                                     Editing Featured Collections (বিশেষ কালেকশন)
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="নির্বাচিত কালেকশনসমূহ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ লেবেল</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Curated Drops" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="নির্বাচিত কালেকশনসমূহ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="বিশেষ কালেকশন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Headline / মূল শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Featured Collections" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="বিশেষ কালেকশন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subheadline</label>
-                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="2" placeholder="Curated for Living Room, Dining..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Subheadline / বিবরণ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="2" placeholder="Curated for Living Room, Dining..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" rows="2" placeholder="লিভিং রুম, ডাইনিং, বেডরুম ও উৎসবের উপহারের জন্য..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2645,19 +2807,55 @@
                         @elseif ($secType === 'category_grid')
                             <div class="space-y-4">
                                 <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
-                                    Editing Traditional Guild / Categories Grid
+                                    Editing Traditional Guild / Categories Grid (কারুশিল্প শাখা)
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="কারুশিল্প শাখা" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ লেবেল</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Heritage Craft Guilds" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="কারুশিল্প শাখা" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="ঐতিহ্যের শ্রেষ্ঠ কারুশিল্প সম্ভার" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Headline / মূল শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Timeless Guilds of Bengal Craftsmanship" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="ঐতিহ্যের শ্রেষ্ঠ কারুশিল্প সম্ভার" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subheadline</label>
-                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="2" placeholder="Explore centuries-old techniques..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Subheadline / বিবরণ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="2" placeholder="Explore centuries-old techniques perfected..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" rows="2" placeholder="প্রজন্ম থেকে প্রজন্মে সিদ্ধহস্ত কারিগরদের শতবর্ষী ঐতিহ্যের সন্ধান।" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2668,16 +2866,52 @@
                                     Editing New Arrivals Carousel (নতুন আগমন)
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="নতুন সংগ্রহ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ লেবেল</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Fresh From Ateliers" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="নতুন সংগ্রহ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="নতুন আগমন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Headline / মূল শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="New Arrivals & Fresh Weaves" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="নতুন আগমন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subheadline</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Touch-friendly horizontal scroll →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Subheadline / স্ক্রোল ইঙ্গিত</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Touch-friendly horizontal scroll →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" placeholder="হরিজন্টাল স্ক্রোল করে দেখুন →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2688,16 +2922,52 @@
                                     Editing Archival Best Sellers (আমাদের বিশেষ সংকলন)
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="সংগ্রাহকদের প্রিয়" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ লেবেল</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Collector Favorites" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="সংগ্রাহকদের প্রিয়" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="আমাদের বিশেষ সংকলন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Headline / মূল শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Archival Best Sellers & Acclaimed Masterpieces" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="আমাদের বিশেষ সংকলন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">CTA Button Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="View Entire Catalog" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>CTA Button Text / বাটন টেক্সট</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="View Entire Catalog" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text_bn" placeholder="সম্পূর্ণ ক্যাটালগ দেখুন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2708,20 +2978,68 @@
                                     Editing Curator's Distinction (এডিটরস চয়েস)
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="কিউরেটর স্পেশাল" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ লেবেল</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Curator Special" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="কিউরেটর স্পেশাল" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="এডিটরস চয়েস: টাঙ্গাইল পিওর মালবেরি সিল্ক জামদানি" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Headline / মূল শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Editor's Choice: Heirloom Tangail Mulberry Silk Jamdani" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="এডিটরস চয়েস: টাঙ্গাইল পিওর মালবেরি সিল্ক জামদানি" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Narrative / Description</label>
-                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="3" placeholder="অর্গানিক মালবেরি সিল্কে হাতে বোনা..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Narrative / বিবরণ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="2" placeholder="Hand-loomed supplementary weft geometric motifs..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" rows="2" placeholder="অর্গানিক মালবেরি সিল্কে হাতে বোনা জ্যামিতিক মোটিফ..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Button Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="সংগ্রহ করুন →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Button Text / বাটন টেক্সট</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="Acquire Heirloom Piece →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text_bn" placeholder="সংগ্রহ করুন →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
                                     <div>
@@ -2746,20 +3064,68 @@
                                     Editing Heritage Manifesto Banner (ঐতিহ্য ঘোষণা)
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="আমাদের ঐতিহ্য ঘোষণা" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ লেবেল</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Living Heritage Manifesto" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="আমাদের ঐতিহ্য ঘোষণা" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Manifesto Quote / Statement</label>
-                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" rows="4" placeholder='"We do not mass produce..."' class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Manifesto Quote / ঘোষণা উক্তি</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" rows="3" placeholder='"Our craftsmanship is not merely merchandise..."' class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" rows="3" placeholder='"আমাদের কারুশিল্প কেবল কোনো পণ্য নয়; এটি আমাদের পূর্বপুরুষদের আত্মা..."' class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Manifesto Narrative Body</label>
-                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="3" placeholder="কৃত্রিম ফাস্ট ফ্যাশন ও যান্ত্রিক প্রতিলিপির যুগে..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Manifesto Narrative Body / বিবরণ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" rows="3" placeholder="In an era of disposable fashion and synthetic mass replication..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" rows="3" placeholder="কৃত্রিম ফাস্ট ফ্যাশন ও যান্ত্রিক প্রতিলিপির যুগে সরলতা বিলুপ্তপ্রায় ঐতিহ্যবাহী শিল্পের আশ্রয়স্থল..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Button Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="সম্পূর্ণ ম্যানিফেস্টো পড়ুন →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Button Text / বাটন টেক্সট</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="Read Full Manifesto →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text_bn" placeholder="সম্পূর্ণ ম্যানিফেস্টো পড়ুন →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2827,27 +3193,54 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
-                                           placeholder="Macro Visual Study"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Visual Chronicles & Intricacies" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="মাস্টারপিস গ্যালারি ও কারুকাজ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Gallery Title (শিরোনাম)</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
-                                           placeholder="Tactile Intricacies"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Gallery Title / শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Intricate Motifs & Macro Textures" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="নিপুণ কারুকাজ ও শিল্প নিদর্শন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subtitle</label>
-                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
-                                              rows="2"
-                                              placeholder="Notice the deliberate irregularities that prove human hand execution..."
-                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Subtitle / বিবরণ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Witness authentic human artisanal execution..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" placeholder="আমাদের নিপুণ শিল্পীদের হাতের স্পর্শে তৈরি প্রতিটি সৃষ্টি..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-2.5">
@@ -2875,42 +3268,95 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" 
-                                           placeholder="Geographical Indication & Regional Provenance"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Geographical Indication & Regional Provenance" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="ভৌগোলিক নির্দেশক ও আঞ্চলিক উৎস" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Heading</label>
-                                    <input type="text" 
-                                           wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" 
-                                           placeholder="Rooted in @{{ district.name }}"
-                                           class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Heading / শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Heritage of Bangladeshi Districts" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="ঐতিহ্যবাহী জেলা ও তাদের সৃষ্টি" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Narrative Subtitle</label>
-                                    <textarea wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" 
-                                              rows="2"
-                                              placeholder="Soil, microclimate, and river humidity shape the personality..."
-                                              class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Narrative Subtitle / বিবরণ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Soil, microclimate, and river humidity shape the personality..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" placeholder="মাটি, আবহাওয়া ও নদীমাতৃক বাংলার ভৌগোলিক বৈচিত্র্য যা প্রতিটি হস্তশিল্পকে দিয়েছে অনন্য স্বীকৃতি..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Button Text / বাটন টেক্সট</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.secondary_cta_text" placeholder="Explore All Districts →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.secondary_cta_text_bn" placeholder="সব জেলা দেখুন →" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="p-3 rounded-xl bg-[#14161d] border border-[#282d37] space-y-2.5">
-                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">3 Provenance Cards</span>
+                                    <span class="text-[10px] uppercase font-bold tracking-wider text-[#A3D9B1] block">3 Provenance Cards (বিবরণ কার্ড)</span>
                                     <div>
                                         <label class="block text-[10px] text-gray-400 mb-0.5">Card 1: GI Specialty Text</label>
-                                        <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.gi_specialty" placeholder="World-renowned handloom textile..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        <div class="space-y-1">
+                                            <textarea rows="1" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.gi_specialty" placeholder="World-renowned handloom textile..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                            <textarea rows="1" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.gi_specialty_bn" placeholder="বিশ্বখ্যাত তাঁতশিল্প ও ভৌগোলিক নির্দেশক ঐতিহ্য..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] text-gray-400 mb-0.5">Card 2: River Basin & Climate</label>
-                                        <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.river_basin" placeholder="Shitalakshya river air provides morning humidity..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        <div class="space-y-1">
+                                            <textarea rows="1" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.river_basin" placeholder="River air provides morning humidity..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                            <textarea rows="1" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.river_basin_bn" placeholder="শীতলক্ষ্যা ও অন্যান্য নদ-নদীর বাতাস..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] text-gray-400 mb-0.5">Card 3: Historical Chronicle</label>
-                                        <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.historical_narrative" placeholder="Documented in traveler chronicles since 14th century..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        <div class="space-y-1">
+                                            <textarea rows="1" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.historical_narrative" placeholder="Documented in traveler chronicles since 14th century..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                            <textarea rows="1" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.historical_narrative_bn" placeholder="ঐতিহাসিক পর্যটক ও প্রাচীন নথিতে উল্লেখিত শতবর্ষী কারুশিল্প..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -3052,16 +3498,52 @@
                                     Editing Shoppable Product Shelf
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="AS FEATURED IN STORIES" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="AUTHENTIC & IN DEMAND" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="জনপ্রিয় ও সমাদৃত হস্তশিল্প" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Shelf Title</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="From Story to Hand: Acquire the Pieces" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Shelf Title / শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Trending Heritage Creations" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="এই সপ্তাহের জনপ্রিয় কারুকাজ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subheadline</label>
-                                    <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Handcrafted in limited archival batches..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Subheadline / বিবরণ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Handcrafted in limited archival batches by master guilds..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" placeholder="শিল্পীদের নিখুঁত দক্ষতায় সীমিত সংখ্যায় তৈরি সংগ্রহযোগ্য শিল্পকর্ম..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -3088,20 +3570,68 @@
                                     Editing Gazette & Collector Club Invitation
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="SOROLATA HERITAGE GUILD" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Badge Text / ব্যাজ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="HERITAGE CIRCLE • সরলতা সমাজ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text_bn" placeholder="ঐতিহ্য সংগ্রাহক মহল • সরলতা সমাজ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Join the Heritage Gazette & Collector Circle" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Headline / শিরোনাম</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Join the Heritage Gazette & Collector Circle" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline_bn" placeholder="যুক্ত হোন আমাদের ঐতিহ্য সংগ্রাহক ক্লাবে" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Invitation Description</label>
-                                    <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Receive our monthly investigative craft essays..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Invitation Description / বিবরণ</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Receive our monthly investigative craft essays, private preview access to limited artisan editions..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline_bn" placeholder="ঐতিহ্যবাহী বাংলার হারানো গল্প, শিল্পীদের জীবনগাথা এবং সীমিত সংস্করণের পণ্য প্রকাশের খবর সবার আগে পান..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subscribe Button Text</label>
-                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="Subscribe to Gazette" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                                        <span>Subscribe Button Text / বাটন টেক্সট</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#214E34]/30 text-[#A3D9B1] font-mono">Bilingual</span>
+                                    </label>
+                                    <div class="space-y-1.5">
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-gray-500 font-mono">EN</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="Subscribe to Gazette" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-2.5 top-2 text-[10px] font-bold text-[#A3D9B1] font-mono">বাং</span>
+                                            <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text_bn" placeholder="যুক্ত হোন" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white pl-8 pr-3 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

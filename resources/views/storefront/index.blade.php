@@ -8,9 +8,40 @@
 
 @section('content')
 
+    @php
+        $isBn = app()->getLocale() === 'bn';
+        $getLoc = function(array $settings, string $key, string $defaultEn = '', string $defaultBn = '') use ($isBn) {
+            if ($isBn) {
+                if (!empty($settings[$key . '_bn'])) {
+                    return $settings[$key . '_bn'];
+                }
+                if (!empty($settings[$key]) && preg_match('/[\x{0980}-\x{09FF}]/u', (string)$settings[$key])) {
+                    return $settings[$key];
+                }
+                return !empty($defaultBn) ? $defaultBn : ($settings[$key] ?? $defaultEn);
+            } else {
+                if (!empty($settings[$key]) && !preg_match('/[\x{0980}-\x{09FF}]/u', (string)$settings[$key])) {
+                    return $settings[$key];
+                }
+                return !empty($defaultEn) ? $defaultEn : ($settings[$key] ?? $defaultBn);
+            }
+        };
+    @endphp
+
     <!-- SECTION 01: Master Editorial Hero -->
     @php
         $heroSettings = $builderSections['hero_cinematic']['settings'] ?? [];
+        $heroBadge = $getLoc($heroSettings, 'badge_text', 'BENGAL HERITAGE LIVING SANCTUARY • VOL 01', 'বেঙ্গল হেরিটেজ স্যাংকচুয়ারি • ভলিয়ম ০১');
+        $heroHeadline = $getLoc($heroSettings, 'headline', 'Where Every Memory Recalls a Timeless History.', 'যেখানে প্রতিটি স্মৃতি বলে এক অনন্য ইতিহাস।');
+        $heroSubheadline = $getLoc($heroSettings, 'subheadline', 'Centuries of master weaving, bell-metal forging, and botanical alchemy—curated for those who cherish authentic human touch over mechanical assembly.', 'শতবর্ষের তাঁতশিল্প, কাঁসা-পিতলের নিখুঁত ভাস্কর্য এবং প্রাকৃতিক উপাদানের জাদু—সংরক্ষিত তাদের জন্য, যারা যান্ত্রিক উৎপাদনের চেয়ে মানুষের হাতের স্পর্শকে মূল্যবান মনে করেন।');
+        $heroPrimaryCta = $getLoc($heroSettings, 'primary_cta_text', 'Explore Archival Pieces', 'সংগ্রহশালা দেখুন');
+        $heroSecondaryCta = $getLoc($heroSettings, 'secondary_cta_text', 'Explore By District', 'জেলা ভিত্তিক অন্বেষণ');
+        $heroM1Lbl = $getLoc($heroSettings, 'metric_1_lbl', 'GI Provenance', 'জিআই সনদপ্রাপ্ত');
+        $heroM2Lbl = $getLoc($heroSettings, 'metric_2_lbl', 'Bengal Districts', 'ঐতিহ্যবাহী জেলা');
+        $heroM3Lbl = $getLoc($heroSettings, 'metric_3_lbl', 'Artisan Royalty', 'কারিগরদের ন্যায্যসম্মান');
+        $heroCardBadge = $getLoc($heroSettings, 'card_badge', 'Featured Archival Piece', 'বিশেষ শিল্পকর্ম');
+        $heroCardTitle = $getLoc($heroSettings, 'card_title', 'Imperial Sonargaon Muslin Scarf', 'সোনারগাঁয়ের শাহী মসলিন স্কার্ফ');
+        $heroCardArtisan = $getLoc($heroSettings, 'card_artisan', 'Master Weaver Alimuddin', 'ওস্তাদ তাঁতি আলিমুদ্দিন');
     @endphp
     <section class="relative pt-12 pb-24 lg:pt-20 lg:pb-36 overflow-hidden">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
@@ -20,23 +51,23 @@
                 <div class="lg:col-span-7 space-y-6">
                     <x-badge variant="primary" size="md">
                         <x-icon name="sparkles" class="w-3.5 h-3.5 text-[#C96A3D]" />
-                        <span>{{ !empty($heroSettings['badge_text']) ? $heroSettings['badge_text'] : __('Bengal Artisan Sanctuary • Vol. 01') }}</span>
+                        <span>{{ $heroBadge }}</span>
                     </x-badge>
                     
                     <h1 class="font-editorial-heading text-5xl sm:text-6xl lg:text-[72px] font-light text-[#1D1D1D] leading-[1.08] tracking-tight">
-                        {{ !empty($heroSettings['headline']) ? $heroSettings['headline'] : __('Where Every Artifact Tells An Irreplaceable Story.') }}
+                        {{ $heroHeadline }}
                     </h1>
 
                     <p class="font-editorial-body text-lg sm:text-xl text-[#555555] font-light max-w-2xl leading-relaxed">
-                        {{ !empty($heroSettings['subheadline']) ? $heroSettings['subheadline'] : __('Centuries of handloom mastery, bell-metal forging, and botanical alchemy—curated for those who treasure authentic human provenance over industrial automation.') }}
+                        {{ $heroSubheadline }}
                     </p>
 
                     <div class="pt-4 flex flex-wrap items-center gap-4">
                         <x-button href="{{ $heroSettings['primary_cta_url'] ?? route('shop.index') }}" variant="primary" size="lg" iconRight="arrow-right">
-                            {{ !empty($heroSettings['primary_cta_text']) ? $heroSettings['primary_cta_text'] : __('Explore Archival Pieces') }}
+                            {{ $heroPrimaryCta }}
                         </x-button>
                         <x-button href="{{ $heroSettings['secondary_cta_url'] ?? route('districts.index') }}" variant="secondary" size="lg" icon="map-pin">
-                            {{ !empty($heroSettings['secondary_cta_text']) ? $heroSettings['secondary_cta_text'] : __('Explore By District') }}
+                            {{ $heroSecondaryCta }}
                         </x-button>
                     </div>
 
@@ -44,15 +75,15 @@
                     <div class="pt-8 border-t border-[#E8E8E8] grid grid-cols-3 gap-6 text-xs text-[#555555]">
                         <div>
                             <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">{{ $heroSettings['metric_1_val'] ?? '100%' }}</span>
-                            <span class="text-[#888888]">{{ $heroSettings['metric_1_lbl'] ?? __('GI Provenance') }}</span>
+                            <span class="text-[#888888]">{{ $heroM1Lbl }}</span>
                         </div>
                         <div>
                             <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">{{ $heroSettings['metric_2_val'] ?? '64' }}</span>
-                            <span class="text-[#888888]">{{ $heroSettings['metric_2_lbl'] ?? __('Bengal Districts') }}</span>
+                            <span class="text-[#888888]">{{ $heroM2Lbl }}</span>
                         </div>
                         <div>
                             <span class="block font-editorial-heading text-2xl font-normal text-[#1D1D1D]">{{ $heroSettings['metric_3_val'] ?? 'Direct' }}</span>
-                            <span class="text-[#888888]">{{ $heroSettings['metric_3_lbl'] ?? __('Artisan Royalty') }}</span>
+                            <span class="text-[#888888]">{{ $heroM3Lbl }}</span>
                         </div>
                     </div>
                 </div>
@@ -68,10 +99,10 @@
                             fetchpriority="high"
                         >
                         <div class="absolute bottom-6 left-6 right-6 sorolata-glass rounded-[24px] p-4 text-[#1D1D1D] shadow-soft-md">
-                            <span class="text-[10px] uppercase tracking-widest text-[#214E34] font-bold block">{{ $heroSettings['card_badge'] ?? __('Featured Archival Piece') }}</span>
-                            <h4 class="font-editorial-heading text-xl font-light">{{ $heroSettings['card_title'] ?? __('Imperial Sonargaon Muslin Scarf') }}</h4>
+                            <span class="text-[10px] uppercase tracking-widest text-[#214E34] font-bold block">{{ $heroCardBadge }}</span>
+                            <h4 class="font-editorial-heading text-xl font-light">{{ $heroCardTitle }}</h4>
                             <div class="flex items-center justify-between mt-2 pt-2 border-t border-[#E8E8E8]/70 text-xs">
-                                <span class="text-[#888888]">{{ $heroSettings['card_artisan'] ?? __('Master Weaver Alimuddin') }}</span>
+                                <span class="text-[#888888]">{{ $heroCardArtisan }}</span>
                                 <span class="font-bold text-[#214E34]">{{ $heroSettings['card_price'] ?? '৳ 18,500' }}</span>
                             </div>
                         </div>
@@ -85,18 +116,21 @@
     <!-- SECTION 02: Featured Collections -->
     @php
         $collSettings = $builderSections['featured_collections']['settings'] ?? [];
+        $collBadge = $getLoc($collSettings, 'badge_text', 'Curated Drops', 'নির্বাচিত কালেকশনসমূহ');
+        $collHeadline = $getLoc($collSettings, 'headline', 'Featured Collections', 'বিশেষ কালেকশন');
+        $collSubheadline = $getLoc($collSettings, 'subheadline', 'Curated for Living Room, Dining, Bedroom & Festival Gifting', 'লিভিং রুম, ডাইনিং, বেডরুম ও উৎসবের উপহারের জন্য বিশেষভাবে কিউরেটেড');
     @endphp
     <section id="featured-collections" class="py-24 bg-white border-y border-[#E8E8E8]/70">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-16">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ !empty($collSettings['badge_text']) ? $collSettings['badge_text'] : __('Curated Drops') }}</span>
+                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ $collBadge }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        {{ !empty($collSettings['headline']) ? $collSettings['headline'] : __('Featured Collections') }}
+                        {{ $collHeadline }}
                     </h2>
                 </div>
                 <p class="text-xs uppercase tracking-widest text-[#888888] mt-4 sm:mt-0 font-medium">
-                    {{ !empty($collSettings['subheadline']) ? $collSettings['subheadline'] : __('Curated for Living Room, Dining, Bedroom & Festival Gifting') }}
+                    {{ $collSubheadline }}
                 </p>
             </div>
 
@@ -124,16 +158,19 @@
     <!-- SECTION 03: Categories / Crafts -->
     @php
         $catSettings = $builderSections['category_grid']['settings'] ?? [];
+        $catBadge = $getLoc($catSettings, 'badge_text', 'Heritage Craft Guilds', 'কারুশিল্প শাখা');
+        $catHeadline = $getLoc($catSettings, 'headline', 'Timeless Guilds of Bengal Craftsmanship', 'ঐতিহ্যের শ্রেষ্ঠ কারুশিল্প সম্ভার');
+        $catSubheadline = $getLoc($catSettings, 'subheadline', 'Explore centuries-old techniques perfected across generations of master craftsmen.', 'প্রজন্ম থেকে প্রজন্মে সিদ্ধহস্ত কারিগরদের শতবর্ষী ঐতিহ্যের সন্ধান।');
     @endphp
     <section id="categories-grid" class="py-24 bg-[#F8F6F2]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ !empty($catSettings['badge_text']) ? $catSettings['badge_text'] : __('Guild Specialization') }}</span>
+                <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $catBadge }}</span>
                 <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                    {{ !empty($catSettings['headline']) ? $catSettings['headline'] : __('Shop by Traditional Guild') }}
+                    {{ $catHeadline }}
                 </h2>
                 <p class="text-sm text-[#555555] mt-3 leading-relaxed">
-                    {{ !empty($catSettings['subheadline']) ? $catSettings['subheadline'] : __('Explore centuries-old techniques perfected across generations of master craftsmen.') }}
+                    {{ $catSubheadline }}
                 </p>
             </div>
 
@@ -148,19 +185,21 @@
     <!-- SECTION 04: New Arrivals (Horizontal Slider / Carousel) -->
     @php
         $newArrivalsSettings = $builderSections['product_carousel']['settings'] ?? [];
+        $newBadge = $getLoc($newArrivalsSettings, 'badge_text', 'Fresh From Ateliers', 'নতুন সংগ্রহ');
+        $newHeadline = $getLoc($newArrivalsSettings, 'headline', 'New Arrivals & Fresh Weaves', 'নতুন আগমন');
+        $newSubheadline = $getLoc($newArrivalsSettings, 'subheadline', 'Touch-friendly horizontal scroll →', 'হরিজন্টাল স্ক্রোল করে দেখুন →');
     @endphp
     <section class="py-24 bg-white border-y border-[#E8E8E8]/70 overflow-hidden">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ !empty($newArrivalsSettings['badge_text']) ? $newArrivalsSettings['badge_text'] : __('Loom Fresh') }}</span>
+                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $newBadge }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        {{ !empty($newArrivalsSettings['headline']) ? $newArrivalsSettings['headline'] : __('New Arrivals') }}
+                        {{ $newHeadline }}
                     </h2>
                 </div>
                 <div class="flex items-center gap-3 mt-4 sm:mt-0 text-xs text-[#888888]">
-                    <span>{{ !empty($newArrivalsSettings['subheadline']) ? $newArrivalsSettings['subheadline'] : __('Touch-friendly horizontal scroll') }}</span>
-                    <span>→</span>
+                    <span>{{ $newSubheadline }}</span>
                 </div>
             </div>
 
@@ -178,19 +217,22 @@
     <!-- SECTION 05: Best Seller -->
     @php
         $bestSellerSettings = $builderSections['best_sellers']['settings'] ?? [];
+        $bestBadge = $getLoc($bestSellerSettings, 'badge_text', 'Collector Favorites', 'সংগ্রাহকদের প্রিয়');
+        $bestHeadline = $getLoc($bestSellerSettings, 'headline', 'Archival Best Sellers & Acclaimed Masterpieces', 'আমাদের বিশেষ সংকলন');
+        $bestCta = $getLoc($bestSellerSettings, 'primary_cta_text', 'View Entire Catalog', 'সম্পূর্ণ ক্যাটালগ দেখুন');
     @endphp
     <section id="curated-collection" class="py-24 bg-[#F8F6F2]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-16">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ !empty($bestSellerSettings['badge_text']) ? $bestSellerSettings['badge_text'] : __('Collector Favorites') }}</span>
+                    <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ $bestBadge }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        {{ !empty($bestSellerSettings['headline']) ? $bestSellerSettings['headline'] : __('Archival Best Sellers') }}
+                        {{ $bestHeadline }}
                     </h2>
                 </div>
                 <div class="mt-4 sm:mt-0">
                     <x-button href="{{ route('shop.index') }}" variant="ghost" size="sm" iconRight="arrow-right">
-                        {{ !empty($bestSellerSettings['primary_cta_text']) ? $bestSellerSettings['primary_cta_text'] : __('View Entire Catalog') }}
+                        {{ $bestCta }}
                     </x-button>
                 </div>
             </div>
@@ -206,21 +248,25 @@
     <!-- SECTION 06: Editor's Choice -->
     @php
         $editorChoiceSettings = $builderSections['editor_choice']['settings'] ?? [];
+        $editorBadge = $getLoc($editorChoiceSettings, 'badge_text', 'Curator Distinction', 'কিউরেটর স্পেশাল');
+        $editorHeadline = $getLoc($editorChoiceSettings, 'headline', "Editor's Choice: Heirloom Tangail Mulberry Silk Jamdani", 'এডিটরস চয়েস: টাঙ্গাইল পিওর মালবেরি সিল্ক জামদানি');
+        $editorSubheadline = $getLoc($editorChoiceSettings, 'subheadline', 'Hand-knotted supplementary weft geometric motifs on pure organic mulberry silk. Woven without paper stencils over six weeks by master weaver Rabeya Begum in Delduar.', 'অর্গানিক মালবেরি সিল্কে হাতে বোনা জ্যামিতিক মোটিফ। দেলদুয়ারের ওস্তাদ তাঁতি রাবেয়া বেগমের ছয় সপ্তাহের সাধনার ফসল।');
+        $editorCta = $getLoc($editorChoiceSettings, 'primary_cta_text', "Acquire Heirloom Piece →", 'সংগ্রহ করুন →');
     @endphp
     <section class="py-24 bg-white border-y border-[#E8E8E8]/70">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="bg-[#F8F6F2] rounded-[32px] p-8 sm:p-14 border border-[#E8E8E8] grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-6 space-y-6">
-                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ !empty($editorChoiceSettings['badge_text']) ? $editorChoiceSettings['badge_text'] : __('Curator Distinction') }}</span>
+                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $editorBadge }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] leading-tight">
-                        {{ !empty($editorChoiceSettings['headline']) ? $editorChoiceSettings['headline'] : __("Editor's Choice: Tangail Pure Mulberry Silk Jamdani") }}
+                        {{ $editorHeadline }}
                     </h2>
                     <p class="font-editorial-body text-base text-[#555555] leading-relaxed">
-                        {{ !empty($editorChoiceSettings['subheadline']) ? $editorChoiceSettings['subheadline'] : __('Hand-knotted supplementary weft geometric motifs on pure organic mulberry silk. Woven without paper stencils over six weeks by master weaver Rabeya Begum in Delduar.') }}
+                        {{ $editorSubheadline }}
                     </p>
                     <div class="pt-2 flex items-center gap-6">
                         <x-button href="{{ $editorChoiceSettings['primary_cta_url'] ?? route('shop.index') }}" variant="primary" size="md">
-                            {{ !empty($editorChoiceSettings['primary_cta_text']) ? $editorChoiceSettings['primary_cta_text'] : __("Acquire Editor's Selection →") }}
+                            {{ $editorCta }}
                         </x-button>
                         <x-price :price="$editorChoiceSettings['price'] ?? 24500" :compareAtPrice="$editorChoiceSettings['compare_price'] ?? 29000" size="lg" />
                     </div>
@@ -237,22 +283,26 @@
     <!-- SECTION 07: Story Banner (Editorial Manifesto) -->
     @php
         $manifestoSettings = $builderSections['editorial_manifesto']['settings'] ?? [];
+        $manBadge = $getLoc($manifestoSettings, 'badge_text', 'Our Heritage Manifesto', 'আমাদের ঐতিহ্য ঘোষণা');
+        $manHeadline = $getLoc($manifestoSettings, 'headline', '"Our craftsmanship is not merely merchandise; it is the soul, breath, and eternal resilience of our ancestors. We shall never let the sacred human touch fade away."', '"আমাদের কারুশিল্প কেবল কোনো পণ্য নয়; এটি আমাদের পূর্বপুরুষদের আত্মা, নিঃশ্বাস এবং বেঁচে থাকার লড়াইয়ের অমর গাথা। শিল্পের এই স্পর্শ আমরা হারিয়ে যেতে দেব না।"');
+        $manSubheadline = $getLoc($manifestoSettings, 'subheadline', "In an era dominated by synthetic fast-fashion and automated machine replicas, Sorolata provides sanctuary for endangered heritage arts. By ensuring fair, direct compensation to rural guilds, we keep Bengal's living cultural soul vibrant.", 'কৃত্রিম ফাস্ট ফ্যাশন ও যান্ত্রিক প্রতিলিপির যুগে সরলতা বিলুপ্তপ্রায় ঐতিহ্যবাহী শিল্পের আশ্রয়স্থল। গ্রামীণ কারিগরদের ন্যায্য মূল্যায়ন নিশ্চিত করে আমরা বাংলার জীবন্ত ঐতিহ্যকে বাঁচিয়ে রাখি।');
+        $manCta = $getLoc($manifestoSettings, 'primary_cta_text', 'Read Complete Manifesto →', 'সম্পূর্ণ ম্যানিফেস্টো পড়ুন →');
     @endphp
     <section id="story-manifesto" class="py-28 bg-[#214E34] text-[#F8F6F2] relative overflow-hidden">
         <div class="max-w-5xl mx-auto px-6 lg:px-12 text-center space-y-8 relative z-10">
-            <span class="text-xs uppercase tracking-widest text-[#DE7D4E] font-bold">{{ !empty($manifestoSettings['badge_text']) ? $manifestoSettings['badge_text'] : __('Our Heritage Manifesto') }}</span>
+            <span class="text-xs uppercase tracking-widest text-[#DE7D4E] font-bold">{{ $manBadge }}</span>
             
             <blockquote class="font-editorial-heading text-3xl sm:text-5xl lg:text-6xl font-light text-[#F8F6F2] leading-[1.15]">
-                {{ !empty($manifestoSettings['headline']) ? $manifestoSettings['headline'] : __('"We do not mass produce. We do not compromise. We preserve the human breath in every thread, hammer strike, and brushstroke."') }}
+                {{ $manHeadline }}
             </blockquote>
 
             <p class="font-editorial-body text-base sm:text-lg text-[#F8F6F2]/80 max-w-2xl mx-auto leading-relaxed">
-                {{ !empty($manifestoSettings['subheadline']) ? $manifestoSettings['subheadline'] : __("In an era dominated by synthetic fast-fashion and automated machine replicas, Sorolata provides sanctuary for endangered heritage arts. By ensuring fair, direct compensation to rural guilds, we keep Bengal's living cultural soul vibrant.") }}
+                {{ $manSubheadline }}
             </p>
 
             <div class="pt-4">
                 <x-button href="{{ $manifestoSettings['primary_cta_url'] ?? route('pages.about') }}" variant="terracotta" size="lg">
-                    {{ !empty($manifestoSettings['primary_cta_text']) ? $manifestoSettings['primary_cta_text'] : __('Read Complete Manifesto →') }}
+                    {{ $manCta }}
                 </x-button>
             </div>
         </div>
@@ -261,18 +311,21 @@
     <!-- SECTION 08: Shop by District -->
     @php
         $distSettings = $builderSections['heritage_provenance']['settings'] ?? [];
+        $distBadge = $getLoc($distSettings, 'badge_text', 'Geographical Provenance', 'ভৌগোলিক পরিচয়');
+        $distHeadline = $getLoc($distSettings, 'headline', 'Shop by Heritage District', 'বাংলার ৬৪ জেলার ভৌগোলিক ঐতিহ্য');
+        $distCta = $getLoc($distSettings, 'secondary_cta_text', 'View All 64 Districts →', 'সবগুলো জেলা দেখুন →');
     @endphp
     <section id="districts-grid" class="py-24 bg-[#F8F6F2]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-16">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ !empty($distSettings['badge_text']) ? $distSettings['badge_text'] : __('Geographical Provenance') }}</span>
+                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $distBadge }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        {{ !empty($distSettings['headline']) ? $distSettings['headline'] : __('Shop by Heritage District') }}
+                        {{ $distHeadline }}
                     </h2>
                 </div>
                 <a href="{{ route('districts.index') }}" class="text-xs uppercase tracking-widest text-[#214E34] font-bold hover:underline mt-4 sm:mt-0">
-                    {{ !empty($distSettings['secondary_cta_text']) ? $distSettings['secondary_cta_text'] : __('View All 64 Districts →') }}
+                    {{ $distCta }}
                 </a>
             </div>
 
@@ -289,16 +342,19 @@
     <!-- SECTION 09: Meet The Artisan -->
     @php
         $artisanSettings = $builderSections['artisan_spotlight']['settings'] ?? [];
+        $artBadge = $getLoc($artisanSettings, 'badge_text', 'Generational Masters', 'বংশানুক্রমিক ওস্তাদ');
+        $artHeadline = $getLoc($artisanSettings, 'headline', 'The Hands Behind The Heirlooms', 'জীবন্ত কিংবদন্তি: ওস্তাদ কারিগরবৃন্দ');
+        $artSubheadline = $getLoc($artisanSettings, 'subheadline', 'Every artisan has a name, a studio, and an unbroken lineage of dedication.', 'প্রতিটি শিল্পকর্মের পেছনে রয়েছে একজন শিল্পীর নাম, স্টুডিও এবং আজীবনের সাধনা।');
     @endphp
     <section id="artisan-section" class="py-24 bg-white border-y border-[#E8E8E8]/70">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ !empty($artisanSettings['badge_text']) ? $artisanSettings['badge_text'] : __('Generational Masters') }}</span>
+                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ $artBadge }}</span>
                 <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                    {{ !empty($artisanSettings['headline']) ? $artisanSettings['headline'] : __('The Hands Behind The Heirlooms') }}
+                    {{ $artHeadline }}
                 </h2>
                 <p class="text-sm text-[#555555] mt-3 leading-relaxed">
-                    {{ !empty($artisanSettings['subheadline']) ? $artisanSettings['subheadline'] : __('Every artisan has a name, a studio, and an unbroken lineage of dedication.') }}
+                    {{ $artSubheadline }}
                 </p>
             </div>
 
@@ -343,18 +399,21 @@
     <!-- SECTION 10: Trending Products -->
     @php
         $shelfSettings = $builderSections['shoppable_product_shelf']['settings'] ?? [];
+        $shelfBadge = $getLoc($shelfSettings, 'badge_text', 'Fresh from the Ateliers', 'তাজা শিল্পকর্ম');
+        $shelfHeadline = $getLoc($shelfSettings, 'headline', 'Trending Releases', 'জনপ্রিয় ঐতিহ্যবাহী শিল্পকর্ম');
+        $shelfSubheadline = $getLoc($shelfSettings, 'subheadline', 'Limited pieces ready for immediate international dispatch', 'সীমিত সংস্করণের সংরক্ষিত শিল্পকর্ম, আন্তর্জাতিক ডেলিভারির জন্য প্রস্তুত');
     @endphp
     <section class="py-24 bg-[#F8F6F2]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-16">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ !empty($shelfSettings['badge_text']) ? $shelfSettings['badge_text'] : __('Fresh from the Ateliers') }}</span>
+                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $shelfBadge }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        {{ !empty($shelfSettings['headline']) ? $shelfSettings['headline'] : __('Trending Releases') }}
+                        {{ $shelfHeadline }}
                     </h2>
                 </div>
                 <p class="text-xs uppercase tracking-widest text-[#888888] mt-4 sm:mt-0 font-medium">
-                    {{ !empty($shelfSettings['subheadline']) ? $shelfSettings['subheadline'] : __('Limited pieces ready for immediate international dispatch') }}
+                    {{ $shelfSubheadline }}
                 </p>
             </div>
 
@@ -369,16 +428,19 @@
     <!-- SECTION 11: Customer Reviews -->
     @php
         $testimonialSettings = $builderSections['testimonial_editorial']['settings'] ?? [];
+        $testBadge = $getLoc($testimonialSettings, 'badge_text', 'Collector Reviews', 'সংগ্রাহকদের মতামত');
+        $testHeadline = $getLoc($testimonialSettings, 'headline', 'Cherished by Discerning Collectors', 'সংগ্রাহকদের অনুভূতি ও স্মৃতিচারণ');
+        $testSubheadline = $getLoc($testimonialSettings, 'subheadline', 'Read unedited reviews from textile historians, interior designers, and global expat patrons.', 'টেক্সটাইল গবেষক, ইন্টেরিয়র ডিজাইনার এবং বৈশ্বিক শিল্প সংগ্রাহকদের অকৃত্রিম প্রতিক্রিয়া।');
     @endphp
     <section class="py-24 bg-white border-y border-[#E8E8E8]/70">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ !empty($testimonialSettings['badge_text']) ? $testimonialSettings['badge_text'] : __('Collector Reviews') }}</span>
+                <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ $testBadge }}</span>
                 <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                    {{ !empty($testimonialSettings['headline']) ? $testimonialSettings['headline'] : __('Cherished by Discerning Collectors') }}
+                    {{ $testHeadline }}
                 </h2>
                 <p class="text-sm text-[#555555] mt-3 leading-relaxed">
-                    {{ !empty($testimonialSettings['subheadline']) ? $testimonialSettings['subheadline'] : __('Read unedited reviews from textile historians, interior designers, and global expat patrons.') }}
+                    {{ $testSubheadline }}
                 </p>
             </div>
 
@@ -405,18 +467,21 @@
     <!-- SECTION 12: Instagram Feed -->
     @php
         $gallerySettings = $builderSections['interactive_gallery']['settings'] ?? [];
+        $galBadge = $getLoc($gallerySettings, 'badge_text', 'Visual Chronicle', 'ভিজ্যুয়াল ক্রনিকল');
+        $galHeadline = $getLoc($gallerySettings, 'headline', '@SorolataHeritage', '@SorolataHeritage ভিজ্যুয়াল জার্নাল');
+        $galSubheadline = $getLoc($gallerySettings, 'subheadline', 'Follow the daily rhythms of our rural weaving clusters', 'আমাদের তাঁতি ও কারিগর পল্লীর দৈনন্দিন জীবনের গল্প ও ছন্দ');
     @endphp
     <section class="py-24 bg-[#F8F6F2]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-16">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ !empty($gallerySettings['badge_text']) ? $gallerySettings['badge_text'] : __('Visual Chronicle') }}</span>
+                    <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ $galBadge }}</span>
                     <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D] mt-2">
-                        {{ !empty($gallerySettings['headline']) ? $gallerySettings['headline'] : '@SorolataHeritage' }}
+                        {{ $galHeadline }}
                     </h2>
                 </div>
                 <p class="text-xs text-[#888888] mt-4 sm:mt-0">
-                    {{ !empty($gallerySettings['subheadline']) ? $gallerySettings['subheadline'] : __('Follow the daily rhythms of our rural weaving clusters') }}
+                    {{ $galSubheadline }}
                 </p>
             </div>
 
@@ -452,17 +517,21 @@
     <!-- SECTION 13: Newsletter -->
     @php
         $newsSettings = $builderSections['heritage_club_newsletter']['settings'] ?? [];
+        $newsBadge = $getLoc($newsSettings, 'badge_text', "The Collector's Circle", 'সংগ্রাহক সার্কেল');
+        $newsHeadline = $getLoc($newsSettings, 'headline', 'Receive Intimate Archival Dispatches', 'সংগ্রাহক সার্কেলে যোগ দিন');
+        $newsSubheadline = $getLoc($newsSettings, 'subheadline', 'Join our private circle of patrons. We dispatch thoughtful notes when a generational weaver prepares a rare loom, with exclusive early access to one-off pieces.', 'নতুন সংগ্রহশালা উন্মোচন ও সীমিত সংস্করণের শিল্পকর্মের আগাম তথ্য পান সরাসরি।');
+        $newsCta = $getLoc($newsSettings, 'primary_cta_text', 'Join Collector Desk', 'যুক্ত হন');
     @endphp
     <section class="py-24 bg-white border-t border-[#E8E8E8]/70">
         <div class="max-w-3xl mx-auto px-6 lg:px-12 text-center space-y-6">
-            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ !empty($newsSettings['badge_text']) ? $newsSettings['badge_text'] : __("The Collector's Circle") }}</span>
+            <span class="text-xs uppercase tracking-widest text-[#C96A3D] font-bold">{{ $newsBadge }}</span>
             
             <h2 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D]">
-                {{ !empty($newsSettings['headline']) ? $newsSettings['headline'] : __('Receive Intimate Archival Dispatches') }}
+                {{ $newsHeadline }}
             </h2>
 
             <p class="font-editorial-body text-base text-[#555555] leading-relaxed">
-                {{ !empty($newsSettings['subheadline']) ? $newsSettings['subheadline'] : __('Join our private circle of patrons. We dispatch thoughtful notes when a generational weaver prepares a rare loom, with exclusive early access to one-off pieces.') }}
+                {{ $newsSubheadline }}
             </p>
 
             <form class="pt-4 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
@@ -473,9 +542,12 @@
                     required
                 >
                 <x-button type="submit" variant="primary" size="md" class="whitespace-nowrap px-8">
-                    {{ !empty($newsSettings['primary_cta_text']) ? $newsSettings['primary_cta_text'] : __('Join Collector Desk') }}
+                    {{ $newsCta }}
                 </x-button>
             </form>
+            <p class="text-[11px] text-[#888888]">{{ __('We honor your privacy. Unsubscribe at any moment with a single click.') }}</p>
+        </div>
+    </section>
             <p class="text-[11px] text-[#888888]">{{ __('We honor your privacy. Unsubscribe at any moment with a single click.') }}</p>
         </div>
     </section>

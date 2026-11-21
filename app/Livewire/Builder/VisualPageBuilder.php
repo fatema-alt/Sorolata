@@ -39,6 +39,7 @@ class VisualPageBuilder extends Component
     public ?string $selectedSectionId = null;
 
     public string $activeViewport = 'desktop'; // desktop, tablet, mobile
+    public string $previewLocale = 'bn';       // bn, en (Language preview in canvas)
     public string $activeTab = 'library';      // elements, library, templates, revisions, seo
     public string $inspectorTab = 'content';   // content, style, advanced
     public string $searchQuery = '';
@@ -88,6 +89,8 @@ class VisualPageBuilder extends Component
 
             if (empty($this->sections) || ($isHome && !$hasAuthenticHomeBlocks)) {
                 $this->loadDefaultPageSections($page);
+            } elseif ($isHome) {
+                $this->ensureBilingualSections();
             }
         } else {
             $this->loadBlankCanvas();
@@ -98,6 +101,11 @@ class VisualPageBuilder extends Component
         if (!empty($this->sections)) {
             $this->selectedSectionId = $this->sections[0]['id'] ?? null;
         }
+    }
+
+    public function setPreviewLocale(string $locale): void
+    {
+        $this->previewLocale = in_array($locale, ['en', 'bn'], true) ? $locale : 'bn';
     }
 
     public function sanitizeSections(): void
@@ -675,161 +683,302 @@ class VisualPageBuilder extends Component
         ];
     }
 
+    public function getBilingualHomepageDefaults(): array
+    {
+        return [
+            BlockType::HERO_CINEMATIC->value => [
+                'badge_text' => 'BENGAL HERITAGE LIVING SANCTUARY • VOL 01',
+                'badge_text_bn' => 'বেঙ্গল হেরিটেজ স্যাংকচুয়ারি • ভলিয়ম ০১',
+                'headline' => 'Where Every Memory Recalls a Timeless History.',
+                'headline_bn' => 'যেখানে প্রতিটি স্মৃতি বলে এক অনন্য ইতিহাস।',
+                'subheadline' => 'Centuries of master weaving, acoustically resonant bell metals, and raw organic elements—preserved for those who cherish authentic human touch over mechanical assembly.',
+                'subheadline_bn' => 'শতবর্ষের তাঁতশিল্প, কাঁসা-পিতলের নিখুঁত ভাস্কর্য এবং প্রাকৃতিক উপাদানের জাদু—সংরক্ষিত তাদের জন্য, যারা যান্ত্রিক উৎপাদনের চেয়ে মানুষের হাতের স্পর্শকে মূল্যবান মনে করেন।',
+                'primary_cta_text' => 'Explore Archival Pieces',
+                'primary_cta_text_bn' => 'সংগ্রহশালা দেখুন',
+                'primary_cta_url' => '/shop',
+                'secondary_cta_text' => 'Explore By District',
+                'secondary_cta_text_bn' => 'জেলা ভিত্তিক অন্বেষণ',
+                'secondary_cta_url' => '/districts',
+                'metric_1_val' => '100%',
+                'metric_1_lbl' => 'GI Provenance',
+                'metric_1_lbl_bn' => 'জিআই সনদপ্রাপ্ত',
+                'metric_2_val' => '64',
+                'metric_2_lbl' => 'Bengal Districts',
+                'metric_2_lbl_bn' => 'ঐতিহ্যবাহী জেলা',
+                'metric_3_val' => 'Direct',
+                'metric_3_lbl' => 'Artisan Royalty',
+                'metric_3_lbl_bn' => 'কারিগরদের ন্যায্যসম্মান',
+                'image_url' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1200&auto=format&fit=crop',
+                'card_badge' => 'Featured Archival Piece',
+                'card_badge_bn' => 'বিশেষ শিল্পকর্ম',
+                'card_title' => 'Imperial Sonargaon Muslin Scarf',
+                'card_title_bn' => 'সোনারগাঁয়ের শাহী মসলিন স্কার্ফ',
+                'card_artisan' => 'Master Weaver Alimuddin',
+                'card_artisan_bn' => 'ওস্তাদ তাঁতি আলিমুদ্দিন',
+                'card_price' => '৳ 18,500',
+            ],
+            BlockType::FEATURED_COLLECTIONS->value => [
+                'badge_text' => 'Curated Drops',
+                'badge_text_bn' => 'নির্বাচিত কালেকশনসমূহ',
+                'headline' => 'Featured Collections',
+                'headline_bn' => 'বিশেষ কালেকশন',
+                'subheadline' => 'Curated for Living Room, Dining, Bedroom & Festival Gifting',
+                'subheadline_bn' => 'লিভিং রুম, ডাইনিং, বেডরুম ও উৎসবের উপহারের জন্য বিশেষভাবে কিউরেটেড',
+            ],
+            BlockType::CATEGORY_GRID->value => [
+                'badge_text' => 'Heritage Craft Guilds',
+                'badge_text_bn' => 'কারুশিল্প শাখা',
+                'headline' => 'Timeless Guilds of Bengal Craftsmanship',
+                'headline_bn' => 'ঐতিহ্যের শ্রেষ্ঠ কারুশিল্প সম্ভার',
+                'subheadline' => 'Explore centuries-old techniques perfected across generations of master craftsmen.',
+                'subheadline_bn' => 'প্রজন্ম থেকে প্রজন্মে সিদ্ধহস্ত কারিগরদের শতবর্ষী ঐতিহ্যের সন্ধান।',
+            ],
+            BlockType::PRODUCT_CAROUSEL->value => [
+                'badge_text' => 'Fresh From Ateliers',
+                'badge_text_bn' => 'নতুন সংগ্রহ',
+                'headline' => 'New Arrivals & Fresh Weaves',
+                'headline_bn' => 'নতুন আগমন',
+                'subheadline' => 'Touch-friendly horizontal scroll →',
+                'subheadline_bn' => 'হরিজন্টাল স্ক্রোল করে দেখুন →',
+            ],
+            BlockType::BEST_SELLERS->value => [
+                'badge_text' => 'Collector Favorites',
+                'badge_text_bn' => 'সংগ্রাহকদের প্রিয়',
+                'headline' => 'Archival Best Sellers & Acclaimed Masterpieces',
+                'headline_bn' => 'আমাদের বিশেষ সংকলন',
+                'primary_cta_text' => 'View Entire Catalog',
+                'primary_cta_text_bn' => 'সম্পূর্ণ ক্যাটালগ দেখুন',
+            ],
+            BlockType::EDITOR_CHOICE->value => [
+                'badge_text' => 'Curator Special',
+                'badge_text_bn' => 'কিউরেটর স্পেশাল',
+                'headline' => "Editor's Choice: Heirloom Tangail Mulberry Silk Jamdani",
+                'headline_bn' => 'এডিটরস চয়েস: টাঙ্গাইল পিওর মালবেরি সিল্ক জামদানি',
+                'subheadline' => 'Hand-loomed supplementary weft geometric motifs on pure organic mulberry silk. Crafted over six weeks by Master Weaver Rabeya Begum in Delduar.',
+                'subheadline_bn' => 'অর্গানিক মালবেরি সিল্কে হাতে বোনা জ্যামিতিক মোটিফ। দেলদুয়ারের ওস্তাদ তাঁতি রাবেয়া বেগমের ছয় সপ্তাহের সাধনার ফসল।',
+                'primary_cta_text' => 'Acquire Heirloom Piece →',
+                'primary_cta_text_bn' => 'সংগ্রহ করুন →',
+                'price' => 24500,
+                'compare_price' => 29000,
+                'image_url' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1000',
+            ],
+            BlockType::EDITORIAL_MANIFESTO->value => [
+                'badge_text' => 'Living Heritage Manifesto',
+                'badge_text_bn' => 'আমাদের ঐতিহ্য ঘোষণা',
+                'headline' => '"Our craftsmanship is not merely merchandise; it is the soul, breath, and eternal resilience of our ancestors. We shall never let the sacred human touch fade away."',
+                'headline_bn' => '"আমাদের কারুশিল্প কেবল কোনো পণ্য নয়; এটি আমাদের পূর্বপুরুষদের আত্মা, নিঃশ্বাস এবং বেঁচে থাকার লড়াইয়ের অমর গাথা। শিল্পের এই স্পর্শ আমরা হারিয়ে যেতে দেব না।\"',
+                'subheadline' => 'In an era of disposable fashion and synthetic mass replication, Sorolata stands as a living sanctuary for Bengal\'s endangered heritage crafts. By ensuring direct dignifying royalties to rural guilds, we keep Bengal\'s living legacy thriving.',
+                'subheadline_bn' => 'কৃত্রিম ফাস্ট ফ্যাশন ও যান্ত্রিক প্রতিলিপির যুগে সরলতা বিলুপ্তপ্রায় ঐতিহ্যবাহী শিল্পের আশ্রয়স্থল। গ্রামীণ কারিগরদের ন্যায্য মূল্যায়ন নিশ্চিত করে আমরা বাংলার জীবন্ত ঐতিহ্যকে বাঁচিয়ে রাখি।',
+                'primary_cta_text' => 'Read Full Manifesto →',
+                'primary_cta_text_bn' => 'সম্পূর্ণ ম্যানিফেস্টো পড়ুন →',
+                'primary_cta_url' => '/pages/about',
+            ],
+            BlockType::HERITAGE_PROVENANCE->value => [
+                'badge_text' => 'Geographical Indication',
+                'badge_text_bn' => 'ভৌগোলিক পরিচয়',
+                'headline' => 'Geographical Heritage Across 64 Bengal Districts',
+                'headline_bn' => 'বাংলার ৬৪ জেলার ভৌগোলিক ঐতিহ্য',
+                'secondary_cta_text' => 'Explore All Districts →',
+                'secondary_cta_text_bn' => 'সবগুলো জেলা দেখুন →',
+            ],
+            BlockType::ARTISAN_SPOTLIGHT->value => [
+                'badge_text' => 'Hereditary Masters',
+                'badge_text_bn' => 'বংশানুক্রমিক ওস্তাদ',
+                'headline' => 'Living Legends: The Master Artisans of Bengal',
+                'headline_bn' => 'জীবন্ত কিংবদন্তি: ওস্তাদ কারিগরবৃন্দ',
+                'subheadline' => 'Behind every museum-grade piece stands a lifetime of discipline, ancestral knowledge, and dedicated studio stewardship.',
+                'subheadline_bn' => 'প্রতিটি শিল্পকর্মের পেছনে রয়েছে একজন শিল্পীর নাম, স্টুডিও এবং আজীবনের সাধনা।',
+            ],
+            BlockType::SHOPPABLE_PRODUCT_SHELF->value => [
+                'badge_text' => 'Fresh Creations',
+                'badge_text_bn' => 'তাজা শিল্পকর্ম',
+                'headline' => 'Trending Archival Artifacts',
+                'headline_bn' => 'জনপ্রিয় ঐতিহ্যবাহী শিল্পকর্ম',
+                'subheadline' => 'Limited pieces ready for immediate international dispatch',
+                'subheadline_bn' => 'সীমিত সংস্করণের সংরক্ষিত শিল্পকর্ম, আন্তর্জাতিক ডেলিভারির জন্য প্রস্তুত',
+            ],
+            BlockType::TESTIMONIAL_EDITORIAL->value => [
+                'badge_text' => 'Collector Impressions',
+                'badge_text_bn' => 'সংগ্রাহকদের মতামত',
+                'headline' => 'Reflections & Memories from Global Collectors',
+                'headline_bn' => 'সংগ্রাহকদের অনুভূতি ও স্মৃতিচারণ',
+                'subheadline' => 'Genuine testimonials from textile historians, interior curators, and heirloom patrons worldwide.',
+                'subheadline_bn' => 'টেক্সটাইল গবেষক, ইন্টেরিয়র ডিজাইনার এবং বৈশ্বিক শিল্প সংগ্রাহকদের অকৃত্রিম প্রতিক্রিয়া।',
+            ],
+            BlockType::INTERACTIVE_GALLERY->value => [
+                'badge_text' => 'Visual Chronicle',
+                'badge_text_bn' => 'ভিজ্যুয়াল ক্রনিকল',
+                'headline' => '@SorolataHeritage Visual Journal',
+                'headline_bn' => '@SorolataHeritage ভিজ্যুয়াল জার্নাল',
+                'subheadline' => 'Intimate moments, loom rhythms, and daily life from artisan villages across the river delta.',
+                'subheadline_bn' => 'আমাদের তাঁতি ও কারিগর পল্লীর দৈনন্দিন জীবনের গল্প ও ছন্দ',
+            ],
+            BlockType::HERITAGE_CLUB_NEWSLETTER->value => [
+                'badge_text' => "Collector's Circle",
+                'badge_text_bn' => 'সংগ্রাহক সার্কেল',
+                'headline' => "Join the Sorolata Collector's Guild",
+                'headline_bn' => 'সংগ্রাহক সার্কেলে যোগ দিন',
+                'subheadline' => 'Receive intimate archival dispatches, private atelier invitations, and priority access to limited seasonal masterworks.',
+                'subheadline_bn' => 'নতুন সংগ্রহশালা উন্মোচন ও সীমিত সংস্করণের শিল্পকর্মের আগাম তথ্য পান সরাসরি।',
+                'primary_cta_text' => 'Join Collector Desk',
+                'primary_cta_text_bn' => 'যুক্ত হন',
+            ],
+        ];
+    }
+
+    public function ensureBilingualSections(): void
+    {
+        $defaults = $this->getBilingualHomepageDefaults();
+
+        foreach ($this->sections as &$sec) {
+            $type = $sec['type'] ?? '';
+            if (isset($defaults[$type])) {
+                $defSettings = $defaults[$type];
+                $sec['settings'] = $sec['settings'] ?? [];
+
+                // Fill any completely missing keys
+                foreach ($defSettings as $k => $v) {
+                    if (!isset($sec['settings'][$k]) || $sec['settings'][$k] === '') {
+                        $sec['settings'][$k] = $v;
+                    }
+                }
+
+                // If headline has Bengali characters but headline_bn was not explicitly set
+                if (!empty($sec['settings']['headline']) && preg_match('/[\x{0980}-\x{09FF}]/u', (string) $sec['settings']['headline'])) {
+                    if (empty($sec['settings']['headline_bn'])) {
+                        $sec['settings']['headline_bn'] = $sec['settings']['headline'];
+                    }
+                    if ($sec['settings']['headline'] === $sec['settings']['headline_bn']) {
+                        $sec['settings']['headline'] = $defSettings['headline'] ?? $sec['settings']['headline'];
+                    }
+                }
+
+                // If badge_text has Bengali characters but badge_text_bn was not explicitly set
+                if (!empty($sec['settings']['badge_text']) && preg_match('/[\x{0980}-\x{09FF}]/u', (string) $sec['settings']['badge_text'])) {
+                    if (empty($sec['settings']['badge_text_bn'])) {
+                        $sec['settings']['badge_text_bn'] = $sec['settings']['badge_text'];
+                    }
+                    if ($sec['settings']['badge_text'] === $sec['settings']['badge_text_bn']) {
+                        $sec['settings']['badge_text'] = $defSettings['badge_text'] ?? $sec['settings']['badge_text'];
+                    }
+                }
+
+                // If subheadline has Bengali characters but subheadline_bn was not explicitly set
+                if (!empty($sec['settings']['subheadline']) && preg_match('/[\x{0980}-\x{09FF}]/u', (string) $sec['settings']['subheadline'])) {
+                    if (empty($sec['settings']['subheadline_bn'])) {
+                        $sec['settings']['subheadline_bn'] = $sec['settings']['subheadline'];
+                    }
+                    if ($sec['settings']['subheadline'] === $sec['settings']['subheadline_bn']) {
+                        $sec['settings']['subheadline'] = $defSettings['subheadline'] ?? $sec['settings']['subheadline'];
+                    }
+                }
+
+                // Primary CTA
+                if (!empty($sec['settings']['primary_cta_text']) && preg_match('/[\x{0980}-\x{09FF}]/u', (string) $sec['settings']['primary_cta_text'])) {
+                    if (empty($sec['settings']['primary_cta_text_bn'])) {
+                        $sec['settings']['primary_cta_text_bn'] = $sec['settings']['primary_cta_text'];
+                    }
+                    if ($sec['settings']['primary_cta_text'] === $sec['settings']['primary_cta_text_bn']) {
+                        $sec['settings']['primary_cta_text'] = $defSettings['primary_cta_text'] ?? $sec['settings']['primary_cta_text'];
+                    }
+                }
+
+                // Secondary CTA
+                if (!empty($sec['settings']['secondary_cta_text']) && preg_match('/[\x{0980}-\x{09FF}]/u', (string) $sec['settings']['secondary_cta_text'])) {
+                    if (empty($sec['settings']['secondary_cta_text_bn'])) {
+                        $sec['settings']['secondary_cta_text_bn'] = $sec['settings']['secondary_cta_text'];
+                    }
+                    if ($sec['settings']['secondary_cta_text'] === $sec['settings']['secondary_cta_text_bn']) {
+                        $sec['settings']['secondary_cta_text'] = $defSettings['secondary_cta_text'] ?? $sec['settings']['secondary_cta_text'];
+                    }
+                }
+            }
+        }
+        unset($sec);
+    }
+
     protected function loadDefaultPageSections(Page $page): void
     {
         if ($page->slug === 'home' || $page->page_type === 'home') {
+            $defaults = $this->getBilingualHomepageDefaults();
             $this->sections = [
                 [
                     'id' => 'sec_hero_' . uniqid(),
                     'type' => BlockType::HERO_CINEMATIC->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'বেঙ্গল হেরিটেজ স্যাংকচুয়ারি • ভলিয়ম ০১',
-                        'headline' => 'যেখানে প্রতিটি স্মৃতি বলে এক অনন্য ইতিহাস।',
-                        'subheadline' => 'শতবর্ষের তাঁতশিল্প, কাঁসা-পিতলের নিখুঁত ভাস্কর্য এবং প্রাকৃতিক উপাদানের জাদু—সংরক্ষিত তাদের জন্য, যারা যান্ত্রিক উৎপাদনের চেয়ে মানুষের হাতের স্পর্শকে মূল্যবান মনে করেন।',
-                        'primary_cta_text' => 'Explore Archival Pieces',
-                        'primary_cta_url' => '/shop',
-                        'secondary_cta_text' => 'Explore By District',
-                        'secondary_cta_url' => '/districts',
-                        'metric_1_val' => '100%',
-                        'metric_1_lbl' => 'GI Provenance',
-                        'metric_2_val' => '64',
-                        'metric_2_lbl' => 'Bengal Districts',
-                        'metric_3_val' => 'Direct',
-                        'metric_3_lbl' => 'Artisan Royalty',
-                        'image_url' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1200&auto=format&fit=crop',
-                        'card_badge' => 'Featured Archival Piece',
-                        'card_title' => 'Imperial Sonargaon Muslin Scarf',
-                        'card_artisan' => 'Master Weaver Alimuddin',
-                        'card_price' => '৳ 18,500',
-                    ],
+                    'settings' => $defaults[BlockType::HERO_CINEMATIC->value],
                 ],
                 [
                     'id' => 'sec_collections_' . uniqid(),
                     'type' => BlockType::FEATURED_COLLECTIONS->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'নির্বাচিত কালেকশনসমূহ',
-                        'headline' => 'বিশেষ কালেকশন',
-                        'subheadline' => 'Curated for Living Room, Dining, Bedroom & Festival Gifting',
-                    ],
+                    'settings' => $defaults[BlockType::FEATURED_COLLECTIONS->value],
                 ],
                 [
                     'id' => 'sec_categories_' . uniqid(),
                     'type' => BlockType::CATEGORY_GRID->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'কারুশিল্প শাখা',
-                        'headline' => 'ঐতিহ্যের শ্রেষ্ঠ কারুশিল্প সম্ভার',
-                        'subheadline' => 'Explore centuries-old techniques perfected across generations of master craftsmen.',
-                    ],
+                    'settings' => $defaults[BlockType::CATEGORY_GRID->value],
                 ],
                 [
                     'id' => 'sec_new_arrivals_' . uniqid(),
                     'type' => BlockType::PRODUCT_CAROUSEL->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'নতুন সংগ্রহ',
-                        'headline' => 'নতুন আগমন',
-                        'subheadline' => 'Touch-friendly horizontal scroll →',
-                    ],
+                    'settings' => $defaults[BlockType::PRODUCT_CAROUSEL->value],
                 ],
                 [
                     'id' => 'sec_best_sellers_' . uniqid(),
                     'type' => BlockType::BEST_SELLERS->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'সংগ্রাহকদের প্রিয়',
-                        'headline' => 'আমাদের বিশেষ সংকলন',
-                        'primary_cta_text' => 'View Entire Catalog',
-                    ],
+                    'settings' => $defaults[BlockType::BEST_SELLERS->value],
                 ],
                 [
                     'id' => 'sec_editor_choice_' . uniqid(),
                     'type' => BlockType::EDITOR_CHOICE->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'কিউরেটর স্পেশাল',
-                        'headline' => "এডিটরস চয়েস: টাঙ্গাইল পিওর মালবেরি সিল্ক জামদানি",
-                        'subheadline' => 'অর্গানিক মালবেরি সিল্কে হাতে বোনা জ্যামিতিক মোটিফ। দেলদুয়ারের ওস্তাদ তাঁতি রাবেয়া বেগমের ছয় সপ্তাহের সাধনার ফসল।',
-                        'primary_cta_text' => 'সংগ্রহ করুন →',
-                        'price' => 24500,
-                        'compare_price' => 29000,
-                        'image_url' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1000',
-                    ],
+                    'settings' => $defaults[BlockType::EDITOR_CHOICE->value],
                 ],
                 [
                     'id' => 'sec_manifesto_' . uniqid(),
                     'type' => BlockType::EDITORIAL_MANIFESTO->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'আমাদের ঐতিহ্য ঘোষণা',
-                        'headline' => '"আমাদের কারুশিল্প কেবল কোনো পণ্য নয়; এটি আমাদের পূর্বপুরুষদের আত্মা, নিঃশ্বাস এবং বেঁচে থাকার লড়াইয়ের অমর গাথা। শিল্পের এই স্পর্শ আমরা হারিয়ে যেতে দেব না।"',
-                        'subheadline' => 'কৃত্রিম ফাস্ট ফ্যাশন ও যান্ত্রিক প্রতিলিপির যুগে সরলতা বিলুপ্তপ্রায় ঐতিহ্যবাহী শিল্পের আশ্রয়স্থল। গ্রামীণ কারিগরদের ন্যায্য মূল্যায়ন নিশ্চিত করে আমরা বাংলার জীবন্ত ঐতিহ্যকে বাঁচিয়ে রাখি।',
-                        'primary_cta_text' => 'সম্পূর্ণ ম্যানিফেস্টো পড়ুন →',
-                        'primary_cta_url' => '/pages/about',
-                    ],
+                    'settings' => $defaults[BlockType::EDITORIAL_MANIFESTO->value],
                 ],
                 [
                     'id' => 'sec_districts_' . uniqid(),
                     'type' => BlockType::HERITAGE_PROVENANCE->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'ভৌগোলিক পরিচয়',
-                        'headline' => 'বাংলার ৬৪ জেলার ভৌগোলিক ঐতিহ্য',
-                        'secondary_cta_text' => 'সবগুলো জেলা দেখুন →',
-                    ],
+                    'settings' => $defaults[BlockType::HERITAGE_PROVENANCE->value],
                 ],
                 [
                     'id' => 'sec_artisan_' . uniqid(),
                     'type' => BlockType::ARTISAN_SPOTLIGHT->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'বংশানুক্রমিক ওস্তাদ',
-                        'headline' => 'জীবন্ত কিংবদন্তি: ওস্তাদ কারিগরবৃন্দ',
-                        'subheadline' => 'প্রতিটি শিল্পকর্মের পেছনে রয়েছে একজন শিল্পীর নাম, স্টুডিও এবং আজীবনের সাধনা।',
-                    ],
+                    'settings' => $defaults[BlockType::ARTISAN_SPOTLIGHT->value],
                 ],
                 [
                     'id' => 'sec_trending_' . uniqid(),
                     'type' => BlockType::SHOPPABLE_PRODUCT_SHELF->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'তাজা শিল্পকর্ম',
-                        'headline' => 'জনপ্রিয় ঐতিহ্যবাহী শিল্পকর্ম',
-                        'subheadline' => 'Limited pieces ready for immediate international dispatch',
-                    ],
+                    'settings' => $defaults[BlockType::SHOPPABLE_PRODUCT_SHELF->value],
                 ],
                 [
                     'id' => 'sec_testimonial_' . uniqid(),
                     'type' => BlockType::TESTIMONIAL_EDITORIAL->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'সংগ্রাহকদের মতামত',
-                        'headline' => 'সংগ্রাহকদের অনুভূতি ও স্মৃতিচারণ',
-                        'subheadline' => 'টেক্সটাইল গবেষক, ইন্টেরিয়র ডিজাইনার এবং বৈশ্বিক শিল্প সংগ্রাহকদের অকৃত্রিম প্রতিক্রিয়া।',
-                    ],
+                    'settings' => $defaults[BlockType::TESTIMONIAL_EDITORIAL->value],
                 ],
                 [
                     'id' => 'sec_gallery_' . uniqid(),
                     'type' => BlockType::INTERACTIVE_GALLERY->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'ভিজ্যুয়াল ক্রনিকল',
-                        'headline' => '@SorolataHeritage',
-                        'subheadline' => 'আমাদের তাঁতি ও কারিগর পল্লীর দৈনন্দিন জীবনের গল্প ও ছন্দ',
-                    ],
+                    'settings' => $defaults[BlockType::INTERACTIVE_GALLERY->value],
                 ],
                 [
                     'id' => 'sec_newsletter_' . uniqid(),
                     'type' => BlockType::HERITAGE_CLUB_NEWSLETTER->value,
                     'is_active' => true,
-                    'settings' => [
-                        'badge_text' => 'সংগ্রাহক সার্কেল',
-                        'headline' => 'সংগ্রাহক সার্কেলে যোগ দিন',
-                        'subheadline' => 'Receive Intimate Archival Dispatches',
-                        'primary_cta_text' => 'Join Collector Desk',
-                    ],
+                    'settings' => $defaults[BlockType::HERITAGE_CLUB_NEWSLETTER->value],
                 ],
             ];
         } elseif ($page->slug === 'about') {
