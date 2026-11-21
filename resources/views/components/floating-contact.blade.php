@@ -3,203 +3,166 @@
     $whatsappUrl = "https://wa.me/{$whatsappNumber}?text=" . urlencode(__('Hello Sorolata Concierge, I would like to inquire about your handcrafted collections.'));
     $phoneDisplay = config('sorolata.phone_display', '+880 1700-000000');
     $phoneRaw = config('sorolata.phone', '+8801700000000');
-    $facebookUrl = config('sorolata.facebook_url', 'https://facebook.com');
-    $currentLang = app()->getLocale() === 'en' ? 'en' : 'bn';
+    $facebookUrl = config('sorolata.facebook_url', 'https://facebook.com/sorolatabangladesh');
+    $isEn = app()->getLocale() === 'en';
 @endphp
 
-<div 
-    x-data="{ 
-        open: false,
-        hoverPrompt: false,
-        toggle() { this.open = !this.open; },
-        close() { this.open = false; }
-    }"
-    @keydown.escape.window="close()"
-    @click.outside="close()"
-    class="sl-fab-container fixed bottom-20 md:bottom-8 right-5 md:right-8 z-50 flex flex-col items-end select-none font-sans"
-    id="sorolataFloatingWidget"
->
-    <!-- Expanded Contact Options -->
-    <div 
-        class="flex flex-col items-end gap-3.5 mb-3.5 transition-all duration-300 origin-bottom-right"
-        :class="open ? 'pointer-events-auto opacity-100 translate-y-0 scale-100' : 'pointer-events-none opacity-0 translate-y-4 scale-95'"
-        x-cloak
-        aria-hidden="!open"
-    >
-        <!-- 1. Direct Call -->
-        <a 
-            href="tel:{{ $phoneRaw }}" 
-            class="sl-contact-row group flex items-center gap-3 no-underline focus:outline-none"
-            style="transition-delay: 120ms;"
-            aria-label="{{ __('Call Us') }}"
-        >
-            <div class="sl-contact-tag bg-white/95 backdrop-blur-md border border-[#E8E5DD] text-[#1D2B24] px-4 py-2 rounded-2xl shadow-[0_8px_24px_rgba(29,43,36,0.12)] transition-all duration-200 group-hover:shadow-[0_10px_28px_rgba(29,43,36,0.18)] group-hover:-translate-x-1">
-                <span class="block text-xs font-semibold text-[#1D2B24] leading-tight" data-bn="সরাসরি কল করুন" data-en="Direct Call">
-                    {{ $currentLang === 'en' ? 'Direct Call' : 'সরাসরি কল করুন' }}
-                </span>
-                <span class="block text-[11px] font-medium text-[#C96A3D] mt-0.5" data-bn="{{ $phoneDisplay }} • সকাল ১০টা - রাত ৮টা" data-en="{{ $phoneDisplay }} • 10 AM - 8 PM">
-                    {{ $phoneDisplay }} • {{ $currentLang === 'en' ? '10 AM - 8 PM' : 'সকাল ১০টা - রাত ৮টা' }}
-                </span>
-            </div>
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#E8A33D] to-[#C96A3D] text-white flex items-center justify-center shadow-[0_8px_20px_rgba(201,106,61,0.35)] transition-transform duration-200 group-hover:scale-110 group-focus-visible:ring-2 group-focus-visible:ring-[#C96A3D] group-focus-visible:ring-offset-2">
-                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                    <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z"/>
-                </svg>
-            </div>
-        </a>
-
-        <!-- 2. WhatsApp Concierge -->
-        <a 
-            href="{{ $whatsappUrl }}" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="sl-contact-row group flex items-center gap-3 no-underline focus:outline-none"
-            style="transition-delay: 70ms;"
-            aria-label="{{ __('WhatsApp Concierge') }}"
-        >
-            <div class="sl-contact-tag bg-white/95 backdrop-blur-md border border-[#E8E5DD] text-[#1D2B24] px-4 py-2 rounded-2xl shadow-[0_8px_24px_rgba(29,43,36,0.12)] transition-all duration-200 group-hover:shadow-[0_10px_28px_rgba(29,43,36,0.18)] group-hover:-translate-x-1">
-                <div class="flex items-center gap-1.5">
-                    <span class="block text-xs font-semibold text-[#1D2B24] leading-tight" data-bn="হোয়াটসঅ্যাপ কনসিয়ার্জ" data-en="WhatsApp Concierge">
-                        {{ $currentLang === 'en' ? 'WhatsApp Concierge' : 'হোয়াটসঅ্যাপ কনসিয়ার্জ' }}
-                    </span>
-                    <span class="inline-block w-2 h-2 rounded-full bg-[#25D366] animate-pulse"></span>
-                </div>
-                <span class="block text-[11px] text-[#6B7A72] mt-0.5" data-bn="তাৎক্ষণিক লাইভ সহায়তা ও অর্ডার" data-en="Instant Live Assistance & Order">
-                    {{ $currentLang === 'en' ? 'Instant Live Assistance & Order' : 'তাৎক্ষণিক লাইভ সহায়তা ও অর্ডার' }}
-                </span>
-            </div>
-            <div class="w-12 h-12 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-[0_8px_22px_rgba(37,211,102,0.38)] transition-transform duration-200 group-hover:scale-110 group-focus-visible:ring-2 group-focus-visible:ring-[#25D366] group-focus-visible:ring-offset-2">
-                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                    <path d="M20.5 3.5A11.8 11.8 0 0012 0C5.4 0 .1 5.3.1 11.9c0 2.1.5 4.1 1.6 5.9L0 24l6.4-1.7a11.9 11.9 0 005.6 1.4c6.6 0 11.9-5.3 11.9-11.9 0-3.2-1.2-6.2-3.4-8.3zM12 21.7c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.8 1 1-3.7-.2-.4a9.8 9.8 0 01-1.5-5.2C2.1 6.5 6.5 2.1 12 2.1c2.6 0 5.1 1 6.9 2.9a9.7 9.7 0 012.9 6.9c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.3c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1l-.9 1.1c-.2.2-.3.2-.6.1-1.8-.9-2.9-1.6-4-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.3 3.2c.1.2 2.2 3.4 5.4 4.7 2 .8 2.8.9 3.8.7.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/>
-                </svg>
-            </div>
-        </a>
-
-        <!-- 3. Facebook Messenger / Page -->
-        <a 
-            href="{{ $facebookUrl }}" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="sl-contact-row group flex items-center gap-3 no-underline focus:outline-none"
-            style="transition-delay: 20ms;"
-            aria-label="{{ __('Facebook Page') }}"
-        >
-            <div class="sl-contact-tag bg-white/95 backdrop-blur-md border border-[#E8E5DD] text-[#1D2B24] px-4 py-2 rounded-2xl shadow-[0_8px_24px_rgba(29,43,36,0.12)] transition-all duration-200 group-hover:shadow-[0_10px_28px_rgba(29,43,36,0.18)] group-hover:-translate-x-1">
-                <span class="block text-xs font-semibold text-[#1D2B24] leading-tight" data-bn="ফেসবুক পেজ" data-en="Facebook Page">
-                    {{ $currentLang === 'en' ? 'Facebook Page' : 'ফেসবুক পেজ' }}
-                </span>
-                <span class="block text-[11px] text-[#6B7A72] mt-0.5" data-bn="ইনবক্সে মেসেজ পাঠান" data-en="Send us a message">
-                    {{ $currentLang === 'en' ? 'Send us a message' : 'ইনবক্সে মেসেজ পাঠান' }}
-                </span>
-            </div>
-            <div class="w-12 h-12 rounded-full bg-[#1877F2] text-white flex items-center justify-center shadow-[0_8px_22px_rgba(24,119,242,0.35)] transition-transform duration-200 group-hover:scale-110 group-focus-visible:ring-2 group-focus-visible:ring-[#1877F2] group-focus-visible:ring-offset-2">
-                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                    <path d="M24 12a12 12 0 10-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.8v8.4A12 12 0 0024 12z"/>
-                </svg>
-            </div>
-        </a>
-    </div>
-
-    <!-- Main Trigger Button Wrapper -->
-    <div class="relative flex items-center gap-3">
-        <!-- Floating Prompt Pill (Visible when closed on hover or subtle initial attraction) -->
-        <div 
-            x-show="!open" 
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 translate-x-2"
-            x-transition:enter-end="opacity-100 translate-x-0"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 translate-x-0"
-            x-transition:leave-end="opacity-0 translate-x-2"
-            class="hidden md:flex items-center gap-2 bg-white/95 backdrop-blur-md border border-[#E8E5DD] px-3.5 py-1.5 rounded-full shadow-[0_4px_16px_rgba(29,43,36,0.12)] cursor-pointer hover:bg-white transition-all text-[#214E34]"
-            @click="toggle()"
-        >
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-xs font-semibold tracking-wide" data-bn="সহায়তা প্রয়োজন?" data-en="Need Help?">
-                {{ $currentLang === 'en' ? 'Need Help?' : 'সহায়তা প্রয়োজন?' }}
-            </span>
-        </div>
-
-        <!-- Master FAB Button -->
-        <button 
-            type="button"
-            @click="toggle()"
-            :aria-expanded="open.toString()"
-            aria-label="{{ __('Contact Options & Concierge') }}"
-            class="sl-fab-trigger relative w-14 h-14 md:w-[60px] md:h-[60px] rounded-full text-white cursor-pointer flex items-center justify-center focus:outline-none focus-visible:ring-4 focus-visible:ring-[#214E34]/40 transition-transform duration-300 active:scale-95 hover:scale-105"
-            style="background: linear-gradient(135deg, #214E34 0%, #2D6846 60%, #1A3F2A 100%); box-shadow: 0 12px 30px rgba(33,78,52,0.42), 0 0 0 1px rgba(212,175,55,0.25);"
-        >
-            <!-- Radar Ping Ring (Only radiates when closed) -->
-            <span 
-                class="absolute inset-0 rounded-full border-2 border-[#2D6846] pointer-events-none"
-                :class="open ? 'opacity-0' : 'animate-sl-ping'"
-            ></span>
-
-            <!-- Online Badge Dot -->
-            <span 
-                class="absolute top-1 right-1 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-white shadow-sm"
-                :class="open ? 'scale-0 opacity-0' : 'scale-100 opacity-100'"
-                style="transition: all 0.2s ease;"
-            ></span>
-
-            <!-- Icon: Chat Bubble (Rotates & fades out on open) -->
-            <svg 
-                class="w-6 h-6 md:w-7 md:h-7 fill-white transition-all duration-300"
-                :class="open ? 'opacity-0 scale-75 rotate-90 absolute' : 'opacity-100 scale-100 rotate-0'"
-                viewBox="0 0 24 24"
-            >
-                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/>
-                <circle cx="8" cy="10" r="1.3"/>
-                <circle cx="12" cy="10" r="1.3"/>
-                <circle cx="16" cy="10" r="1.3"/>
-            </svg>
-
-            <!-- Icon: Close 'X' (Rotates in on open) -->
-            <svg 
-                class="w-6 h-6 md:w-7 md:h-7 stroke-white transition-all duration-300 fill-none"
-                :class="open ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-75 -rotate-90 absolute'"
-                viewBox="0 0 24 24" 
-                stroke-width="2.2" 
-                stroke-linecap="round" 
-                stroke-linejoin="round"
-            >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-    </div>
-</div>
-
+<!-- ============ SOROLATA LUXURY FLOATING CONCIERGE ============ -->
 <style>
-    @keyframes sl-ping {
-        0% { transform: scale(1); opacity: 0.8; }
-        70% { transform: scale(1.6); opacity: 0; }
-        100% { transform: scale(1.6); opacity: 0; }
-    }
-    .animate-sl-ping {
-        animation: sl-ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
-    }
-    @media (prefers-reduced-motion: reduce) {
-        .animate-sl-ping {
-            animation: none !important;
-        }
-    }
+  .sl-fab{
+    --green:#214E34; --green2:#2A6847; --wa:#25D366; --fb:#1877F2; --call:#C96A3D;
+    position:fixed !important; right:24px !important; bottom:24px !important; z-index:99999 !important;
+    display:flex !important; flex-direction:column !important; align-items:flex-end !important; gap:12px !important;
+    font-family:"Hind Siliguri",system-ui,-apple-system,sans-serif !important;
+    margin:0 !important; padding:0 !important;
+  }
+  /* Action rows */
+  .sl-fab__item{
+    display:flex !important; align-items:center !important; gap:10px !important; text-decoration:none !important;
+    opacity:0 !important; transform:translateY(14px) scale(.9) !important; pointer-events:none !important;
+    transition:opacity .22s, transform .28s cubic-bezier(.2,.9,.3,1.2) !important;
+  }
+  .sl-fab.is-open .sl-fab__item{
+    opacity:1 !important; transform:none !important; pointer-events:auto !important;
+  }
+  .sl-fab.is-open .sl-fab__item:nth-child(3){transition-delay:.02s}
+  .sl-fab.is-open .sl-fab__item:nth-child(2){transition-delay:.07s}
+  .sl-fab.is-open .sl-fab__item:nth-child(1){transition-delay:.12s}
+
+  .sl-fab__tag{
+    background:#ffffff !important; color:#1d2b24 !important; font-size:13px !important; font-weight:600 !important;
+    padding:8px 14px !important; border-radius:999px !important; white-space:nowrap !important;
+    box-shadow:0 6px 20px rgba(29,43,36,.15) !important; border:1px solid #e6e1d8 !important;
+    line-height:1.25 !important; text-align:right !important;
+  }
+  .sl-fab__tag small{
+    display:block !important; font-size:11px !important; font-weight:400 !important; color:#6b7a72 !important; margin-top:1px !important;
+  }
+  .sl-fab__circle{
+    width:50px !important; height:50px !important; border-radius:50% !important; display:grid !important; place-items:center !important;
+    box-shadow:0 8px 22px rgba(0,0,0,.22) !important; transition:transform .18s !important;
+    flex-shrink:0 !important;
+  }
+  .sl-fab__item:hover .sl-fab__circle{transform:scale(1.1) !important}
+  .sl-fab__circle svg{width:24px !important; height:24px !important; fill:#ffffff !important}
+  .sl-fab__item:focus-visible{outline:none !important}
+  .sl-fab__item:focus-visible .sl-fab__circle{outline:3px solid var(--green) !important; outline-offset:3px !important}
+  .is-wa .sl-fab__circle{background:var(--wa) !important}
+  .is-fb .sl-fab__circle{background:var(--fb) !important}
+  .is-call .sl-fab__circle{background:var(--call) !important}
+
+  /* Main toggle button */
+  .sl-fab__main{
+    position:relative !important; width:60px !important; height:60px !important; border:0 !important; border-radius:50% !important; cursor:pointer !important;
+    background:linear-gradient(135deg,var(--green),var(--green2)) !important; color:#ffffff !important;
+    box-shadow:0 12px 30px rgba(31,77,54,.42) !important; display:grid !important; place-items:center !important;
+    transition:transform .2s !important; padding:0 !important;
+    border:1px solid rgba(212,175,55,0.3) !important;
+  }
+  .sl-fab__main:hover{transform:scale(1.06) !important}
+  .sl-fab__main:focus-visible{outline:3px solid var(--wa) !important; outline-offset:3px !important}
+  .sl-fab__main svg{position:absolute !important; width:26px !important; height:26px !important; transition:transform .3s, opacity .2s !important}
+  .sl-fab__main .ico-chat{fill:#ffffff !important}
+  .sl-fab__main .ico-x{stroke:#ffffff !important; stroke-width:2.4 !important; stroke-linecap:round !important; fill:none !important; opacity:0 !important; transform:rotate(-90deg) !important}
+  .sl-fab.is-open .ico-chat{opacity:0 !important; transform:rotate(90deg) !important}
+  .sl-fab.is-open .ico-x{opacity:1 !important; transform:none !important}
+  .sl-fab__main::after{
+    content:"" !important; position:absolute !important; inset:0 !important; border-radius:50% !important;
+    border:2px solid var(--green2) !important; animation:sl-ping 2.6s ease-out infinite !important;
+  }
+  .sl-fab.is-open .sl-fab__main::after{animation:none !important; opacity:0 !important}
+  @keyframes sl-ping{from{transform:scale(1);opacity:.7}to{transform:scale(1.55);opacity:0}}
+
+  /* Mobile positioning (float above mobile bottom navigation bar) */
+  @media (max-width:768px){
+    .sl-fab{right:16px !important; bottom:74px !important}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .sl-fab *{animation:none !important; transition:none !important}
+  }
 </style>
 
+<div class="sl-fab" id="slFab">
+  <!-- 1. Facebook Page -->
+  <a class="sl-fab__item is-fb" href="{{ $facebookUrl }}" target="_blank" rel="noopener" aria-label="Facebook">
+    <span class="sl-fab__tag">
+      <span data-bn="ফেসবুক পেজ" data-en="Facebook Page">{{ $isEn ? 'Facebook Page' : 'ফেসবুক পেজ' }}</span>
+      <small data-bn="ইনবক্সে মেসেজ পাঠান" data-en="Send us a message">{{ $isEn ? 'Send us a message' : 'ইনবক্সে মেসেজ পাঠান' }}</small>
+    </span>
+    <span class="sl-fab__circle">
+      <svg viewBox="0 0 24 24"><path d="M24 12a12 12 0 1 0-13.900 11.900v-8.400H7.100V12h3V9.400c0-3 1.800-4.700 4.500-4.700 1.300 0 2.700.2 2.700.2v3h-1.500c-1.500 0-2 .9-2 1.900V12h3.400l-.5 3.500h-2.800v8.400A12 12 0 0 0 24 12z"/></svg>
+    </span>
+  </a>
+
+  <!-- 2. WhatsApp Concierge -->
+  <a class="sl-fab__item is-wa" href="{{ $whatsappUrl }}" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <span class="sl-fab__tag">
+      <span data-bn="হোয়াটসঅ্যাপ কনসিয়ার্জ" data-en="WhatsApp Concierge">{{ $isEn ? 'WhatsApp Concierge' : 'হোয়াটসঅ্যাপ কনসিয়ার্জ' }}</span>
+      <small data-bn="তাৎক্ষণিক লাইভ সহায়তা" data-en="Instant Live Assistance">{{ $isEn ? 'Instant Live Assistance' : 'তাৎক্ষণিক লাইভ সহায়তা' }}</small>
+    </span>
+    <span class="sl-fab__circle">
+      <svg viewBox="0 0 24 24"><path d="M20.500 3.500A11.800 11.800 0 0 0 12 0C5.400 0 .1 5.300.1 11.900c0 2.100.5 4.100 1.600 5.900L0 24l6.400-1.700a11.900 11.900 0 0 0 5.600 1.400c6.600 0 11.900-5.300 11.900-11.900 0-3.200-1.200-6.200-3.400-8.300zM12 21.700c-1.800 0-3.600-.5-5.100-1.400l-.4-.2-3.800 1 1-3.700-.2-.4a9.800 9.800 0 0 1-1.500-5.200C2.100 6.500 6.500 2.100 12 2.100c2.600 0 5.100 1 6.900 2.900a9.700 9.700 0 0 1 2.900 6.900c0 5.400-4.400 9.800-9.800 9.800zm5.400-7.300c-.3-.1-1.800-.9-2-1-.3-.1-.5-.1-.7.1l-.9 1.100c-.2.200-.3.200-.6.100-1.800-.9-2.900-1.600-4-3.600-.3-.5.300-.5.900-1.600.1-.2 0-.4 0-.5l-.9-2.200c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.400-.3.300-1.100 1.100-1.100 2.600s1.100 3 1.300 3.200c.1.200 2.200 3.400 5.400 4.700 2 .8 2.800.9 3.800.7.600-.1 1.800-.7 2-1.400.3-.7.300-1.300.2-1.400-.1-.2-.3-.3-.6-.4z"/></svg>
+    </span>
+  </a>
+
+  <!-- 3. Direct Call -->
+  <a class="sl-fab__item is-call" href="tel:{{ $phoneRaw }}" aria-label="Call">
+    <span class="sl-fab__tag">
+      <span data-bn="সরাসরি কল করুন" data-en="Call us">{{ $isEn ? 'Call us' : 'সরাসরি কল করুন' }}</span>
+      <small>{{ $phoneDisplay }}</small>
+    </span>
+    <span class="sl-fab__circle">
+      <svg viewBox="0 0 24 24"><path d="M6.600 10.800a15.100 15.100 0 0 0 6.600 6.600l2.200-2.200a1 1 0 0 1 1-.25c1.100.37 2.300.57 3.600.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.500a1 1 0 0 1 1 1c0 1.300.2 2.500.57 3.600a1 1 0 0 1-.25 1z"/></svg>
+    </span>
+  </a>
+
+  <!-- Main Toggle Button -->
+  <button class="sl-fab__main" id="slFabBtn" type="button" aria-expanded="false" aria-label="Contact options">
+    <svg class="ico-chat" viewBox="0 0 24 24"><path d="M4 3h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 1-2z"/></svg>
+    <svg class="ico-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</div>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Dynamic bilingual switch listener in case page updates lang attribute
-        function updateFloatingLang() {
-            var isEn = document.documentElement.lang && document.documentElement.lang.toLowerCase().indexOf('en') === 0;
-            var widget = document.getElementById('sorolataFloatingWidget');
-            if (!widget) return;
-            widget.querySelectorAll('[data-bn]').forEach(function (el) {
-                el.textContent = isEn ? el.getAttribute('data-en') : el.getAttribute('data-bn');
-            });
-        }
-        new MutationObserver(updateFloatingLang).observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['lang']
-        });
+(function(){
+  var fab = document.getElementById('slFab');
+  var btn = document.getElementById('slFabBtn');
+  if (!fab || !btn) return;
+
+  function setOpen(isOpen){
+    fab.classList.toggle('is-open', isOpen);
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    setOpen(!fab.classList.contains('is-open'));
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') setOpen(false);
+  });
+
+  document.addEventListener('click', function(e){
+    if (!fab.contains(e.target)) setOpen(false);
+  });
+
+  // Dynamic Bengali/English locale switcher
+  function renderLocale(){
+    var isEn = document.documentElement.lang && document.documentElement.lang.toLowerCase().indexOf('en') === 0;
+    var langKey = isEn ? 'en' : 'bn';
+    fab.querySelectorAll('[data-bn]').forEach(function(el){
+      if (el.dataset && el.dataset[langKey]) {
+        el.textContent = el.dataset[langKey];
+      }
     });
+  }
+
+  if (window.MutationObserver) {
+    new MutationObserver(renderLocale).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['lang']
+    });
+  }
+})();
 </script>
