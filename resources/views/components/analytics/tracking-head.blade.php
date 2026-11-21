@@ -443,4 +443,3 @@
     @if(!empty($customHeadScript))
         {!! $customHeadScript !!}
     @endif
-@endif
