@@ -141,6 +141,8 @@ Route::get('/search', [StaticPageController::class, 'search'])->name('search.ind
 Route::get('/docs/api', fn() => view('docs.api'))->name('docs.api');
 
 // Visual Page Builder Studio & Public Landing Engine
+Route::get('/admin/builder/home', [BuilderController::class, 'home'])->name('builder.home')->middleware(['admin']);
+Route::get('/builder/home', fn() => redirect()->route('builder.home'))->middleware(['admin']);
 Route::get('/admin/builder/product/{id}', [BuilderController::class, 'product'])->name('builder.product')->middleware(['admin']);
 Route::get('/admin/builder/page/{id}', [BuilderController::class, 'page'])->name('builder.page')->middleware(['admin']);
 Route::get('/builder/product/{id}', fn($id) => redirect()->route('builder.product', $id))->middleware(['admin']);

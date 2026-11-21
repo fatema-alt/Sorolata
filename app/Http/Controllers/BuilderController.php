@@ -33,6 +33,26 @@ class BuilderController extends Controller
     }
 
     /**
+     * Launch the Visual Page Builder directly for the Homepage.
+     */
+    public function home(): View
+    {
+        $page = Page::firstOrCreate(['slug' => 'home'], [
+            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'title' => 'Heritage Living Sanctuary (Homepage)',
+            'page_type' => 'home',
+            'status' => 'published',
+            'version' => 1,
+        ]);
+
+        return view('builder.editor', [
+            'productId' => null,
+            'pageId' => $page->id,
+            'title' => "Editing: {$page->title}",
+        ]);
+    }
+
+    /**
      * Launch the Visual Page Builder for a generic CMS / Campaign landing page.
      */
     public function page(int $id): View
