@@ -743,11 +743,11 @@
                     <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37] flex items-center justify-between">
                         <div class="text-[11px]">
                             <span class="text-gray-400 block font-mono text-[10px]">GOOGLE TAG MGR</span>
-                            <span class="font-semibold {{ ($settings['gtm_enabled'] ?? '0') == '1' && !empty($settings['gtm_id']) ? 'text-emerald-400' : 'text-gray-500' }}">
-                                {{ ($settings['gtm_enabled'] ?? '0') == '1' && !empty($settings['gtm_id']) ? 'Active' : 'Disabled' }}
+                            <span class="font-semibold {{ ($settings['gtm_enabled'] ?? '1') == '1' && !empty($settings['gtm_id'] ?? 'GTM-W62NQS6R') ? 'text-emerald-400' : 'text-gray-500' }}">
+                                {{ ($settings['gtm_enabled'] ?? '1') == '1' && !empty($settings['gtm_id'] ?? 'GTM-W62NQS6R') ? 'Active' : 'Disabled' }}
                             </span>
                         </div>
-                        <span class="w-2.5 h-2.5 rounded-full {{ ($settings['gtm_enabled'] ?? '0') == '1' && !empty($settings['gtm_id']) ? 'bg-emerald-400 shadow-sm shadow-emerald-500/50' : 'bg-gray-600' }}"></span>
+                        <span class="w-2.5 h-2.5 rounded-full {{ ($settings['gtm_enabled'] ?? '1') == '1' && !empty($settings['gtm_id'] ?? 'GTM-W62NQS6R') ? 'bg-emerald-400 shadow-sm shadow-emerald-500/50' : 'bg-gray-600' }}"></span>
                     </div>
 
                     <div class="p-3 rounded-xl bg-[#0f1115] border border-[#282d37] flex items-center justify-between">
@@ -805,7 +805,7 @@
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="gtm_enabled" value="1" 
-                               {{ ($settings['gtm_enabled'] ?? '0') == '1' ? 'checked' : '' }} 
+                               {{ ($settings['gtm_enabled'] ?? '1') == '1' ? 'checked' : '' }} 
                                class="sr-only peer">
                         <div class="w-11 h-6 bg-[#252a36] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#214E34]"></div>
                     </label>
@@ -814,10 +814,10 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-300 mb-1">GTM Container ID (ওয়েব কন্টেইনার আইডি)</label>
-                        <input type="text" name="gtm_id" value="{{ $settings['gtm_id'] ?? '' }}" 
+                        <input type="text" name="gtm_id" value="{{ $settings['gtm_id'] ?? 'GTM-W62NQS6R' }}" 
                                placeholder="GTM-XXXXXXX"
                                class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#4285F4] focus:outline-none font-mono">
-                        <span class="text-[10px] text-gray-500 mt-1 block">Google Tag Manager একাউন্টের Container ID দিন (যেমন: GTM-N8XXXXX)।</span>
+                        <span class="text-[10px] text-gray-500 mt-1 block">Google Tag Manager একাউন্টের Container ID দিন (যেমন: GTM-W62NQS6R)।</span>
                     </div>
 
                     <div>

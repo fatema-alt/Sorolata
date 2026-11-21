@@ -2,8 +2,11 @@
     $trackingSettings = app(\App\Services\Admin\AdminSettingService::class)->all();
     $trackingEnabled = (bool) ($trackingSettings['tracking_enabled'] ?? '1');
     $dataLayerEnabled = (bool) ($trackingSettings['datalayer_enabled'] ?? '1');
-    $gtmEnabled = (bool) ($trackingSettings['gtm_enabled'] ?? '0');
-    $gtmId = trim((string) ($trackingSettings['gtm_id'] ?? ''));
+    $gtmEnabled = (bool) ($trackingSettings['gtm_enabled'] ?? '1');
+    $gtmId = trim((string) ($trackingSettings['gtm_id'] ?? 'GTM-W62NQS6R'));
+    if (empty($gtmId)) {
+        $gtmId = 'GTM-W62NQS6R';
+    }
     $serverContainerUrl = rtrim(trim((string) ($trackingSettings['server_container_url'] ?? '')), '/');
     $ga4Enabled = (bool) ($trackingSettings['ga4_enabled'] ?? '0');
     $ga4Id = trim((string) ($trackingSettings['ga4_measurement_id'] ?? ''));
@@ -17,57 +20,68 @@
 @endphp
 
 @if($trackingEnabled)
-    {{-- 1. Initialize Global DataLayer & Helper Functions --}}
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-
-        // Helper to extract first-party cookies (_fbp, _fbc)
-        function getSorolataCookie(name) {
-            var value = "; " + document.cookie;
-            var parts = value.split("; " + name + "=");
-            if (parts.length === 2) return parts.pop().split(";").shift();
-            return null;
-        }
-
-        // Helper to generate unique event_id for deduplication
-        function generateSorolataEventId(prefix) {
-            return (prefix || 'evt') + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
-        }
-
-        // Initial DataLayer PageView event matching PDF Step 04
-        @if($dataLayerEnabled)
-            window.dataLayer.push({
-                event: 'page_view',
-                event_id: '{{ $pageEventId }}',
-                event_time: Math.round(Date.now() / 1000),
-                send_page_view: true,
-                first_party_collection: true,
-                @if(!empty($serverContainerUrl))
-                server_container_url: '{{ $serverContainerUrl }}',
-                @endif
-                'x-fb-ck-fbp': getSorolataCookie('_fbp'),
-                'x-fb-ck-fbc': getSorolataCookie('_fbc')
-            });
-        @endif
-    </script>
-
-    {{-- 2. Google Tag Manager Container (Web + Server Container / Stape.io) --}}
+    {{-- 1. Initialize Google Tag Manager & Global DataLayer --}}
     @if($gtmEnabled && !empty($gtmId))
-        <!-- Google Tag Manager -->
+        <!-- Google Tag Manager ({{ $gtmId }}) -->
+        <script async src="{{ !empty($serverContainerUrl) ? $serverContainerUrl : 'https://www.googletagmanager.com' }}/gtm.js?id={{ $gtmId }}"></script>
         <script>
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;
-            @if(!empty($serverContainerUrl))
-                j.src='{{ $serverContainerUrl }}/gtm.js?id='+i+dl;
-            @else
-                j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            // Helper to extract first-party cookies (_fbp, _fbc)
+            function getSorolataCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length === 2) return parts.pop().split(";").shift();
+                return null;
+            }
+
+            // Helper to generate unique event_id for deduplication
+            function generateSorolataEventId(prefix) {
+                return (prefix || 'evt') + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+            }
+
+            // Standard GTM container start event
+            window.dataLayer.push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+
+            // Initial DataLayer PageView event matching PDF Step 04
+            @if($dataLayerEnabled)
+                window.dataLayer.push({
+                    event: 'page_view',
+                    event_id: '{{ $pageEventId }}',
+                    event_time: Math.round(Date.now() / 1000),
+                    send_page_view: true,
+                    first_party_collection: true,
+                    @if(!empty($serverContainerUrl))
+                    server_container_url: '{{ $serverContainerUrl }}',
+                    @endif
+                    'x-fb-ck-fbp': getSorolataCookie('_fbp'),
+                    'x-fb-ck-fbc': getSorolataCookie('_fbc')
+                });
             @endif
-            f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','{{ $gtmId }}');
         </script>
         <!-- End Google Tag Manager -->
+    @else
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            function getSorolataCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length === 2) return parts.pop().split(";").shift();
+                return null;
+            }
+
+            function generateSorolataEventId(prefix) {
+                return (prefix || 'evt') + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+            }
+        </script>
     @endif
 
     {{-- 3. Google Analytics 4 (GA4) Direct Fallback if GTM not used --}}

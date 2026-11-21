@@ -1,8 +1,11 @@
 @php
     $trackingSettings = app(\App\Services\Admin\AdminSettingService::class)->all();
     $trackingEnabled = (bool) ($trackingSettings['tracking_enabled'] ?? '1');
-    $gtmEnabled = (bool) ($trackingSettings['gtm_enabled'] ?? '0');
-    $gtmId = trim((string) ($trackingSettings['gtm_id'] ?? ''));
+    $gtmEnabled = (bool) ($trackingSettings['gtm_enabled'] ?? '1');
+    $gtmId = trim((string) ($trackingSettings['gtm_id'] ?? 'GTM-W62NQS6R'));
+    if (empty($gtmId)) {
+        $gtmId = 'GTM-W62NQS6R';
+    }
     $serverContainerUrl = rtrim(trim((string) ($trackingSettings['server_container_url'] ?? '')), '/');
     $customBodyScript = $trackingSettings['custom_body_script'] ?? '';
 @endphp

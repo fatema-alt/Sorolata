@@ -47,6 +47,25 @@ class AppServiceProvider extends ServiceProvider
                         ->update(['slug' => \Illuminate\Support\Str::slug((string) $r->name_en)]);
                 }
             }
+
+            if (\Illuminate\Support\Facades\Schema::hasTable('admin_settings')) {
+                $gtmSetting = \Illuminate\Support\Facades\DB::table('admin_settings')->where('key', 'gtm_id')->first();
+                if (!$gtmSetting || empty($gtmSetting->value)) {
+                    \Illuminate\Support\Facades\DB::table('admin_settings')->updateOrInsert(
+                        ['key' => 'gtm_id'],
+                        ['value' => 'GTM-W62NQS6R', 'group' => 'tracking', 'updated_at' => now()]
+                    );
+                    \Illuminate\Support\Facades\DB::table('admin_settings')->updateOrInsert(
+                        ['key' => 'gtm_enabled'],
+                        ['value' => '1', 'group' => 'tracking', 'updated_at' => now()]
+                    );
+                    \Illuminate\Support\Facades\DB::table('admin_settings')->updateOrInsert(
+                        ['key' => 'tracking_enabled'],
+                        ['value' => '1', 'group' => 'tracking', 'updated_at' => now()]
+                    );
+                    \Illuminate\Support\Facades\Cache::forget('sorolata_admin_settings_all');
+                }
+            }
         } catch (\Throwable) {}
     }
 }
