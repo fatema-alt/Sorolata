@@ -19,7 +19,7 @@
                     <span class="text-[#1D1D1D] font-semibold">{{ $district->getLocalized('name') }}</span>
                 </div>
                 <div class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#214E34] font-bold">
-                    <span>{{ $district->division->value }}</span>
+                    <span>{{ $district->division instanceof \BackedEnum ? $district->division->value : ($district->division ?? 'Bangladesh') }}</span>
                     <span>•</span>
                     <span class="font-editorial-bangla">{{ $district->name_bn }}</span>
                 </div>
@@ -52,7 +52,7 @@
                             <img src="{{ $artisan->portrait_url }}" alt="{{ $artisan->getLocalized('full_name') }}" class="w-16 h-16 rounded-full object-cover">
                             <div>
                                 <h4 class="font-editorial-heading text-xl text-[#1D1D1D]">{{ $artisan->getLocalized('full_name') }}</h4>
-                                <span class="text-xs text-[#888888] block">{{ $artisan->craft_type->title() }}</span>
+                                <span class="text-xs text-[#888888] block">{{ $artisan->craft_type instanceof \App\Enums\ArtisanCraftType ? $artisan->craft_type->title() : ($artisan->craft_type ?? 'Master Artisan') }}</span>
                                 <a href="{{ route('artisan.show', $artisan->slug ?? $artisan->uuid) }}" class="text-xs text-[#214E34] font-semibold mt-1 inline-block">{{ __('View Studio Profile →') }}</a>
                             </div>
                         </div>

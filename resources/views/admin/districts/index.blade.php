@@ -89,7 +89,7 @@
                             Edit
                         </button>
 
-                        <a href="{{ route('district.show', $d->slug ?? $d->name_en) }}" target="_blank" class="text-[#A3D9B1] hover:underline font-semibold text-[11px]">
+                        <a href="{{ route('district.show', !empty($d->slug) ? $d->slug : \Illuminate\Support\Str::slug($d->name_en)) }}" target="_blank" class="text-[#A3D9B1] hover:underline font-semibold text-[11px]">
                             Basin Hub ↗
                         </a>
                     </div>
