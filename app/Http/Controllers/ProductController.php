@@ -10,6 +10,7 @@ use App\Models\Artisan;
 use App\Models\Category;
 use App\Models\Collection;
 use App\Models\District;
+use App\Models\Page;
 use App\Models\Product;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
