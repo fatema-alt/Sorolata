@@ -288,6 +288,17 @@ class PaymentController extends Controller
             'customer_notified' => true,
         ]);
 
+        // Dispatch Centralized Admin Notification
+        try {
+            app(\App\Services\Admin\AdminNotificationService::class)->notifyPaymentSubmitted(
+                $orderModel,
+                $validated['transaction_id'],
+                $methodLabel
+            );
+        } catch (\Throwable $e) {
+            Log::warning("Payment notification trigger failed: " . $e->getMessage());
+        }
+
         return redirect()->route('track.order', ['order_number' => $orderModel->order_number])
             ->with('success', __('Your payment transaction ID (#:trx) has been submitted successfully! Our team will verify and confirm your order shortly.', ['trx' => $validated['transaction_id']]));
     }

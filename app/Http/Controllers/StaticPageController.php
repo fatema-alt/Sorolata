@@ -178,6 +178,16 @@ class StaticPageController extends Controller
             'customer_notified' => true,
         ]);
 
+        // Dispatch Centralized Admin Notification
+        try {
+            app(\App\Services\Admin\AdminNotificationService::class)->notifyCancellationRequested(
+                $order,
+                $validated['reason']
+            );
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning("Cancellation notification trigger failed: " . $e->getMessage());
+        }
+
         return back()->with('success', __('Your cancellation request has been received. Our support team will review it shortly.'));
     }
 }

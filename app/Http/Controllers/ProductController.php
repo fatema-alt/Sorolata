@@ -133,7 +133,7 @@ class ProductController extends Controller
                 ->exists();
         }
 
-        \App\Models\Review::create([
+        $review = \App\Models\Review::create([
             'product_id' => $product->id,
             'artisan_id' => $product->artisan_id,
             'user_id' => $userId,
@@ -145,6 +145,11 @@ class ProductController extends Controller
             'is_verified_purchase' => $isVerified,
             'likes_count' => 0,
         ]);
+
+        // Dispatch Centralized Admin Notification
+        try {
+            app(\App\Services\Admin\AdminNotificationService::class)->notifyReviewSubmitted($review);
+        } catch (\Throwable $e) {}
 
         return back()->with('review_success', __('Your review and rating have been added successfully. Thank you for your feedback!'));
     }

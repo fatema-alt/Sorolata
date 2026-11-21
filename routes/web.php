@@ -229,6 +229,13 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
     Route::put('/collections/{id}', [\App\Http\Controllers\Admin\AdminCollectionController::class, 'update'])->name('collections.update');
     Route::delete('/collections/{id}', [\App\Http\Controllers\Admin\AdminCollectionController::class, 'destroy'])->name('collections.destroy');
 
+    // Notification Center & Real-Time Alerts
+    Route::get('/notifications', [\App\Http\Controllers\Admin\AdminNotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [\App\Http\Controllers\Admin\AdminNotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [\App\Http\Controllers\Admin\AdminNotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    Route::delete('/notifications/{id}', [\App\Http\Controllers\Admin\AdminNotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::get('/notifications/unread-count', [\App\Http\Controllers\Admin\AdminNotificationController::class, 'unreadCount'])->name('notifications.unread-count');
+
     // Storefront Settings & Configuration
     Route::get('/settings', [\App\Http\Controllers\Admin\AdminSettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [\App\Http\Controllers\Admin\AdminSettingController::class, 'update'])->name('settings.update');

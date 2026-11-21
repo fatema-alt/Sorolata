@@ -112,43 +112,107 @@
             </a>
 
             <!-- Notification Bell -->
-            <div class="relative">
+            @php
+                $notifService = app(\App\Services\Admin\AdminNotificationService::class);
+                $unreadNotifsCount = $notifService->getUnreadCount();
+                $headerNotifs = $notifService->getLatest(5);
+            @endphp
+            <div class="relative" x-data="{ 
+                unreadCount: {{ $unreadNotifsCount }},
+                fetchUnread() {
+                    fetch('{{ route('admin.notifications.unread-count') }}')
+                        .then(r => r.json())
+                        .then(d => { if(d && typeof d.count !== 'undefined') this.unreadCount = d.count; })
+                        .catch(() => {});
+                }
+            }" x-init="setInterval(() => fetchUnread(), 30000)">
                 <button type="button" 
                         @click="notificationsOpen = !notificationsOpen" 
-                        class="p-2 text-gray-400 hover:text-white hover:bg-[#222733] rounded-lg transition-colors relative">
+                        class="p-2 text-gray-400 hover:text-white hover:bg-[#222733] rounded-lg transition-colors relative"
+                        title="Alerts & Notifications">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                     </svg>
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 absolute top-2 right-2 ring-2 ring-[#161922]"></span>
+                    <span x-show="unreadCount > 0" 
+                          x-text="unreadCount > 99 ? '99+' : unreadCount" 
+                          class="absolute -top-1 -right-1 px-1.5 py-0.2 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold rounded-full bg-rose-500 text-white ring-2 ring-[#161922]">
+                        {{ $unreadNotifsCount > 99 ? '99+' : $unreadNotifsCount }}
+                    </span>
                 </button>
 
                 <!-- Notifications Dropdown -->
                 <div x-show="notificationsOpen" 
                      @click.away="notificationsOpen = false" 
                      x-transition 
-                     class="absolute right-0 mt-2 w-80 bg-[#1c202b] border border-[#2d3342] rounded-2xl shadow-2xl p-4 z-50">
+                     class="absolute right-0 mt-2 w-96 bg-[#1c202b] border border-[#2d3342] rounded-2xl shadow-2xl p-4 z-50">
                     <div class="flex items-center justify-between pb-3 border-b border-[#2d3342]">
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-white">Centralized Dispatch</h4>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-semibold">Active</span>
-                    </div>
-                    <div class="py-3 space-y-3">
-                        <div class="flex items-start space-x-3 text-xs">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5 shrink-0"></span>
-                            <div>
-                                <p class="text-gray-200 font-medium">New Order Placed: Sonargaon Muslin Scarf</p>
-                                <span class="text-[10px] text-gray-500">2 minutes ago • Verified Concierge</span>
-                            </div>
+                        <div class="flex items-center gap-2">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-white">Central Dispatch</h4>
+                            @if($unreadNotifsCount > 0)
+                                <span class="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 font-semibold">{{ $unreadNotifsCount }} unread</span>
+                            @else
+                                <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-semibold">All Caught Up</span>
+                            @endif
                         </div>
-                        <div class="flex items-start space-x-3 text-xs">
-                            <span class="w-2 h-2 rounded-full bg-amber-400 mt-1.5 shrink-0"></span>
-                            <div>
-                                <p class="text-gray-200 font-medium">Low Stock Notice: Tangail Silk Jamdani</p>
-                                <span class="text-[10px] text-gray-500">3 units remaining in atelier ledger</span>
-                            </div>
-                        </div>
+                        @if($unreadNotifsCount > 0)
+                            <form action="{{ route('admin.notifications.read-all') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="text-[11px] text-[#A3D9B1] hover:underline font-medium">Mark all read</button>
+                            </form>
+                        @endif
                     </div>
-                    <a href="{{ route('admin.orders.index') }}" class="block text-center text-xs font-semibold text-[#A3D9B1] hover:underline pt-2 border-t border-[#2d3342]">
-                        View Full Logistics Timeline →
+                    
+                    <div class="py-2 divide-y divide-[#252a36] max-h-80 overflow-y-auto admin-scroll">
+                        @forelse($headerNotifs as $notif)
+                            <div class="py-2.5 first:pt-1 last:pb-1 flex items-start gap-3 hover:bg-[#222733]/50 p-2 rounded-xl transition-colors {{ !$notif->is_read ? 'bg-[#214E34]/10' : '' }}">
+                                @php
+                                    $color = $notif->getTypeColor();
+                                    $dotClass = match($color) {
+                                        'emerald' => 'bg-emerald-400',
+                                        'blue' => 'bg-blue-400',
+                                        'rose' => 'bg-rose-400',
+                                        'amber' => 'bg-amber-400',
+                                        'purple' => 'bg-purple-400',
+                                        default => 'bg-gray-400'
+                                    };
+                                    $badgeClass = match($color) {
+                                        'emerald' => 'bg-emerald-500/20 text-emerald-400',
+                                        'blue' => 'bg-blue-500/20 text-blue-400',
+                                        'rose' => 'bg-rose-500/20 text-rose-400',
+                                        'amber' => 'bg-amber-500/20 text-amber-400',
+                                        'purple' => 'bg-purple-500/20 text-purple-400',
+                                        default => 'bg-gray-500/20 text-gray-400'
+                                    };
+                                @endphp
+                                <span class="w-2 h-2 rounded-full {{ $dotClass }} mt-1.5 shrink-0"></span>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between gap-1 mb-0.5">
+                                        <span class="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.2 rounded {{ $badgeClass }}">
+                                            {{ $notif->getTypeLabel() }}
+                                        </span>
+                                        <span class="text-[10px] text-gray-500 font-mono">{{ $notif->created_at?->diffForHumans() }}</span>
+                                    </div>
+                                    <form action="{{ route('admin.notifications.read', $notif->id) }}?redirect=1" method="POST">
+                                        @csrf
+                                        <button type="submit" class="text-left group w-full">
+                                            <p class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] truncate transition-colors">{{ $notif->title }}</p>
+                                            <p class="text-[11px] text-gray-400 line-clamp-1 mt-0.5">{{ $notif->message }}</p>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="py-6 text-center text-gray-500 text-xs">
+                                <svg class="w-8 h-8 mx-auto text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                                No notifications yet.
+                            </div>
+                        @endforelse
+                    </div>
+
+                    <a href="{{ route('admin.notifications.index') }}" class="block text-center text-xs font-semibold text-[#A3D9B1] hover:underline pt-2.5 border-t border-[#2d3342]">
+                        Open Notification Center →
                     </a>
                 </div>
             </div>
@@ -378,6 +442,21 @@
                     </h5>
                     <nav class="space-y-1">
                         
+                        <!-- Notifications -->
+                        <a href="{{ route('admin.notifications.index') }}" 
+                           class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all {{ request()->routeIs('admin.notifications.*') ? 'bg-[#214E34] text-white shadow-sm' : 'text-gray-300 hover:bg-[#222733] hover:text-white' }}"
+                           title="Notification Dispatch">
+                            <div class="flex items-center space-x-3">
+                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                                <span x-show="!sidebarCollapsed" class="truncate">Notifications</span>
+                            </div>
+                            @if(isset($unreadNotifsCount) && $unreadNotifsCount > 0)
+                                <span x-show="!sidebarCollapsed" class="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-400 font-mono font-bold">{{ $unreadNotifsCount }}</span>
+                            @endif
+                        </a>
+
                         <!-- Settings -->
                         <a href="{{ route('admin.settings.index') }}" 
                            class="flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-medium transition-all {{ request()->routeIs('admin.settings.*') ? 'bg-[#214E34] text-white shadow-sm' : 'text-gray-300 hover:bg-[#222733] hover:text-white' }}">

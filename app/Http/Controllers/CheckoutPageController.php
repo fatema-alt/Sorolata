@@ -183,6 +183,13 @@ class CheckoutPageController extends Controller
 
         $order = Order::create($orderData);
 
+        // Dispatch Centralized Admin Notification
+        try {
+            app(\App\Services\Admin\AdminNotificationService::class)->notifyOrderPlaced($order);
+        } catch (\Throwable $e) {
+            Log::warning("Order notification trigger failed: " . $e->getMessage());
+        }
+
         foreach ($products as $p) {
             $qty = $bag[$p->id] ?? 1;
             OrderItem::create([
@@ -202,6 +209,12 @@ class CheckoutPageController extends Controller
                 $prev = $p->stock_quantity ?? 0;
                 $new = max(0, $prev - $qty);
                 $p->update(['stock_quantity' => $new]);
+
+                if ($new <= 3) {
+                    try {
+                        app(\App\Services\Admin\AdminNotificationService::class)->notifyLowStock($p, $new);
+                    } catch (\Throwable) {}
+                }
 
                 InventoryLog::create([
                     'product_id' => $p->id,
