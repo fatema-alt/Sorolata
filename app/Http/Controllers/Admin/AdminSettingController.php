@@ -85,6 +85,7 @@ class AdminSettingController extends Controller
             'payment_cod_enabled',
             'payment_sslcommerz_enabled',
             'sms_enabled',
+            'floating_contact_enabled',
         ];
 
         foreach ($toggles as $toggle) {

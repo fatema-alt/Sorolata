@@ -42,6 +42,10 @@
         <button type="button" @click="tab = 'sms'" :class="tab === 'sms' ? 'bg-[#222733] text-white shadow' : 'hover:text-gray-200'" class="px-4 py-2 rounded-xl transition-all whitespace-nowrap">
             SMS Gateway
         </button>
+        <button type="button" @click="tab = 'floating'" :class="tab === 'floating' ? 'bg-[#222733] text-white shadow' : 'hover:text-gray-200'" class="px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Floating Concierge (ফ্লোটিং উইজেট)</span>
+        </button>
         <button type="button" @click="tab = 'backup'" :class="tab === 'backup' ? 'bg-[#222733] text-white shadow' : 'hover:text-gray-200'" class="px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-1.5">
             <x-icon name="database" class="w-3.5 h-3.5 text-emerald-400" />
             <span>Database Backup</span>
@@ -580,6 +584,130 @@
                         <label class="block text-xs font-semibold text-gray-300 mb-1">Order Shipped Template (কুরিয়ারে ডিসপ্যাচের পর SMS)</label>
                         <input type="text" name="sms_order_shipped_template" value="{{ $settings['sms_order_shipped_template'] ?? 'Dear {name}, order #{order_number} dispatched via {courier}. Tracking: {tracking_number}. Track live: {tracking_url}' }}" 
                                class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-blue-500 focus:outline-none">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Concierge Widget Tab -->
+        <div x-show="tab === 'floating'" class="space-y-6">
+            <!-- Master Toggle Card -->
+            <div class="p-6 rounded-2xl bg-[#161922] border border-[#252a36] space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-[#252a36]">
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-white">Floating Contact Concierge (ফ্লোটিং উইজেট নিয়ন্ত্রণ)</h3>
+                        <p class="text-[11px] text-gray-400">ওয়েবসাইটের নিচে ডান কোনায় থাকা ফেসবুক, হোয়াটসঅ্যাপ ও সরাসরি ফোন কল বাটন নিয়ন্ত্রণ করুন।</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="floating_contact_enabled" value="1" 
+                               {{ ($settings['floating_contact_enabled'] ?? '1') == '1' ? 'checked' : '' }} 
+                               class="sr-only peer">
+                        <div class="w-11 h-6 bg-[#252a36] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#214E34]"></div>
+                    </label>
+                </div>
+
+                <!-- 1. WhatsApp Channel -->
+                <div class="p-4 rounded-xl bg-[#0f1115] border border-[#282d37] space-y-4">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-[#25D366]"></span>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">1. WhatsApp Concierge (হোয়াটসঅ্যাপ)</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">WhatsApp Number (দেশ কোড সহ নম্বর)</label>
+                            <input type="text" name="whatsapp_number" value="{{ $settings['whatsapp_number'] ?? '8801700000000' }}" 
+                                   placeholder="8801700000000"
+                                   class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#214E34] focus:outline-none">
+                            <span class="text-[10px] text-gray-500 mt-1 block">যেমন: 8801700000000 (কোনো স্পেস বা ড্যাশ ছাড়া)</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Default Pre-filled Message (ক্লিক করলে স্বয়ংক্রিয় মেসেজ)</label>
+                            <input type="text" name="whatsapp_default_message" value="{{ $settings['whatsapp_default_message'] ?? 'Hello Sorolata Concierge, I would like to inquire about your handcrafted collections.' }}" 
+                                   class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#214E34] focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#1e222d]">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Title (Bangla / English)</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" name="whatsapp_label_bn" value="{{ $settings['whatsapp_label_bn'] ?? 'হোয়াটসঅ্যাপ কনসিয়ার্জ' }}" placeholder="বাংলা লেবেল" class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                <input type="text" name="whatsapp_label_en" value="{{ $settings['whatsapp_label_en'] ?? 'WhatsApp Concierge' }}" placeholder="English Label" class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Subtitle (Bangla / English)</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" name="whatsapp_subtitle_bn" value="{{ $settings['whatsapp_subtitle_bn'] ?? 'তাৎক্ষণিক লাইভ সহায়তা' }}" placeholder="বাংলা সাবটাইটেল" class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                <input type="text" name="whatsapp_subtitle_en" value="{{ $settings['whatsapp_subtitle_en'] ?? 'Instant Live Assistance' }}" placeholder="English Subtitle" class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Facebook Page Channel -->
+                <div class="p-4 rounded-xl bg-[#0f1115] border border-[#282d37] space-y-4">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-[#1877F2]"></span>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">2. Facebook Page (ফেসবুক পেজ ও মেসেঞ্জার)</h4>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Facebook Page / Messenger URL</label>
+                        <input type="text" name="facebook_page_url" value="{{ $settings['facebook_page_url'] ?? 'https://facebook.com/sorolatabangladesh' }}" 
+                               placeholder="https://facebook.com/yourpage"
+                               class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#214E34] focus:outline-none">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#1e222d]">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Title (Bangla / English)</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" name="facebook_label_bn" value="{{ $settings['facebook_label_bn'] ?? 'ফেসবুক পেজ' }}" placeholder="বাংলা লেবেল" class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                <input type="text" name="facebook_label_en" value="{{ $settings['facebook_label_en'] ?? 'Facebook Page' }}" placeholder="English Label" class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Subtitle (Bangla / English)</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" name="facebook_subtitle_bn" value="{{ $settings['facebook_subtitle_bn'] ?? 'ইনবক্সে মেসেজ পাঠান' }}" placeholder="বাংলা সাবটাইটেল" class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                <input type="text" name="facebook_subtitle_en" value="{{ $settings['facebook_subtitle_en'] ?? 'Send us a message' }}" placeholder="English Subtitle" class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Direct Call Channel -->
+                <div class="p-4 rounded-xl bg-[#0f1115] border border-[#282d37] space-y-4">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-[#C96A3D]"></span>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">3. Direct Phone Call (সরাসরি কল)</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Dial Number (সরাসরি ডায়াল করার নম্বর)</label>
+                            <input type="text" name="contact_phone_number" value="{{ $settings['contact_phone_number'] ?? '+8801700000000' }}" 
+                                   placeholder="+8801700000000"
+                                   class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#214E34] focus:outline-none font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Display Text / Schedule (প্রদর্শিত নম্বর বা সময়)</label>
+                            <input type="text" name="contact_phone_display" value="{{ $settings['contact_phone_display'] ?? '+880 1700-000000' }}" 
+                                   placeholder="+880 1700-000000"
+                                   class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#214E34] focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#1e222d]">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Call Label (Bangla / English)</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" name="call_label_bn" value="{{ $settings['call_label_bn'] ?? 'সরাসরি কল করুন' }}" placeholder="বাংলা লেবেল" class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                <input type="text" name="call_label_en" value="{{ $settings['call_label_en'] ?? 'Call us' }}" placeholder="English Label" class="w-full bg-[#161922] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

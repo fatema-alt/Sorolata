@@ -1,9 +1,33 @@
 @php
-    $whatsappNumber = config('sorolata.whatsapp', '8801700000000');
-    $whatsappUrl = "https://wa.me/{$whatsappNumber}?text=" . urlencode(__('Hello Sorolata Concierge, I would like to inquire about your handcrafted collections.'));
-    $phoneDisplay = config('sorolata.phone_display', '+880 1700-000000');
-    $phoneRaw = config('sorolata.phone', '+8801700000000');
-    $facebookUrl = config('sorolata.facebook_url', 'https://facebook.com/sorolatabangladesh');
+    $adminSettings = app(\App\Services\Admin\AdminSettingService::class);
+    $isEnabled = ($adminSettings->get('floating_contact_enabled', '1')) !== '0';
+
+    if (! $isEnabled) {
+        return;
+    }
+
+    $rawWa = (string) $adminSettings->get('whatsapp_number', '8801700000000');
+    $cleanWa = preg_replace('/[^0-9]/', '', $rawWa) ?: '8801700000000';
+    $waMsg = (string) $adminSettings->get('whatsapp_default_message', __('Hello Sorolata Concierge, I would like to inquire about your handcrafted collections.'));
+    $whatsappUrl = "https://wa.me/{$cleanWa}?text=" . urlencode($waMsg);
+
+    $facebookUrl = (string) $adminSettings->get('facebook_page_url', 'https://facebook.com/sorolatabangladesh');
+    $phoneDisplay = (string) $adminSettings->get('contact_phone_display', '+880 1700-000000');
+    $phoneRaw = (string) $adminSettings->get('contact_phone_number', '+8801700000000');
+
+    $fbTitleBn = (string) $adminSettings->get('facebook_label_bn', 'ফেসবুক পেজ');
+    $fbTitleEn = (string) $adminSettings->get('facebook_label_en', 'Facebook Page');
+    $fbSubBn = (string) $adminSettings->get('facebook_subtitle_bn', 'ইনবক্সে মেসেজ পাঠান');
+    $fbSubEn = (string) $adminSettings->get('facebook_subtitle_en', 'Send us a message');
+
+    $waTitleBn = (string) $adminSettings->get('whatsapp_label_bn', 'হোয়াটসঅ্যাপ কনসিয়ার্জ');
+    $waTitleEn = (string) $adminSettings->get('whatsapp_label_en', 'WhatsApp Concierge');
+    $waSubBn = (string) $adminSettings->get('whatsapp_subtitle_bn', 'তাৎক্ষণিক লাইভ সহায়তা');
+    $waSubEn = (string) $adminSettings->get('whatsapp_subtitle_en', 'Instant Live Assistance');
+
+    $callTitleBn = (string) $adminSettings->get('call_label_bn', 'সরাসরি কল করুন');
+    $callTitleEn = (string) $adminSettings->get('call_label_en', 'Call us');
+
     $isEn = app()->getLocale() === 'en';
 @endphp
 
@@ -86,8 +110,8 @@
   <!-- 1. Facebook Page -->
   <a class="sl-fab__item is-fb" href="{{ $facebookUrl }}" target="_blank" rel="noopener" aria-label="Facebook">
     <span class="sl-fab__tag">
-      <span data-bn="ফেসবুক পেজ" data-en="Facebook Page">{{ $isEn ? 'Facebook Page' : 'ফেসবুক পেজ' }}</span>
-      <small data-bn="ইনবক্সে মেসেজ পাঠান" data-en="Send us a message">{{ $isEn ? 'Send us a message' : 'ইনবক্সে মেসেজ পাঠান' }}</small>
+      <span data-bn="{{ $fbTitleBn }}" data-en="{{ $fbTitleEn }}">{{ $isEn ? $fbTitleEn : $fbTitleBn }}</span>
+      <small data-bn="{{ $fbSubBn }}" data-en="{{ $fbSubEn }}">{{ $isEn ? $fbSubEn : $fbSubBn }}</small>
     </span>
     <span class="sl-fab__circle">
       <svg viewBox="0 0 24 24"><path d="M24 12a12 12 0 1 0-13.900 11.900v-8.400H7.100V12h3V9.400c0-3 1.800-4.700 4.500-4.700 1.300 0 2.700.2 2.700.2v3h-1.500c-1.500 0-2 .9-2 1.900V12h3.400l-.5 3.500h-2.800v8.400A12 12 0 0 0 24 12z"/></svg>
@@ -97,8 +121,8 @@
   <!-- 2. WhatsApp Concierge -->
   <a class="sl-fab__item is-wa" href="{{ $whatsappUrl }}" target="_blank" rel="noopener" aria-label="WhatsApp">
     <span class="sl-fab__tag">
-      <span data-bn="হোয়াটসঅ্যাপ কনসিয়ার্জ" data-en="WhatsApp Concierge">{{ $isEn ? 'WhatsApp Concierge' : 'হোয়াটসঅ্যাপ কনসিয়ার্জ' }}</span>
-      <small data-bn="তাৎক্ষণিক লাইভ সহায়তা" data-en="Instant Live Assistance">{{ $isEn ? 'Instant Live Assistance' : 'তাৎক্ষণিক লাইভ সহায়তা' }}</small>
+      <span data-bn="{{ $waTitleBn }}" data-en="{{ $waTitleEn }}">{{ $isEn ? $waTitleEn : $waTitleBn }}</span>
+      <small data-bn="{{ $waSubBn }}" data-en="{{ $waSubEn }}">{{ $isEn ? $waSubEn : $waSubBn }}</small>
     </span>
     <span class="sl-fab__circle">
       <svg viewBox="0 0 24 24"><path d="M20.500 3.500A11.800 11.800 0 0 0 12 0C5.400 0 .1 5.300.1 11.900c0 2.100.5 4.100 1.600 5.900L0 24l6.400-1.700a11.900 11.900 0 0 0 5.600 1.400c6.600 0 11.900-5.300 11.900-11.900 0-3.200-1.200-6.200-3.400-8.300zM12 21.700c-1.800 0-3.600-.5-5.100-1.400l-.4-.2-3.800 1 1-3.700-.2-.4a9.800 9.800 0 0 1-1.500-5.200C2.100 6.500 6.500 2.100 12 2.100c2.600 0 5.100 1 6.900 2.900a9.700 9.700 0 0 1 2.900 6.900c0 5.400-4.400 9.800-9.800 9.800zm5.400-7.300c-.3-.1-1.800-.9-2-1-.3-.1-.5-.1-.7.1l-.9 1.100c-.2.200-.3.200-.6.100-1.800-.9-2.900-1.600-4-3.600-.3-.5.300-.5.900-1.600.1-.2 0-.4 0-.5l-.9-2.200c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.400-.3.300-1.100 1.100-1.100 2.600s1.100 3 1.300 3.200c.1.200 2.200 3.400 5.400 4.700 2 .8 2.800.9 3.800.7.600-.1 1.800-.7 2-1.400.3-.7.300-1.300.2-1.400-.1-.2-.3-.3-.6-.4z"/></svg>
@@ -108,7 +132,7 @@
   <!-- 3. Direct Call -->
   <a class="sl-fab__item is-call" href="tel:{{ $phoneRaw }}" aria-label="Call">
     <span class="sl-fab__tag">
-      <span data-bn="সরাসরি কল করুন" data-en="Call us">{{ $isEn ? 'Call us' : 'সরাসরি কল করুন' }}</span>
+      <span data-bn="{{ $callTitleBn }}" data-en="{{ $callTitleEn }}">{{ $isEn ? $callTitleEn : $callTitleBn }}</span>
       <small>{{ $phoneDisplay }}</small>
     </span>
     <span class="sl-fab__circle">
