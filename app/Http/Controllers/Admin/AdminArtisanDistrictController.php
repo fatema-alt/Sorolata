@@ -52,6 +52,14 @@ class AdminArtisanDistrictController extends Controller
             'historical_narrative_bn' => 'nullable|string|max:2000',
         ]);
 
+        if (!empty($validated['division'])) {
+            $validated['division'] = \App\Enums\DistrictRegion::tryFrom($validated['division']) 
+                ?? \App\Enums\DistrictRegion::tryFrom($validated['division'] . ' Division') 
+                ?? $validated['division'];
+        } else {
+            $validated['division'] = null;
+        }
+
         $validated['uuid'] = (string) Str::uuid();
         $validated['slug'] = Str::slug($validated['name_en']);
         
@@ -81,6 +89,14 @@ class AdminArtisanDistrictController extends Controller
             'historical_narrative' => 'nullable|string|max:2000',
             'historical_narrative_bn' => 'nullable|string|max:2000',
         ]);
+
+        if (!empty($validated['division'])) {
+            $validated['division'] = \App\Enums\DistrictRegion::tryFrom($validated['division']) 
+                ?? \App\Enums\DistrictRegion::tryFrom($validated['division'] . ' Division') 
+                ?? $validated['division'];
+        } else {
+            $validated['division'] = null;
+        }
 
         $district->update($validated);
 

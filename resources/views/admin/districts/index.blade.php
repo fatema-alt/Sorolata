@@ -62,7 +62,7 @@
 
                         @if(!empty($d->division))
                             <div class="text-[10px] text-gray-500 font-mono">
-                                Division: <span class="text-gray-400">{{ $d->division }}</span>
+                                Division: <span class="text-gray-400">{{ $d->division instanceof \BackedEnum ? $d->division->value : $d->division }}</span>
                             </div>
                         @endif
                     </div>
@@ -75,15 +75,15 @@
                         <button type="button" 
                                 @click="editDistrict = {
                                     id: {{ $d->id }},
-                                    name_en: '{{ addslashes($d->name_en) }}',
-                                    name_bn: '{{ addslashes($d->name_bn ?? '') }}',
-                                    division: '{{ addslashes($d->division ?? '') }}',
-                                    gi_specialty: '{{ addslashes($d->gi_specialty ?? '') }}',
-                                    gi_specialty_bn: '{{ addslashes($d->gi_specialty_bn ?? '') }}',
-                                    river_basin: '{{ addslashes($d->river_basin ?? '') }}',
-                                    river_basin_bn: '{{ addslashes($d->river_basin_bn ?? '') }}',
-                                    historical_narrative: '{{ addslashes(str_replace(["\r", "\n"], ' ', $d->historical_narrative ?? '')) }}',
-                                    historical_narrative_bn: '{{ addslashes(str_replace(["\r", "\n"], ' ', $d->historical_narrative_bn ?? '')) }}'
+                                    name_en: @json($d->name_en),
+                                    name_bn: @json($d->name_bn ?? ''),
+                                    division: @json($d->division instanceof \BackedEnum ? $d->division->value : (string) ($d->division ?? '')),
+                                    gi_specialty: @json($d->gi_specialty ?? ''),
+                                    gi_specialty_bn: @json($d->gi_specialty_bn ?? ''),
+                                    river_basin: @json($d->river_basin ?? ''),
+                                    river_basin_bn: @json($d->river_basin_bn ?? ''),
+                                    historical_narrative: @json($d->historical_narrative ?? ''),
+                                    historical_narrative_bn: @json($d->historical_narrative_bn ?? '')
                                 }; showEditModal = true" 
                                 class="text-gray-400 hover:text-white text-[11px] font-medium transition-colors cursor-pointer">
                             Edit
@@ -152,7 +152,17 @@
                     </div>
                     <div>
                         <label class="block font-semibold text-gray-300 mb-1">Division (বিভাগ)</label>
-                        <input type="text" name="division" placeholder="e.g. Rajshahi" class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#214E34] focus:outline-none">
+                        <select name="division" class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#214E34] focus:outline-none">
+                            <option value="">Select Division</option>
+                            <option value="Dhaka Division">Dhaka Division (ঢাকা)</option>
+                            <option value="Chittagong Division">Chittagong Division (চট্টগ্রাম)</option>
+                            <option value="Rajshahi Division">Rajshahi Division (রাজশাহী)</option>
+                            <option value="Khulna Division">Khulna Division (খুলনা)</option>
+                            <option value="Barishal Division">Barishal Division (বরিশাল)</option>
+                            <option value="Sylhet Division">Sylhet Division (সিলেট)</option>
+                            <option value="Rangpur Division">Rangpur Division (রংপুর)</option>
+                            <option value="Mymensingh Division">Mymensingh Division (ময়মনসিংহ)</option>
+                        </select>
                     </div>
                 </div>
 
@@ -223,7 +233,17 @@
                     </div>
                     <div>
                         <label class="block font-semibold text-gray-300 mb-1">Division (বিভাগ)</label>
-                        <input type="text" name="division" x-model="editDistrict.division" class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#214E34] focus:outline-none">
+                        <select name="division" x-model="editDistrict.division" class="w-full bg-[#0f1115] border border-[#282d37] rounded-xl text-xs text-white px-3 py-2.5 focus:border-[#214E34] focus:outline-none">
+                            <option value="">Select Division</option>
+                            <option value="Dhaka Division">Dhaka Division (ঢাকা)</option>
+                            <option value="Chittagong Division">Chittagong Division (চট্টগ্রাম)</option>
+                            <option value="Rajshahi Division">Rajshahi Division (রাজশাহী)</option>
+                            <option value="Khulna Division">Khulna Division (খুলনা)</option>
+                            <option value="Barishal Division">Barishal Division (বরিশাল)</option>
+                            <option value="Sylhet Division">Sylhet Division (সিলেট)</option>
+                            <option value="Rangpur Division">Rangpur Division (রংপুর)</option>
+                            <option value="Mymensingh Division">Mymensingh Division (ময়মনসিংহ)</option>
+                        </select>
                     </div>
                 </div>
 
