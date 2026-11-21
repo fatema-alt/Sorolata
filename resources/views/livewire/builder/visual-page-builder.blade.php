@@ -2326,6 +2326,219 @@
                                 </div>
                             </div>
 
+                        {{-- 9. MAGAZINE HERO GRID --}}
+                        @elseif ($secType === 'magazine_hero_grid')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Editorial Magazine Hero Grid
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="HERITAGE DISCOVERY • 5 MIN READ" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Main Story Headline</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Main featured headline..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Story Narrative / Subheadline</label>
+                                    <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Story lead..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Hero Story Image URL</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.image_url" placeholder="https://images.unsplash.com/..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none font-mono">
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">CTA Button Text</label>
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="Read Full Story" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">CTA Link URL</label>
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_url" placeholder="/stories" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                    </div>
+                                </div>
+                            </div>
+
+                        {{-- 10. TOPIC BUBBLES --}}
+                        @elseif ($secType === 'topic_bubbles')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Topic & Craft Bubbles
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="TOPIC ARCHIVES" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Section Title</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Explore Stories by Heritage Craft & Guild" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                            </div>
+
+                        {{-- 11. EDITORIAL FEED SIDEBAR --}}
+                        @elseif ($secType === 'editorial_feed_sidebar')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Editorial Journal & Sidebar
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="CURATED JOURNAL" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Heading</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Heritage Gazette Stories & In-Depth Chronicles" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                            </div>
+
+                        {{-- 12. SHOPPABLE PRODUCT SHELF --}}
+                        @elseif ($secType === 'shoppable_product_shelf')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Shoppable Product Shelf
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="AS FEATURED IN STORIES" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Shelf Title</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="From Story to Hand: Acquire the Pieces" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subheadline</label>
+                                    <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Handcrafted in limited archival batches..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+                            </div>
+
+                        {{-- 13. VIDEO REELS SHOWCASE --}}
+                        @elseif ($secType === 'video_reels_showcase')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing In-Motion Video Reels Showcase
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="LIVING CINEMATICS" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Section Title</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Living Chronicles: Watch the Hands Behind the Craft" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                            </div>
+
+                        {{-- 14. HERITAGE CLUB NEWSLETTER --}}
+                        @elseif ($secType === 'heritage_club_newsletter')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Gazette & Collector Club Invitation
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Badge Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="SOROLATA HERITAGE GUILD" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Headline</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Join the Heritage Gazette & Collector Circle" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Invitation Description</label>
+                                    <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Receive our monthly investigative craft essays..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Subscribe Button Text</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" placeholder="Subscribe to Gazette" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                            </div>
+
+                        {{-- 15. EDITORIAL NARRATIVE --}}
+                        @elseif ($secType === 'editorial_narrative')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Editorial Narrative & Storytelling
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Story Headline</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="The Loom Saga & Cultural Lineage" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Story Narrative / Body Text</label>
+                                    <textarea rows="5" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="Write the historical narrative or craft saga..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Featured Photo URL</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.image_url" placeholder="https://..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                </div>
+                            </div>
+
+                        {{-- 16. ELEMENT PRODUCT CARD --}}
+                        @elseif ($secType === 'element_product_card')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Product Card Widget
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Product Title</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Imperial Sonargaon Muslin Scarf" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">Price Display</label>
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.price_text" placeholder="৳ 18,500" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] text-gray-400 mb-0.5">District / Badge</label>
+                                        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Sonargaon" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-2.5 py-1.5 focus:border-[#214E34] focus:outline-none">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Product Image URL</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.image_url" placeholder="https://..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Button Link URL</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_url" placeholder="/shop" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-1.5 focus:border-[#214E34] focus:outline-none font-mono">
+                                </div>
+                            </div>
+
+                        {{-- 17. ELEMENT ARTISAN QUOTE --}}
+                        @elseif ($secType === 'element_artisan_quote')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Artisan Quote Widget
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Quote Text</label>
+                                    <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" placeholder="A true Jamdani has no backside..." class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Artisan Master Name</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" placeholder="Ustad Alimullah Dewan" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Guild / Lineage Citation</label>
+                                    <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" placeholder="Third-generation master weaver • Sonargaon" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                </div>
+                            </div>
+
+                        {{-- 18. ELEMENT DIVIDER --}}
+                        @elseif ($secType === 'element_divider')
+                            <div class="space-y-4">
+                                <div class="p-2 rounded-lg bg-[#214E34]/20 border border-[#214E34]/40 text-[11px] text-[#A3D9B1]">
+                                    Editing Divider & Spacer
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-300 mb-1">Divider Style</label>
+                                    <select wire:model.live="sections.{{ $sIndex }}.settings.divider_style" class="w-full bg-[#12141a] border border-[#282d37] rounded-lg text-xs text-white px-3 py-2 focus:border-[#214E34] focus:outline-none">
+                                        <option value="solid">Solid Line</option>
+                                        <option value="dashed">Dashed Line</option>
+                                        <option value="dotted">Dotted Line</option>
+                                        <option value="motif">Heritage Diamond Motif (◆)</option>
+                                    </select>
+                                </div>
+                            </div>
+
                         {{-- 9. DEFAULT / FALLBACK FOR OTHER SECTIONS --}}
                         @else
                             <div class="space-y-4">

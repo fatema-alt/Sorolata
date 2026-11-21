@@ -78,6 +78,10 @@ class VisualPageBuilder extends Component
             $this->sections = $page->layout_json['sections'] ?? [];
             $this->seoTitle = $page->seo_meta['title'] ?? $page->title;
             $this->seoDescription = $page->seo_meta['description'] ?? '';
+
+            if (empty($this->sections)) {
+                $this->loadDefaultPageSections($page);
+            }
         } else {
             $this->loadBlankCanvas();
         }
@@ -662,6 +666,142 @@ class VisualPageBuilder extends Component
                 ],
             ],
         ];
+    }
+
+    protected function loadDefaultPageSections(Page $page): void
+    {
+        if ($page->slug === 'home' || $page->page_type === 'home') {
+            $this->sections = [
+                [
+                    'id' => 'sec_mag_hero_' . uniqid(),
+                    'type' => BlockType::MAGAZINE_HERO_GRID->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'badge_text' => 'HERITAGE DISCOVERY • 5 MIN READ',
+                        'headline' => 'Are you a Green or Red Flag? Have You Ever Discovered Your True Craft Soul Amidst Heritage?',
+                        'subheadline' => 'Traveling across ancestral river basins of Bengal where master weavers preserve living stories.',
+                        'image_url' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1200',
+                        'primary_cta_text' => 'Read Full Gazette Story',
+                        'primary_cta_url' => '/stories',
+                    ],
+                ],
+                [
+                    'id' => 'sec_mag_bubbles_' . uniqid(),
+                    'type' => BlockType::TOPIC_BUBBLES->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'badge_text' => 'TOPIC ARCHIVES',
+                        'headline' => 'Explore Stories by Heritage Craft & Guild',
+                    ],
+                ],
+                [
+                    'id' => 'sec_mag_feed_' . uniqid(),
+                    'type' => BlockType::EDITORIAL_FEED_SIDEBAR->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'badge_text' => 'CURATED JOURNAL',
+                        'headline' => 'Heritage Gazette Stories & In-Depth Chronicles',
+                    ],
+                ],
+                [
+                    'id' => 'sec_mag_shelf_' . uniqid(),
+                    'type' => BlockType::SHOPPABLE_PRODUCT_SHELF->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'badge_text' => 'AS FEATURED IN STORIES',
+                        'headline' => 'From Story to Hand: Acquire the Pieces Featured Above',
+                        'subheadline' => 'Handcrafted in limited archival batches by the master guilds profiled in this edition.',
+                    ],
+                ],
+                [
+                    'id' => 'sec_artisan_' . uniqid(),
+                    'type' => BlockType::ARTISAN_SPOTLIGHT->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'headline' => 'Meet Our Generational Master Artisans',
+                        'subheadline' => 'Behind every thread and chisel lies a master whose family has perfected their craft over centuries.',
+                        'badge_text' => 'Generational Custodians',
+                    ],
+                ],
+                [
+                    'id' => 'sec_mag_reels_' . uniqid(),
+                    'type' => BlockType::VIDEO_REELS_SHOWCASE->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'badge_text' => 'LIVING CINEMATICS',
+                        'headline' => 'Living Chronicles: Watch the Hands Behind the Craft',
+                    ],
+                ],
+                [
+                    'id' => 'sec_provenance_' . uniqid(),
+                    'type' => BlockType::HERITAGE_PROVENANCE->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'badge_text' => 'GI Certified Bengal Craftsmanship',
+                        'headline' => 'Geographical Indication & Regional Heritage',
+                        'subheadline' => 'Every piece certified for genuine river basin origin and fair-trade honorarium.',
+                    ],
+                ],
+                [
+                    'id' => 'sec_testimonial_' . uniqid(),
+                    'type' => BlockType::TESTIMONIAL_EDITORIAL->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'headline' => 'Appraisals from Global Connoisseurs',
+                        'subheadline' => 'Trusted by collectors across Dhaka, London, Toronto, and New York.',
+                    ],
+                ],
+                [
+                    'id' => 'sec_mag_newsletter_' . uniqid(),
+                    'type' => BlockType::HERITAGE_CLUB_NEWSLETTER->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'badge_text' => 'SOROLATA HERITAGE GUILD',
+                        'headline' => 'Join the Heritage Gazette & Collector Circle',
+                        'subheadline' => 'Receive our monthly investigative craft essays, private notifications for limited loom harvests, and invitations to exhibitions.',
+                        'primary_cta_text' => 'Subscribe to Gazette',
+                    ],
+                ],
+            ];
+        } elseif ($page->slug === 'about') {
+            $this->sections = [
+                [
+                    'id' => 'sec_hero_' . uniqid(),
+                    'type' => BlockType::HERO_CINEMATIC->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'badge_text' => 'OUR LIVING MANIFESTO',
+                        'headline' => 'In Quiet Reverence For The Human Touch',
+                        'subheadline' => 'Preserving endangered living craft traditions of Bangladesh.',
+                    ],
+                ],
+                [
+                    'id' => 'sec_narrative_' . uniqid(),
+                    'type' => BlockType::EDITORIAL_NARRATIVE->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'headline' => 'The Loom Saga & Cultural Lineage',
+                        'subheadline' => 'Across the alluvial river deltas, our master artisans breathe soul into natural fibers.',
+                    ],
+                ],
+                [
+                    'id' => 'sec_artisan_' . uniqid(),
+                    'type' => BlockType::ARTISAN_SPOTLIGHT->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'headline' => 'Living Masters of the Heritage Guilds',
+                    ],
+                ],
+                [
+                    'id' => 'sec_provenance_' . uniqid(),
+                    'type' => BlockType::HERITAGE_PROVENANCE->value,
+                    'is_active' => true,
+                    'settings' => [],
+                ],
+            ];
+        } else {
+            $this->loadBlankCanvas();
+        }
     }
 
     public function render(): View
