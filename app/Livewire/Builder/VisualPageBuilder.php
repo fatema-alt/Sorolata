@@ -600,6 +600,59 @@ class VisualPageBuilder extends Component
         $this->statusMessage = 'Item added';
     }
 
+    public static function mapProductToCardItem(Product $prod): array
+    {
+        $media = $prod->media->first();
+        $imageUrl = $media ? url($media->file_path) : '';
+        $hasDiscount = !empty($prod->compare_at_price) && $prod->compare_at_price > $prod->price;
+        $discountPct = $hasDiscount ? round((($prod->compare_at_price - $prod->price) / $prod->compare_at_price) * 100) : 0;
+
+        return [
+            'product_id' => $prod->id,
+            'district' => $prod->district?->name_en ?? $prod->district?->getLocalized('name') ?? 'Bangladesh',
+            'name' => $prod->getLocalized('title'),
+            'maker' => $prod->artisan?->getLocalized('full_name') ?? 'Master Artisan',
+            'price' => '৳ ' . number_format((float) $prod->price, 0),
+            'old_price' => $hasDiscount ? '৳ ' . number_format((float) $prod->compare_at_price, 0) : '',
+            'badge' => $hasDiscount ? ($discountPct . '% off') : '',
+            'image_url' => $imageUrl,
+            'bg' => 'linear-gradient(160deg,#C9B48A,#8E7545)',
+            'pattern' => 'patCloth',
+            'href' => '/products/' . $prod->slug,
+            'button_text' => 'Bring it home',
+        ];
+    }
+
+    public function addExistingProductToSection(int $productId): void
+    {
+        if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex])) {
+            return;
+        }
+        $prod = Product::with(['artisan', 'district', 'media'])->find($productId);
+        if (!$prod) {
+            return;
+        }
+        $items = $this->sections[$this->selectedIndex]['settings']['items'] ?? [];
+        $items[] = static::mapProductToCardItem($prod);
+        $this->sections[$this->selectedIndex]['settings']['items'] = $items;
+        $this->autoSave();
+        $this->statusMessage = 'Product added to section';
+    }
+
+    public function selectExistingProductForItem(int $index, int $productId): void
+    {
+        if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex]['settings']['items'][$index])) {
+            return;
+        }
+        $prod = Product::with(['artisan', 'district', 'media'])->find($productId);
+        if (!$prod) {
+            return;
+        }
+        $this->sections[$this->selectedIndex]['settings']['items'][$index] = static::mapProductToCardItem($prod);
+        $this->autoSave();
+        $this->statusMessage = 'Product linked';
+    }
+
     public function removeRepeaterItem(string $listKey, int $index): void
     {
         if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex]['settings'][$listKey][$index])) {
@@ -1204,12 +1257,25 @@ class VisualPageBuilder extends Component
                     'heading' => 'Popular right now',
                     'cta_text' => 'View all products →',
                     'cta_href' => '/shop',
-                    'items' => [
-                        ['district' => 'Narayanganj (Sonargaon)', 'name' => 'Imperial Sonargaon Muslin Scarf', 'maker' => 'Alimuddin', 'price' => '৳ 18,500', 'old_price' => '৳ 22,000', 'badge' => '16% off', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9B48A,#8E7545)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'Bring it home'],
-                        ['district' => 'Tangail', 'name' => 'Heirloom Tangail Silk Jamdani', 'maker' => 'Rabeya Begum', 'price' => '৳ 24,500', 'old_price' => '৳ 29,000', 'badge' => '16% off', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#7A4B8A,#3B1F52)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'Bring it home'],
-                        ['district' => 'Bogura', 'name' => 'Hand-Chiseled Bogura Kettle', 'maker' => 'Gourango Karmakar', 'price' => '৳ 12,800', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#D8B25A,#8A6410)', 'pattern' => 'patBrass', 'href' => '/shop', 'button_text' => 'Bring it home'],
-                        ['district' => 'Rangpur (Nisbetganj)', 'name' => 'Rangpur Shatranji Carpet', 'maker' => 'Mofizul Islam', 'price' => '৳ 15,600', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9795A,#6E2E1E)', 'pattern' => 'patCarpet', 'href' => '/shop', 'button_text' => 'Bring it home'],
-                    ],
+                    'items' => (function () {
+                        $real = Product::with(['artisan', 'district', 'media'])
+                            ->where('status', 'published')
+                            ->orderByDesc('is_featured')
+                            ->orderBy('id', 'asc')
+                            ->take(4)
+                            ->get();
+
+                        if ($real->isNotEmpty()) {
+                            return $real->map(fn ($prod) => static::mapProductToCardItem($prod))->values()->all();
+                        }
+
+                        return [
+                            ['district' => 'Narayanganj (Sonargaon)', 'name' => 'Imperial Sonargaon Muslin Scarf', 'maker' => 'Alimuddin', 'price' => '৳ 18,500', 'old_price' => '৳ 22,000', 'badge' => '16% off', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9B48A,#8E7545)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'Bring it home'],
+                            ['district' => 'Tangail', 'name' => 'Heirloom Tangail Silk Jamdani', 'maker' => 'Rabeya Begum', 'price' => '৳ 24,500', 'old_price' => '৳ 29,000', 'badge' => '16% off', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#7A4B8A,#3B1F52)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'Bring it home'],
+                            ['district' => 'Bogura', 'name' => 'Hand-Chiseled Bogura Kettle', 'maker' => 'Gourango Karmakar', 'price' => '৳ 12,800', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#D8B25A,#8A6410)', 'pattern' => 'patBrass', 'href' => '/shop', 'button_text' => 'Bring it home'],
+                            ['district' => 'Rangpur (Nisbetganj)', 'name' => 'Rangpur Shatranji Carpet', 'maker' => 'Mofizul Islam', 'price' => '৳ 15,600', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9795A,#6E2E1E)', 'pattern' => 'patCarpet', 'href' => '/shop', 'button_text' => 'Bring it home'],
+                        ];
+                    })(),
                 ],
             ],
             [
@@ -1705,7 +1771,7 @@ class VisualPageBuilder extends Component
             'templates' => $templates,
             'revisions' => $revisions,
             'product' => $product,
-            'catalogProducts' => Product::select('id', 'title', 'slug', 'price')->take(30)->get(),
+            'catalogProducts' => Product::select('id', 'title', 'slug', 'price')->orderBy('title')->take(100)->get(),
             'parser' => $parser,
             'selectedSection' => $this->selectedSection,
             'selectedIndex' => $this->selectedIndex,

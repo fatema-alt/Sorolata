@@ -262,7 +262,25 @@
   </section>
 
 @elseif($type === 'home_products')
-  @php $productsList = $s['items'] ?? []; @endphp
+  @php
+    $productsList = $s['items'] ?? [];
+    $allPlaceholders = !empty($productsList) && collect($productsList)->every(
+        fn ($item) => empty($item['product_id']) && empty($item['image_url'])
+    );
+    if (empty($productsList) || $allPlaceholders) {
+        $liveProducts = \App\Models\Product::with(['artisan', 'district', 'media'])
+            ->where('status', 'published')
+            ->orderByDesc('is_featured')
+            ->orderBy('id', 'asc')
+            ->take(4)
+            ->get();
+        if ($liveProducts->isNotEmpty()) {
+            $productsList = $liveProducts->map(
+                fn ($prod) => \App\Livewire\Builder\VisualPageBuilder::mapProductToCardItem($prod)
+            )->values()->all();
+        }
+    }
+  @endphp
   <section id="products" style="background:{{ $s['bg_color'] ?? '#F7F5F0' }}">
     <div style="max-width:1200px; margin:0 auto; padding:80px 24px">
       <div style="text-align:center; max-width:680px; margin:0 auto 48px">

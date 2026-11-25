@@ -328,10 +328,27 @@
       </div>
     </div>
 
+    <div class="{{ $cardClass }}" x-data="{ pickProdId: '' }">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white">Add Existing Real Product</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <select x-model="pickProdId" class="{{ $inputClass }}">
+          <option value="">-- Choose a product --</option>
+          @foreach(($catalogProducts ?? collect()) as $cp)
+            <option value="{{ $cp->id }}">{{ $cp->title }} (৳ {{ number_format((float) $cp->price, 0) }})</option>
+          @endforeach
+        </select>
+        <button type="button"
+                @click="if (pickProdId) { $wire.addExistingProductToSection(parseInt(pickProdId)); pickProdId = ''; }"
+                class="px-3 py-1.5 rounded bg-[#214E34] hover:bg-[#193b27] text-white text-[10px] font-semibold shrink-0">+ Add</button>
+      </div>
+    </div>
+
     <div class="{{ $cardClass }}">
       <div class="flex items-center justify-between">
         <span class="text-xs font-semibold text-white">Product Cards</span>
-        <button type="button" wire:click="addRepeaterItem('items')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add Product</button>
+        <button type="button" wire:click="addRepeaterItem('items')" class="px-2 py-1 rounded bg-[#282d37] text-gray-200 text-[10px] font-semibold">+ Custom Card</button>
       </div>
       @foreach(($s['items'] ?? []) as $i => $item)
         <div class="p-2.5 rounded bg-[#1a1d24] border border-[#282d37] space-y-1.5" wire:key="prod-{{ $sIndex }}-{{ $i }}">
@@ -342,6 +359,14 @@
               <button type="button" wire:click="moveRepeaterItem('items', {{ $i }}, 'down')" class="px-1 hover:text-white">↓</button>
               <button type="button" wire:click="removeRepeaterItem('items', {{ $i }})" class="px-1 text-red-400 hover:text-red-300">✕</button>
             </div>
+          </div>
+          <div>
+            <select @change="if ($event.target.value) $wire.selectExistingProductForItem({{ $i }}, parseInt($event.target.value))" class="{{ $inputClass }}">
+              <option value="">Link / swap with existing product...</option>
+              @foreach(($catalogProducts ?? collect()) as $cp)
+                <option value="{{ $cp->id }}" @selected(($item['product_id'] ?? null) == $cp->id)>{{ $cp->title }} (৳ {{ number_format((float) $cp->price, 0) }})</option>
+              @endforeach
+            </select>
           </div>
           <input type="text" placeholder="Product Title" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.items.{{ $i }}.name" class="{{ $inputClass }}">
           <div class="grid grid-cols-2 gap-1.5">

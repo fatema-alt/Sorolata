@@ -2182,6 +2182,7 @@
                             'section' => $selectedSection,
                             'sIndex' => $sIndex,
                             'inspectorTab' => $inspectorTab,
+                            'catalogProducts' => $catalogProducts ?? collect(),
                         ])
                     @else
                     <!-- TAB 1: CONTENT (কনটেন্ট) -->
