@@ -41,7 +41,7 @@ class Artisan extends Model
     protected static function booted(): void
     {
         static::creating(function (Artisan $artisan): void {
-            if (empty($artisan->slug) && !empty($artisan->full_name)) {
+            if (\Illuminate\Support\Facades\Schema::hasColumn('artisans', 'slug') && empty($artisan->slug) && !empty($artisan->full_name)) {
                 $artisan->slug = static::generateUniqueSlug($artisan->full_name);
             }
         });
