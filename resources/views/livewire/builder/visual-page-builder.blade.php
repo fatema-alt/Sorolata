@@ -2038,6 +2038,57 @@
                         </div>
                     @endforelse
 
+                    @if($product)
+                        @php
+                            $builderDistrictName = $product->district?->name_en ?? $product->district?->getLocalized('name') ?? __('Bangladesh');
+                            $builderArtisanName = $product->artisan?->getLocalized('full_name') ?? __('Master Maker');
+                        @endphp
+                        @if($product->artisan)
+                            <div class="relative bg-[#F0E6D0] border-t border-[#E3D8BC] pointer-events-none">
+                                <div class="px-4 py-1.5 bg-[#1a1d24] text-[10px] font-mono uppercase tracking-wider text-amber-300 flex items-center justify-between">
+                                    <span>Meet the Maker (Auto-synced from Artisan Profile)</span>
+                                    <span>Live Storefront Section</span>
+                                </div>
+                                <div style="max-width:1000px; margin:0 auto; padding:56px 24px; display:flex; flex-wrap:wrap; align-items:center; gap:36px">
+                                    <div style="flex:0 0 220px; margin:0 auto">
+                                        <div style="border:1.5px solid #B8892F; border-radius:999px 999px 16px 16px; padding:7px; background:#FBF6EC">
+                                            <div style="height:260px; border-radius:999px 999px 10px 10px; overflow:hidden; background:#6E7FB8">
+                                                <img src="{{ $product->artisan->portrait_url }}" alt="{{ $builderArtisanName }}" style="width:100%; height:100%; object-fit:cover; display:block">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="flex:1 1 300px; min-width:0">
+                                        <div style="font-size:12px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#8F3F26; margin-bottom:8px">{{ __('Our makers') }}</div>
+                                        <h2 style="margin:0 0 6px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:34px; line-height:1.1; color:#1F4D3A">{{ $builderArtisanName }}</h2>
+                                        <div style="font-size:14px; font-weight:600; color:#2B2118; margin-bottom:14px">
+                                            {{ $product->artisan->craft_type?->title() }} · {{ $builderDistrictName }} · {{ __(':count years of work', ['count' => $product->artisan->years_of_mastery ?? 25]) }}
+                                        </div>
+                                        <span style="display:inline-block; background:#1F4D3A; color:#FBF6EC; font-weight:600; padding:10px 22px; border-radius:999px; font-size:13px">
+                                            {{ __('See maker profile →') }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="relative bg-[#F0E6D0] border-t border-[#E3D8BC] pointer-events-none">
+                            <div class="px-4 py-1.5 bg-[#1a1d24] text-[10px] font-mono uppercase tracking-wider text-amber-300 flex items-center justify-between">
+                                <span>Customer Reviews & Review Form (Auto-synced)</span>
+                                <span>Live Storefront Section</span>
+                            </div>
+                            <div style="max-width:900px; margin:0 auto; padding:56px 24px">
+                                <div style="text-align:center; margin-bottom:28px">
+                                    <div style="font-size:12px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#8F3F26; margin-bottom:8px">{{ __('Customer reviews') }}</div>
+                                    <h2 style="margin:0; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:38px; line-height:1.05; color:#1F2A24">{{ __('What our customers say') }}</h2>
+                                </div>
+                                <div style="background:#fff; border:1px solid #E3D8BC; border-radius:20px; padding:26px">
+                                    <h3 style="margin:0 0 10px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:24px; color:#1F4D3A">{{ __('Write a review') }}</h3>
+                                    <p style="margin:0; font-size:13px; color:#5A5044">Interactive rating & review submission form renders here on the live product page.</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                 </div>
 
             </div>

@@ -297,7 +297,7 @@
                   <span style="font-size:14px; color:#6B5F50; text-decoration:line-through">{{ $p['old_price'] }}</span>
                 @endif
               </div>
-              <button type="button" @if(!$isBuilder) onclick="window.location='{{ $resolveUrl($p['href'] ?? route('shop.index')) }}'" @endif style="margin-top:12px; background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:13px 20px; font-size:15px; font-weight:600; min-height:46px">{{ $p['button_text'] ?? 'Add to Cart' }}</button>
+              <button type="button" @if(!$isBuilder) onclick="window.location='{{ $resolveUrl($p['href'] ?? route('shop.index')) }}'" @endif style="margin-top:12px; background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:13px 20px; font-size:15px; font-weight:600; min-height:46px">{{ (empty($p['button_text']) || $p['button_text'] === 'Add to Cart') ? 'Bring it home' : $p['button_text'] }}</button>
             </div>
           </article>
         @endforeach
@@ -792,7 +792,7 @@
               </div>
 
               <button type="submit" style="flex:1 1 200px; background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:15px 30px; font-size:16px; font-weight:600; min-height:50px">
-                {{ $s['add_to_cart_text'] ?? 'Add to Cart' }}
+                {{ (empty($s['add_to_cart_text']) || $s['add_to_cart_text'] === 'Add to Cart') ? 'Bring it home' : $s['add_to_cart_text'] }}
               </button>
             </form>
           @else
