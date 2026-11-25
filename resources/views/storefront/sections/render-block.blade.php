@@ -135,10 +135,10 @@
         <p style="margin:0; font-size:17px; color:#5A5044">{{ $s['subtitle'] ?? '' }}</p>
       </div>
       <div style="display:flex; flex-wrap:wrap; gap:32px; align-items:stretch">
-        <div style="position:relative; flex:1 1 320px; min-width:0; background:{{ $mapBg }}; border:1px solid #D9C28A; border-radius:24px; padding:28px; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden">
+        <div style="position:relative; flex:1 1 360px; min-width:0; background:{{ $mapBg }}; border:1px solid #D9C28A; border-radius:24px; padding:{{ !empty($s['map_image_url']) ? '18px 18px 16px' : '28px' }}; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden">
           <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; left:0; top:0"><rect width="100%" height="100%" fill="url(#patJaliDark)"></rect></svg>
           @if(!empty($s['map_image_url']))
-            <img src="{{ $s['map_image_url'] }}" alt="{{ $s['map_image_alt'] ?? 'Bangladesh craft districts map' }}" style="position:relative; width:100%; max-width:380px; height:auto; border-radius:16px; object-fit:contain">
+            <img src="{{ $s['map_image_url'] }}" alt="{{ $s['map_image_alt'] ?? 'Bangladesh craft districts map' }}" style="position:relative; width:100%; flex:1 1 auto; max-height:470px; object-fit:contain; mix-blend-mode:{{ ($s['map_blend_multiply'] ?? true) ? 'multiply' : 'normal' }}; border-radius:{{ ($s['map_blend_multiply'] ?? true) ? '0' : '16px' }}">
           @else
             <svg role="img" aria-label="Simple map of Bangladesh with four district pins" viewBox="0 0 300 420" width="100%" style="position:relative; max-width:340px; height:auto">
               <path d="M110 10 L140 18 L160 40 L195 50 L230 55 L262 70 L268 100 L250 125 L255 160 L245 200 L255 250 L270 300 L282 350 L270 395 L255 360 L245 320 L225 290 L200 300 L170 310 L150 330 L120 335 L100 320 L95 290 L105 250 L95 215 L70 195 L55 165 L68 135 L60 105 L75 75 L90 45 Z" fill="#EBDDB8" stroke="#1F4D3A" stroke-width="2.5" stroke-linejoin="round"></path>

@@ -202,6 +202,10 @@
         <label class="{{ $labelClass }}">Map Caption</label>
         <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.map_caption" class="{{ $inputClass }}">
       </div>
+      <label class="inline-flex items-center gap-2 text-xs text-gray-300 cursor-pointer pt-1">
+        <input type="checkbox" wire:model.live="sections.{{ $sIndex }}.settings.map_blend_multiply" class="rounded bg-[#12141a] border-[#282d37] text-[#214E34]">
+        <span>Transparent White Background (Blend)</span>
+      </label>
     </div>
 
     <div class="{{ $cardClass }}">
