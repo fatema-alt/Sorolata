@@ -370,7 +370,24 @@
   </section>
 
 @elseif($type === 'home_makers')
-  @php $makersList = $s['items'] ?? []; @endphp
+  @php
+    $makersList = $s['items'] ?? [];
+    $allMakerPlaceholders = !empty($makersList) && collect($makersList)->every(
+        fn ($item) => empty($item['artisan_id']) && empty($item['image_url'])
+    );
+    if (empty($makersList) || $allMakerPlaceholders) {
+        $liveArtisans = \App\Models\Artisan::with('district')
+            ->where('is_verified', true)
+            ->orderBy('id', 'asc')
+            ->take(4)
+            ->get();
+        if ($liveArtisans->isNotEmpty()) {
+            $makersList = $liveArtisans->map(
+                fn ($a) => \App\Livewire\Builder\VisualPageBuilder::mapArtisanToCardItem($a)
+            )->values()->all();
+        }
+    }
+  @endphp
   <section id="makers" style="background:{{ $s['bg_color'] ?? '#F7F5F0' }}">
     <div style="max-width:1200px; margin:0 auto; padding:80px 24px">
       <div style="text-align:center; max-width:680px; margin:0 auto 48px">

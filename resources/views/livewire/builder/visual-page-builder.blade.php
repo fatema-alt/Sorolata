@@ -2183,6 +2183,7 @@
                             'sIndex' => $sIndex,
                             'inspectorTab' => $inspectorTab,
                             'catalogProducts' => $catalogProducts ?? collect(),
+                            'catalogArtisans' => $catalogArtisans ?? collect(),
                         ])
                     @else
                     <!-- TAB 1: CONTENT (কনটেন্ট) -->

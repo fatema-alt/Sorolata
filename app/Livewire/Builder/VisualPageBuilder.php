@@ -653,6 +653,51 @@ class VisualPageBuilder extends Component
         $this->statusMessage = 'Product linked';
     }
 
+    public static function mapArtisanToCardItem(Artisan $artisan): array
+    {
+        return [
+            'artisan_id' => $artisan->id,
+            'name' => $artisan->getLocalized('full_name'),
+            'craft' => $artisan->craft_type?->title() ?? 'Master Artisan',
+            'place' => $artisan->district?->name_en ?? $artisan->district?->getLocalized('name') ?? 'Bangladesh',
+            'years' => (string) ($artisan->years_of_mastery ?? 25),
+            'photo_label' => 'Real portrait photo',
+            'image_url' => $artisan->portrait_url ?: '',
+            'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)',
+            'href' => '/artisan/' . ($artisan->slug ?: $artisan->uuid),
+        ];
+    }
+
+    public function addExistingArtisanToSection(int $artisanId): void
+    {
+        if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex])) {
+            return;
+        }
+        $artisan = Artisan::with('district')->find($artisanId);
+        if (!$artisan) {
+            return;
+        }
+        $items = $this->sections[$this->selectedIndex]['settings']['items'] ?? [];
+        $items[] = static::mapArtisanToCardItem($artisan);
+        $this->sections[$this->selectedIndex]['settings']['items'] = $items;
+        $this->autoSave();
+        $this->statusMessage = 'Artisan added to section';
+    }
+
+    public function selectExistingArtisanForItem(int $index, int $artisanId): void
+    {
+        if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex]['settings']['items'][$index])) {
+            return;
+        }
+        $artisan = Artisan::with('district')->find($artisanId);
+        if (!$artisan) {
+            return;
+        }
+        $this->sections[$this->selectedIndex]['settings']['items'][$index] = static::mapArtisanToCardItem($artisan);
+        $this->autoSave();
+        $this->statusMessage = 'Artisan linked';
+    }
+
     public function removeRepeaterItem(string $listKey, int $index): void
     {
         if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex]['settings'][$listKey][$index])) {
@@ -1310,12 +1355,24 @@ class VisualPageBuilder extends Component
                     'eyebrow' => 'Our makers',
                     'heading' => 'Meet the hands behind every piece',
                     'subtitle' => 'Each maker has spent a lifetime learning their craft.',
-                    'items' => [
-                        ['name' => 'Alimuddin', 'craft' => 'Muslin weaver', 'place' => 'Narayanganj (Sonargaon)', 'years' => '42', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)', 'href' => '/artisans'],
-                        ['name' => 'Rabeya Begum', 'craft' => 'Jamdani weaver', 'place' => 'Tangail', 'years' => '38', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#A06AB0,#4A2862)', 'href' => '/artisans'],
-                        ['name' => 'Gourango Karmakar', 'craft' => 'Bell-metal maker', 'place' => 'Bogura', 'years' => '46', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C89A3A,#7A5710)', 'href' => '/artisans'],
-                        ['name' => 'Mofizul Islam', 'craft' => 'Shatranji weaver', 'place' => 'Rangpur (Nisbetganj)', 'years' => '32', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#D98A62,#7C3523)', 'href' => '/artisans'],
-                    ],
+                    'items' => (function () {
+                        $realArtisans = Artisan::with('district')
+                            ->where('is_verified', true)
+                            ->orderBy('id', 'asc')
+                            ->take(4)
+                            ->get();
+
+                        if ($realArtisans->isNotEmpty()) {
+                            return $realArtisans->map(fn ($a) => static::mapArtisanToCardItem($a))->values()->all();
+                        }
+
+                        return [
+                            ['name' => 'Alimuddin', 'craft' => 'Muslin weaver', 'place' => 'Narayanganj (Sonargaon)', 'years' => '42', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)', 'href' => '/artisans'],
+                            ['name' => 'Rabeya Begum', 'craft' => 'Jamdani weaver', 'place' => 'Tangail', 'years' => '38', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#A06AB0,#4A2862)', 'href' => '/artisans'],
+                            ['name' => 'Gourango Karmakar', 'craft' => 'Bell-metal maker', 'place' => 'Bogura', 'years' => '46', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C89A3A,#7A5710)', 'href' => '/artisans'],
+                            ['name' => 'Mofizul Islam', 'craft' => 'Shatranji weaver', 'place' => 'Rangpur (Nisbetganj)', 'years' => '32', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#D98A62,#7C3523)', 'href' => '/artisans'],
+                        ];
+                    })(),
                 ],
             ],
             [
@@ -1772,6 +1829,7 @@ class VisualPageBuilder extends Component
             'revisions' => $revisions,
             'product' => $product,
             'catalogProducts' => Product::select('id', 'title', 'slug', 'price')->orderBy('title')->take(100)->get(),
+            'catalogArtisans' => Artisan::with('district')->orderBy('full_name')->take(100)->get(),
             'parser' => $parser,
             'selectedSection' => $this->selectedSection,
             'selectedIndex' => $this->selectedIndex,

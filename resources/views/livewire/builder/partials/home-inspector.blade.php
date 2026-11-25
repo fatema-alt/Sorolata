@@ -461,13 +461,38 @@
       </div>
     </div>
 
+    <div class="{{ $cardClass }}" x-data="{ pickArtisanId: '' }">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white">Add Existing Artisan</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <select x-model="pickArtisanId" class="{{ $inputClass }}">
+          <option value="">-- Choose an artisan --</option>
+          @foreach(($catalogArtisans ?? collect()) as $ca)
+            <option value="{{ $ca->id }}">{{ $ca->full_name }} ({{ $ca->district?->name_en ?? 'Bangladesh' }})</option>
+          @endforeach
+        </select>
+        <button type="button"
+                @click="if (pickArtisanId) { $wire.addExistingArtisanToSection(parseInt(pickArtisanId)); pickArtisanId = ''; }"
+                class="px-3 py-1.5 rounded bg-[#214E34] hover:bg-[#193b27] text-white text-[10px] font-semibold shrink-0">+ Add</button>
+      </div>
+    </div>
+
     <div class="{{ $cardClass }}">
       <div class="flex items-center justify-between">
         <span class="text-xs font-semibold text-white">Maker Profiles</span>
-        <button type="button" wire:click="addRepeaterItem('items')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add Maker</button>
+        <button type="button" wire:click="addRepeaterItem('items')" class="px-2 py-1 rounded bg-[#282d37] text-gray-200 text-[10px] font-semibold">+ Custom Maker</button>
       </div>
       @foreach(($s['items'] ?? []) as $i => $item)
         <div class="p-2.5 rounded bg-[#1a1d24] border border-[#282d37] space-y-1.5" wire:key="maker-{{ $sIndex }}-{{ $i }}">
+          <div class="mb-1">
+            <select @change="if ($event.target.value) $wire.selectExistingArtisanForItem({{ $i }}, parseInt($event.target.value))" class="{{ $inputClass }}">
+              <option value="">Link / swap with existing artisan...</option>
+              @foreach(($catalogArtisans ?? collect()) as $ca)
+                <option value="{{ $ca->id }}" @selected(($item['artisan_id'] ?? null) == $ca->id)>{{ $ca->full_name }} ({{ $ca->district?->name_en ?? 'Bangladesh' }})</option>
+              @endforeach
+            </select>
+          </div>
           <div class="flex items-center justify-between text-[10px] text-gray-400">
             <span class="font-semibold text-gray-200">{{ $item['name'] ?? 'Maker #' . ($i+1) }}</span>
             <div class="flex items-center gap-1">
