@@ -583,7 +583,7 @@ class VisualPageBuilder extends Component
             'home_hero:trust_items', 'home_product_showcase:trust_items' => ['text' => 'Authentic handmade craft'],
             'home_districts:items' => ['n' => (string) (count($items) + 1), 'name' => 'New District', 'bn' => 'নতুন জেলা', 'craft' => 'Traditional craft', 'href' => '#products', 'cta_text' => 'See products →'],
             'home_crafts:items' => ['name' => 'New Craft', 'line' => 'Handcrafted heritage', 'photo_label' => 'Photo: craft', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#5B6FAE,#26356A)', 'pattern' => 'patCloth', 'href' => '#products'],
-            'home_products:items' => ['district' => 'Narayanganj', 'name' => 'New Heritage Piece', 'maker' => 'Master Artisan', 'price' => '৳ 12,000', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9B48A,#8E7545)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'Bring it home'],
+            'home_products:items' => ['district' => 'Narayanganj', 'name' => 'New Heritage Piece', 'maker' => 'Master Artisan', 'price' => '৳ 12,000', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9B48A,#8E7545)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'View Piece →'],
             'home_story_timeline:items' => ['when' => '2026', 'text' => 'A new chapter in Bangladesh’s living craft heritage.'],
             'home_makers:items' => ['name' => 'Artisan Name', 'craft' => 'Master Weaver', 'place' => 'Tangail', 'years' => '25', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)'],
             'home_why:items' => ['title' => 'Authentic Craft', 'text' => 'Made slowly by hand using traditional methods.', 'd' => 'M12 4a8 8 0 100 16 8 8 0 000-16z'],
@@ -620,7 +620,7 @@ class VisualPageBuilder extends Component
             'bg' => 'linear-gradient(160deg,#C9B48A,#8E7545)',
             'pattern' => 'patCloth',
             'href' => '/products/' . $prod->slug,
-            'button_text' => 'Bring it home',
+            'button_text' => 'View Piece →',
         ];
     }
 

@@ -292,32 +292,42 @@
       </div>
       <div style="display:flex; flex-wrap:wrap; gap:22px">
         @foreach($productsList as $p)
-          <article style="flex:1 1 250px; min-width:0; background:#fff; border:1px solid #E3D8BC; border-radius:18px; overflow:hidden; display:flex; flex-direction:column">
-            <div style="position:relative; height:280px; background:{{ $p['bg'] ?? 'linear-gradient(160deg,#C9B48A,#8E7545)' }}">
-              @if(!empty($p['image_url']))
-                <img src="{{ $p['image_url'] }}" alt="{{ $p['name'] ?? '' }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover">
-              @else
-                <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; left:0; top:0"><rect width="100%" height="100%" fill="url(#{{ $p['pattern'] ?? 'patCloth' }})"></rect></svg>
-                <div style="position:absolute; left:50%; bottom:22px; transform:translateX(-50%); background:rgba(30,18,10,0.62); color:#FBF6EC; font-size:12px; padding:5px 12px; border-radius:999px; white-space:nowrap">Product photo</div>
-              @endif
-              <div aria-hidden="true" style="position:absolute; left:10px; right:10px; top:10px; bottom:10px; border:1px solid rgba(255,255,255,0.6); border-radius:10px"></div>
-              @if(!empty($p['badge']))
-                <div style="position:absolute; right:18px; top:18px; background:#B8553A; color:#fff; font-weight:700; font-size:12px; padding:5px 11px; border-radius:999px">{{ $p['badge'] }}</div>
-              @endif
-            </div>
-            <svg aria-hidden="true" width="100%" height="10" style="display:block"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
-            <div style="padding:16px 20px 22px; display:flex; flex-direction:column; gap:6px; flex:1 1 auto">
-              <div style="font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#5A5044">{{ $p['district'] ?? '' }}</div>
-              <h3 style="margin:0; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:24px; line-height:1.15; color:#1F4D3A">{{ $p['name'] ?? '' }}</h3>
-              <div style="font-size:14px; color:#5A5044">Made by {{ $p['maker'] ?? '' }}</div>
-              <div style="display:flex; align-items:baseline; gap:10px; margin-top:6px">
-                <span style="font-weight:700; font-size:19px; color:#2B2118">{{ $p['price'] ?? '' }}</span>
-                @if(!empty($p['old_price']))
-                  <span style="font-size:14px; color:#6B5F50; text-decoration:line-through">{{ $p['old_price'] }}</span>
+          @php
+            $cardHref = $linkHref($p['href'] ?? route('shop.index'));
+            $btnLabel = (empty($p['button_text']) || in_array($p['button_text'], ['Add to Cart', 'Bring it home'], true)) ? 'View Piece →' : $p['button_text'];
+          @endphp
+          <article style="flex:1 1 250px; min-width:0; background:#fff; border:1px solid #E3D8BC; border-radius:18px; overflow:hidden; display:flex; flex-direction:column; transition:box-shadow .2s, transform .2s"
+                   onmouseover="this.style.boxShadow='0 10px 26px rgba(31,77,58,0.1)'; this.style.transform='translateY(-2px)'"
+                   onmouseout="this.style.boxShadow='none'; this.style.transform='none'">
+            <a href="{{ $cardHref }}" style="display:flex; flex-direction:column; flex:1 1 auto; text-decoration:none; color:inherit">
+              <div style="position:relative; height:280px; background:{{ $p['bg'] ?? 'linear-gradient(160deg,#C9B48A,#8E7545)' }}">
+                @if(!empty($p['image_url']))
+                  <img src="{{ $p['image_url'] }}" alt="{{ $p['name'] ?? '' }}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600&auto=format&fit=crop';" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover">
+                @else
+                  <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; left:0; top:0"><rect width="100%" height="100%" fill="url(#{{ $p['pattern'] ?? 'patCloth' }})"></rect></svg>
+                  <div style="position:absolute; left:50%; bottom:22px; transform:translateX(-50%); background:rgba(30,18,10,0.62); color:#FBF6EC; font-size:12px; padding:5px 12px; border-radius:999px; white-space:nowrap">Product photo</div>
+                @endif
+                <div aria-hidden="true" style="position:absolute; left:10px; right:10px; top:10px; bottom:10px; border:1px solid rgba(255,255,255,0.6); border-radius:10px"></div>
+                @if(!empty($p['badge']))
+                  <div style="position:absolute; right:18px; top:18px; background:#B8553A; color:#fff; font-weight:700; font-size:12px; padding:5px 11px; border-radius:999px">{{ $p['badge'] }}</div>
                 @endif
               </div>
-              <button type="button" @if(!$isBuilder) onclick="window.location='{{ $resolveUrl($p['href'] ?? route('shop.index')) }}'" @endif style="margin-top:12px; background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:13px 20px; font-size:15px; font-weight:600; min-height:46px">{{ (empty($p['button_text']) || $p['button_text'] === 'Add to Cart') ? 'Bring it home' : $p['button_text'] }}</button>
-            </div>
+              <svg aria-hidden="true" width="100%" height="10" style="display:block"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
+              <div style="padding:16px 20px 22px; display:flex; flex-direction:column; gap:6px; flex:1 1 auto">
+                <div style="font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#5A5044">{{ $p['district'] ?? '' }}</div>
+                <h3 style="margin:0; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:24px; line-height:1.15; color:#1F4D3A">{{ $p['name'] ?? '' }}</h3>
+                <div style="font-size:14px; color:#5A5044">Made by {{ $p['maker'] ?? '' }}</div>
+                <div style="display:flex; align-items:baseline; gap:10px; margin-top:6px">
+                  <span style="font-weight:700; font-size:19px; color:#2B2118">{{ $p['price'] ?? '' }}</span>
+                  @if(!empty($p['old_price']))
+                    <span style="font-size:14px; color:#6B5F50; text-decoration:line-through">{{ $p['old_price'] }}</span>
+                  @endif
+                </div>
+                <span style="margin-top:auto; padding-top:12px; display:block">
+                  <span style="display:flex; align-items:center; justify-content:center; background:#1F4D3A; color:#FBF6EC; border-radius:999px; padding:12px 20px; font-size:15px; font-weight:600; min-height:46px; box-sizing:border-box">{{ $btnLabel }}</span>
+                </span>
+              </div>
+            </a>
           </article>
         @endforeach
       </div>
