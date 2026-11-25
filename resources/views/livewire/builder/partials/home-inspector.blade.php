@@ -85,10 +85,6 @@
   @elseif($type === 'home_hero')
     <div class="{{ $cardClass }}">
       <div>
-        <label class="{{ $labelClass }}">Top Pill Badge</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.badge_text" class="{{ $inputClass }}">
-      </div>
-      <div>
         <label class="{{ $labelClass }}">Main Headline (H1)</label>
         <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" class="{{ $inputClass }}"></textarea>
       </div>
@@ -133,10 +129,6 @@
       <div>
         <label class="{{ $labelClass }}">Or Image URL</label>
         <input type="text" placeholder="https://... or /storage/..." wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.image_url" class="{{ $inputClass }}">
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Photo Pill Label (optional)</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.photo_pill" class="{{ $inputClass }}">
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div>

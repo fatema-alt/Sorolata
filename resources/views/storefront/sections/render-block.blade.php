@@ -64,12 +64,6 @@
     @endif
     <div style="position:relative; max-width:1200px; margin:0 auto; padding:64px 24px 72px; display:flex; flex-wrap:wrap; align-items:center; gap:48px">
       <div style="flex:1 1 420px; min-width:0">
-        @if(!empty($s['badge_text']))
-          <div style="display:inline-flex; align-items:center; gap:10px; background:{{ $primaryBg }}; color:#fff; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; border-radius:999px; padding:7px 16px; margin-bottom:22px">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 48 48" style="color:#E3C26F"><use href="#rosetteArt"></use></svg>
-            {{ $s['badge_text'] }}
-          </div>
-        @endif
         <h1 style="margin:0 0 22px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(46px,5.8vw,80px); line-height:1.0; letter-spacing:-0.01em; color:{{ $s['text_color'] ?? '#1F2A24' }}">{{ $s['headline'] ?? '' }}</h1>
         <p style="margin:0 0 32px; font-size:18px; color:#5A5044; max-width:500px">{{ $s['subheadline'] ?? '' }}</p>
         <div style="display:flex; flex-wrap:wrap; gap:14px; margin-bottom:36px">
@@ -108,9 +102,6 @@
                   <circle cx="200" cy="330" r="46" fill="#FFE9C2" fill-opacity="0.18" stroke="#FFE9C2" stroke-opacity="0.6" stroke-width="1.5"></circle>
                   <circle cx="200" cy="330" r="30" fill="none" stroke="#FFE9C2" stroke-opacity="0.6" stroke-width="1.2" stroke-dasharray="2 4"></circle>
                 </svg>
-              @endif
-              @if(!empty($s['photo_pill']))
-                <div style="position:absolute; left:50%; top:46px; transform:translateX(-50%); background:rgba(30,18,10,0.62); color:#FBF6EC; font-size:12px; padding:6px 14px; border-radius:999px; white-space:nowrap">{{ $s['photo_pill'] }}</div>
               @endif
               <a href="{{ $linkHref($s['featured_href'] ?? '#products') }}" style="position:absolute; left:16px; right:16px; bottom:16px; background:#FBF6EC; border-radius:16px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; border:1px solid #D9C28A; text-decoration:none">
                 <div>
