@@ -92,9 +92,11 @@
 
     <!-- Heritage Header (Homepage Essence) -->
     <style>
+        .soro-mob-avatar-wrap { display: none; position: relative; }
         @media (max-width: 767px) {
-            .soro-hdr-inner { justify-content: center !important; padding: 12px 16px !important; }
+            .soro-hdr-inner { justify-content: space-between !important; padding: 12px 16px !important; }
             .soro-hdr-nav, .soro-hdr-actions { display: none !important; }
+            .soro-mob-avatar-wrap { display: block; }
             .soro-page-wrap { padding-bottom: 66px; }
         }
     </style>
@@ -164,6 +166,51 @@
                     </a>
                 @endif
             </div>
+
+            <!-- Mobile Right Avatar + Dropdown Menu -->
+            @php
+                $mobUser = auth()->user();
+                $mobInitials = $mobUser ? strtoupper(mb_substr($mobUser->name ?? 'S', 0, 1)) : '';
+                $mobWlCount = count(session('sorolata_wishlist', []));
+            @endphp
+            <div class="soro-mob-avatar-wrap">
+                <button type="button" aria-label="{{ __('Menu') }}"
+                        onclick="event.stopPropagation(); var m=document.getElementById('soro-mob-acct-menu'); m.style.display=(m.style.display==='block'?'none':'block');"
+                        style="position:relative; width:40px; height:40px; border:1.5px solid {{ $mobUser ? '#1F4D3A' : '#D9C28A' }}; background:{{ $mobUser ? '#E7EEE4' : '#fff' }}; color:#1F4D3A; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; font-weight:700; font-size:14px; cursor:pointer">
+                    @if($mobUser)
+                        <span>{{ $mobInitials }}</span>
+                    @else
+                        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    @endif
+                    @if($bagCount + $mobWlCount > 0)
+                        <span style="position:absolute; top:-2px; right:-2px; width:10px; height:10px; background:#B8553A; border-radius:50%; border:2px solid #F7F5F0"></span>
+                    @endif
+                </button>
+                <div id="soro-mob-acct-menu" onclick="event.stopPropagation()"
+                     style="display:none; position:absolute; right:0; top:48px; width:220px; background:#FBF6EC; border:1.5px solid #D9C28A; border-radius:16px; box-shadow:0 16px 36px rgba(43,33,24,0.18); padding:8px; z-index:60; font-size:14px; color:#2B2118">
+                    @if($mobUser)
+                        <a href="{{ route('account.index') }}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:10px; text-decoration:none; color:#1F4D3A; font-weight:700">{{ __('My Account') }}</a>
+                    @else
+                        <a href="{{ route('login') }}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:10px; text-decoration:none; color:#1F4D3A; font-weight:700">{{ __('Sign In') }}</a>
+                        <a href="{{ route('register') }}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:10px; text-decoration:none; color:#2B2118; font-weight:600">{{ __('Register') }}</a>
+                    @endif
+                    <div style="height:1px; background:#E2D3AF; margin:4px 8px"></div>
+                    <a href="{{ route('wishlist.index') }}" style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border-radius:10px; text-decoration:none; color:#2B2118">
+                        <span>{{ __('Wishlist') }}</span>
+                        @if($mobWlCount > 0)<span style="background:#B8553A; color:#fff; font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px">{{ $mobWlCount }}</span>@endif
+                    </a>
+                    <a href="{{ route('cart.index') }}" style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border-radius:10px; text-decoration:none; color:#2B2118">
+                        <span>{{ __('Shopping Bag') }}</span>
+                        @if($bagCount > 0)<span style="background:#1F4D3A; color:#fff; font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px">{{ $bagCount }}</span>@endif
+                    </a>
+                    <a href="{{ route('search.index') }}" style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border-radius:10px; text-decoration:none; color:#2B2118">{{ __('Search') }}</a>
+                    <div style="height:1px; background:#E2D3AF; margin:4px 8px"></div>
+                    <a href="{{ route('language.switch', $isBn ? 'en' : 'bn') }}" style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border-radius:10px; text-decoration:none; color:#1F4D3A; font-weight:600">
+                        <span>{{ $isBn ? 'Switch to English' : 'বাংলায় দেখুন' }}</span>
+                    </a>
+                </div>
+            </div>
+            <script>document.addEventListener('click',function(){var m=document.getElementById('soro-mob-acct-menu');if(m)m.style.display='none';});</script>
         </div>
         @if($hs['show_stitch_border'] ?? true)
             <svg aria-hidden="true" width="100%" height="10" style="display:block"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
