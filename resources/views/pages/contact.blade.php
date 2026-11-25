@@ -7,17 +7,12 @@
 @endsection
 
 @section('content')
-    <section class="py-16 bg-white border-b border-[#E8E8E8]">
-        <div class="max-w-4xl mx-auto px-6 lg:px-12 text-center space-y-4">
-            <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('Curator Concierge') }}</span>
-            <h1 class="font-editorial-heading text-4xl sm:text-6xl font-light text-[#1D1D1D]">
-                {{ __('Connect With Our Atelier') }}
-            </h1>
-            <p class="font-editorial-body text-base text-[#555555] leading-relaxed">
-                {{ __('Whether you wish to commission an archival family heirloom, verify a Geographical Indication tag, or arrange bespoke international expat courier delivery—our curatorial desk is at your service.') }}
-            </p>
-        </div>
-    </section>
+    <x-heritage-header
+        :eyebrow="__('Curator Concierge')"
+        :title="__('Connect With Our Atelier')"
+        :subtitle="__('Whether you wish to commission an archival family heirloom, verify a Geographical Indication tag, or arrange bespoke international expat courier delivery—our curatorial desk is at your service.')"
+        :breadcrumb="__('Contact')"
+    />
 
     <div class="max-w-6xl mx-auto px-6 lg:px-12 py-16">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-12">

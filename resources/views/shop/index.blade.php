@@ -8,23 +8,12 @@
 
 @section('content')
     <!-- Shop Hero Header -->
-    <section class="py-12 bg-white border-b border-[#E8E8E8]">
-        <div class="max-w-7xl mx-auto px-6 lg:px-12">
-            <div class="max-w-3xl space-y-3">
-                <div class="flex items-center gap-2 text-xs text-[#888888] uppercase tracking-wider">
-                    <a href="{{ url('/') }}" class="hover:text-[#214E34]">{{ __('Home') }}</a>
-                    <span>/</span>
-                    <span class="text-[#1D1D1D] font-semibold">{{ __('Curated Catalog') }}</span>
-                </div>
-                <h1 class="font-editorial-heading text-4xl sm:text-5xl font-light text-[#1D1D1D]">
-                    {{ __('The Living Archive') }}
-                </h1>
-                <p class="font-editorial-body text-base text-[#555555]">
-                    {{ __('Explore authentic Bengali heirlooms. Filter through generational weaving clusters, lost-wax bell-metal foundries, and master craftsman ateliers.') }}
-                </p>
-            </div>
-        </div>
-    </section>
+    <x-heritage-header
+        :eyebrow="__('Our Pieces')"
+        :title="__('The Living Archive')"
+        :subtitle="__('Explore authentic Bengali heirlooms. Filter through generational weaving clusters, lost-wax bell-metal foundries, and master craftsman ateliers.')"
+        :breadcrumb="__('Curated Catalog')"
+    />
 
     <!-- Main Shop Catalog Body -->
     <div class="max-w-7xl mx-auto px-6 lg:px-12 py-12">

@@ -12,10 +12,10 @@
     $isOutOfStock = ! $product->is_in_stock || $product->status === 'out_of_stock' || (is_object($product->status) && $product->status->value === 'out_of_stock');
 @endphp
 
-<article {{ $attributes->merge(['class' => 'group relative bg-white rounded-[32px] p-4 shadow-soft-xs hover:shadow-soft-hover transition-luxury flex flex-col justify-between']) }}>
+<article {{ $attributes->merge(['class' => 'group relative bg-white border border-[#E3D8BC] rounded-[18px] overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between']) }}>
     
     <!-- Top Visual Stage -->
-    <div class="relative w-full aspect-[4/5] rounded-[24px] overflow-hidden bg-[#F8F6F2]">
+    <div class="relative w-full aspect-[4/5] overflow-hidden bg-[#F0E6D0]">
         <a href="{{ route('products.show', $product->slug) }}" class="block w-full h-full">
             <img 
                 src="{{ $imageUrl }}" 
@@ -24,94 +24,70 @@
                 loading="lazy"
             >
         </a>
+        <div aria-hidden="true" class="pointer-events-none absolute inset-[10px] border border-white/60 rounded-[10px]"></div>
 
-        <!-- Floating Badges: Out of Stock, Discount & District -->
-        <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">
+        <!-- Floating Badges: Out of Stock & Discount -->
+        <div class="absolute top-4 right-4 flex flex-col items-end gap-1.5 z-10 pointer-events-none">
             @if($isOutOfStock)
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#1D1D1D]/90 text-white backdrop-blur-xs tracking-wider uppercase">
-                    {{ __('Sold Out / সমাপ্ত') }}
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-[#2B2118]/90 text-[#FBF6EC] tracking-wider uppercase">
+                    {{ __('Sold Out') }}
                 </span>
             @elseif($hasDiscount)
-                <x-badge variant="terracotta" size="xs">
-                    {{ __(':percent% Off', ['percent' => $discountPercent]) }}
-                </x-badge>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#B8553A] text-white">
+                    {{ __(':percent% off', ['percent' => $discountPercent]) }}
+                </span>
             @endif
-            <x-badge variant="district" size="xs">
-                <x-icon name="map-pin" class="w-3 h-3 text-[#214E34]" />
-                <span>{{ $districtName }}</span>
-            </x-badge>
         </div>
 
         <!-- Floating Action: Wishlist Icon -->
         @php
             $isWishlisted = in_array($product->id, session('sorolata_wishlist', []));
         @endphp
-        <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-3 right-3 z-20">
+        <form action="{{ route('wishlist.toggle') }}" method="POST" class="absolute top-4 left-4 z-20">
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <button 
                 type="submit" 
                 aria-label="{{ $isWishlisted ? __('Remove from Wishlist') : __('Save to Wishlist') }}" 
-                class="w-9 h-9 rounded-full {{ $isWishlisted ? 'bg-[#C96A3D] text-white shadow-md' : 'bg-white/90 backdrop-blur-md text-[#555555]' }} hover:text-white hover:bg-[#C96A3D] hover:scale-110 flex items-center justify-center shadow-soft-xs transition-luxury"
+                class="w-9 h-9 rounded-full {{ $isWishlisted ? 'bg-[#B8553A] text-white shadow-md' : 'bg-[#FBF6EC]/90 text-[#5A5044]' }} hover:text-white hover:bg-[#B8553A] flex items-center justify-center border border-[#D9C28A] transition-all cursor-pointer"
                 title="{{ $isWishlisted ? __('Remove from Wishlist') : __('Save to Wishlist') }}"
             >
                 <x-icon name="heart" class="w-4 h-4 {{ $isWishlisted ? 'fill-current' : '' }}" />
             </button>
         </form>
-
-        <!-- Quick View Hover Reveal Dock -->
-        <div class="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-luxury z-10">
-            <a 
-                href="{{ route('products.show', $product->slug) }}" 
-                class="w-full py-2.5 px-4 bg-white/95 backdrop-blur-md hover:bg-[#214E34] text-[#1D1D1D] hover:text-white rounded-full text-xs font-semibold tracking-wide flex items-center justify-center gap-2 shadow-soft-md transition-colors"
-            >
-                <x-icon name="eye" class="w-3.5 h-3.5" />
-                <span>{{ __('Explore Story & Details') }}</span>
-            </a>
-        </div>
     </div>
 
+    <svg aria-hidden="true" width="100%" height="10" style="display:block"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
+
     <!-- Product Meta Info -->
-    <div class="pt-4 px-2 pb-1 space-y-2.5">
-        
-        <!-- Header row: Material / Craft Tag & Rating -->
-        <div class="flex items-center justify-between text-xs text-[#888888]">
-            <span class="tracking-wider uppercase text-[10px] font-medium text-[#214E34]/80">
-                {{ $craftTitle }}
-            </span>
-            <x-rating rating="5.0" count="12" size="xs" />
+    <div class="p-5 flex flex-col gap-1.5 flex-1 justify-between">
+        <div class="space-y-1.5">
+            <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-[#5A5044]">
+                {{ $districtName }}
+            </div>
+
+            <h3 class="font-editorial-heading text-2xl font-semibold leading-tight text-[#1F4D3A] group-hover:text-[#8F3F26] transition-colors line-clamp-1">
+                <a href="{{ route('products.show', $product->slug) }}">
+                    {{ $product->getLocalized('title') }}
+                </a>
+            </h3>
+
+            <p class="text-sm text-[#5A5044]">
+                {{ __('Made by') }} {{ $product->artisan?->getLocalized('full_name') ?? __('Master Artisan Guild') }}
+            </p>
         </div>
 
-        <!-- Title -->
-        <h3 class="font-editorial-heading text-xl sm:text-2xl font-light text-[#1D1D1D] group-hover:text-[#214E34] transition-colors line-clamp-1">
-            <a href="{{ route('products.show', $product->slug) }}">
-                {{ $product->getLocalized('title') }}
-            </a>
-        </h3>
-
-        <!-- Artisan Attribution -->
-        <p class="text-xs text-[#888888] font-light">
-            {{ __('By') }} <span class="text-[#555555] font-medium">{{ $product->artisan?->getLocalized('full_name') ?? __('Master Artisan Guild') }}</span>
-        </p>
-
-        <!-- Price & Cart CTA Row -->
-        <div class="pt-2 border-t border-[#E8E8E8]/70 flex items-center justify-between">
+        <div class="pt-3 space-y-3">
             <x-price 
                 :price="$product->price" 
                 :compareAtPrice="$product->compare_at_price" 
                 :currency="$product->currency->value"
                 size="md"
             />
-            
-            <a 
-                href="{{ route('products.show', $product->slug) }}" 
-                class="w-8 h-8 rounded-full bg-[#F8F6F2] hover:bg-[#214E34] text-[#1D1D1D] hover:text-white flex items-center justify-center transition-luxury shadow-soft-xs"
-                aria-label="{{ __('Acquire Product') }}"
-            >
-                <x-icon name="arrow-right" class="w-3.5 h-3.5" />
+            <a href="{{ route('products.show', $product->slug) }}" class="w-full inline-flex items-center justify-center rounded-full bg-[#1F4D3A] hover:bg-[#163829] text-[#FBF6EC] font-semibold text-sm py-3 px-5 transition-colors">
+                {{ __('View Piece →') }}
             </a>
         </div>
-
     </div>
 
 </article>

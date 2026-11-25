@@ -8,17 +8,13 @@
 
 @section('content')
     <!-- Editorial About Hero -->
-    <section class="py-24 bg-white border-b border-[#E8E8E8]">
-        <div class="max-w-4xl mx-auto px-6 lg:px-12 text-center space-y-6">
-            <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">{{ __('Heritage Manifesto') }}</span>
-            <h1 class="font-editorial-heading text-5xl sm:text-7xl font-light text-[#1D1D1D] leading-tight">
-                {{ __('Craft as a Sacred Living Continuum') }}
-            </h1>
-            <p class="font-editorial-body text-xl text-[#555555] font-light leading-relaxed">
-                {{ __('We believe that true luxury is not machine precision; it is the patient, deliberate human touch that cannot be replicated by algorithms.') }}
-            </p>
-        </div>
-    </section>
+    <x-heritage-header
+        :eyebrow="__('Heritage Manifesto')"
+        :title="__('Craft as a Sacred Living Continuum')"
+        :subtitle="__('We believe that true luxury is not machine precision; it is the patient, deliberate human touch that cannot be replicated by algorithms.')"
+        :breadcrumb="__('About Us')"
+        :showBand="true"
+    />
 
     <!-- Narrative Pillars -->
     <section class="py-20 max-w-5xl mx-auto px-6 lg:px-12 space-y-16">

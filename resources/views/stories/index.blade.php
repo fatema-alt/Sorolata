@@ -11,19 +11,12 @@
 @endsection
 
 @section('content')
-    <section class="py-16 bg-[#FAF8F5] border-b border-[#E8E4DC]">
-        <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center max-w-3xl mx-auto space-y-4">
-            <span class="text-xs uppercase tracking-widest text-[#214E34] font-bold">
-                {{ __('The Heritage Gazette') }}
-            </span>
-            <h1 class="font-editorial-heading text-4xl sm:text-6xl font-light text-[#1D1D1D]">
-                {{ __('Chronicles of Bengal Craft') }}
-            </h1>
-            <p class="font-editorial-body text-base text-[#555555] leading-relaxed max-w-2xl mx-auto">
-                {{ __('Slow journalism dedicated to the philosophy, material science, and living custodians of traditional South Asian handcraft.') }}
-            </p>
-        </div>
-    </section>
+    <x-heritage-header
+        :eyebrow="__('Stories')"
+        :title="__('Read about the crafts')"
+        :subtitle="__('Slow journalism dedicated to the philosophy, material science, and living custodians of traditional South Asian handcraft.')"
+        :breadcrumb="__('Stories')"
+    />
 
     <div class="max-w-7xl mx-auto px-6 lg:px-12 py-16">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
