@@ -147,14 +147,14 @@
 
     <!-- Individual Artisan Page Editor Modal -->
     <div x-show="modalOpen" x-cloak @keydown.escape.window="modalOpen = false"
-         class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 overflow-y-auto">
-        <div @click.away="modalOpen = false" class="w-full max-w-2xl bg-[#161922] border border-[#282d37] rounded-2xl shadow-2xl overflow-hidden my-8">
-            <div class="px-6 py-4 border-b border-[#282d37] flex items-center justify-between bg-[#12141c]">
+         class="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4">
+        <div @click.away="modalOpen = false" class="w-full max-w-2xl max-h-[90vh] flex flex-col bg-[#161922] border border-[#282d37] rounded-2xl shadow-2xl overflow-hidden">
+            <div class="shrink-0 px-6 py-4 border-b border-[#282d37] flex items-center justify-between bg-[#12141c]">
                 <h2 class="text-base font-bold text-white" x-text="isEdit ? 'Edit Artisan Page: ' + form.full_name : 'Add New Master Artisan'"></h2>
-                <button type="button" @click="modalOpen = false" class="text-gray-400 hover:text-white text-lg">✕</button>
+                <button type="button" @click="modalOpen = false" class="text-gray-400 hover:text-white text-lg cursor-pointer">✕</button>
             </div>
 
-            <form :action="formAction" method="POST" enctype="multipart/form-data" class="p-6 space-y-4 max-h-[78vh] overflow-y-auto">
+            <form :action="formAction" method="POST" enctype="multipart/form-data" class="flex-1 overflow-y-auto p-6 space-y-4">
                 @csrf
                 <template x-if="isEdit">
                     <input type="hidden" name="_method" value="PUT">
