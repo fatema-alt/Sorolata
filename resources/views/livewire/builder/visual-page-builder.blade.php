@@ -344,303 +344,63 @@
 
                 <div class="flex-1 overflow-y-auto builder-scroll p-3 space-y-5">
 
-                    @if($slug === 'home' || $pageType === 'home')
-                        <div class="p-2.5 rounded-lg bg-[#214E34]/15 border border-[#214E34]/40 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-semibold uppercase tracking-wider text-emerald-300">Sorolata Homepage</span>
-                                <button type="button" wire:click="resetHomepageToDefault" wire:confirm="Reset the homepage layout to all 13 default Sorolata sections?" class="px-2 py-1 rounded bg-[#214E34] hover:bg-[#2c6846] text-[10px] font-semibold text-white">Reset Default</button>
-                            </div>
-                            <div class="grid grid-cols-1 gap-1.5">
-                                @foreach([
-                                    ['home_header', 'Top Bar & Header'],
-                                    ['home_hero', 'Hero & Arch Frame'],
-                                    ['home_districts', 'Shop by District & Map'],
-                                    ['home_crafts', 'Shop by Craft Grid'],
-                                    ['home_products', 'Popular Products Grid'],
-                                    ['home_story_timeline', 'Muslin & Jamdani Timeline'],
-                                    ['home_makers', 'Our Makers Portraits'],
-                                    ['home_why', 'Why Sorolata Pillars'],
-                                    ['home_gifts', 'Gift Ideas Grid'],
-                                    ['home_reviews', 'Customer Reviews'],
-                                    ['home_stories', 'Craft Stories Grid'],
-                                    ['home_newsletter', 'Newsletter Banner'],
-                                    ['home_footer', 'Heritage Footer'],
-                                ] as [$hbType, $hbLabel])
-                                    <div draggable="true"
-                                         @dragstart="event.dataTransfer.setData('text/plain', '{{ $hbType }}'); event.dataTransfer.effectAllowed = 'copy';"
-                                         wire:click="addSection('{{ $hbType }}')"
-                                         class="px-2.5 py-2 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing text-xs font-medium text-white flex items-center justify-between select-none">
-                                        <span>{{ $hbLabel }}</span>
-                                        <span class="text-[10px] text-emerald-400">+ Add</span>
-                                    </div>
-                                @endforeach
-                            </div>
+                                        <div class="p-2.5 rounded-lg bg-[#214E34]/15 border border-[#214E34]/40 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-semibold uppercase tracking-wider text-emerald-300">Sorolata Heritage Blocks</span>
+                            <button type="button" wire:click="resetHomepageToDefault" wire:confirm="Reset this page to its default Sorolata Heritage layout?" class="px-2 py-1 rounded bg-[#214E34] hover:bg-[#2c6846] text-[10px] font-semibold text-white">Reset Default</button>
                         </div>
-                    @endif
-                    
-                    <!-- Category: Shajgoj Content-to-Commerce Magazine Blocks -->
-                    <div>
-                        <h4 class="text-[11px] font-semibold tracking-wider uppercase text-emerald-400 mb-2 flex items-center justify-between">
-                            <span>Content to Commerce</span>
-                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">SHAJGOJ STYLE</span>
-                        </h4>
-                        <div class="grid grid-cols-1 gap-2">
-                            
-                            <!-- Magazine Hero Grid -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'magazine_hero_grid'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('magazine_hero_grid')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-[#214E34]/20 text-[#A3D9B1] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Magazine Hero Grid</div>
-                                    <div class="text-[11px] text-gray-400 truncate">Large lead story with dual stacked sub-articles</div>
-                                </div>
-                            </div>
 
-                            <!-- Topic Bubbles Carousel -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'topic_bubbles'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('topic_bubbles')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+                        <div class="space-y-1.5">
+                            <div class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold pt-1">Page Structure</div>
+                            @foreach([
+                                ['home_page_header', 'Heritage Page Header Banner'],
+                                ['home_rich_text', 'Story & Media Block'],
+                                ['home_header', 'Top Bar & Header'],
+                                ['home_footer', 'Heritage Footer'],
+                            ] as [$hbType, $hbLabel])
+                                <div draggable="true"
+                                     @dragstart="event.dataTransfer.setData('text/plain', '{{ $hbType }}'); event.dataTransfer.effectAllowed = 'copy';"
+                                     wire:click="addSection('{{ $hbType }}')"
+                                     class="px-2.5 py-2 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing text-xs font-medium text-white flex items-center justify-between select-none">
+                                    <span>{{ $hbLabel }}</span>
+                                    <span class="text-[10px] text-emerald-400">+ Add</span>
                                 </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Topic Craft Bubbles</div>
-                                    <div class="text-[11px] text-gray-400 truncate">Circular craft highlight avatars (Jamdani, Brass, etc.)</div>
-                                </div>
-                            </div>
+                            @endforeach
 
-                            <!-- Editorial Feed + Trending Sidebar -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'editorial_feed_sidebar'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('editorial_feed_sidebar')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                            <div class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold pt-2">Showcase & Catalog</div>
+                            @foreach([
+                                ['home_hero', 'Hero & Arch Frame'],
+                                ['home_districts', 'Shop by District & Map'],
+                                ['home_crafts', 'Shop by Craft Grid'],
+                                ['home_products', 'Popular Products Grid'],
+                                ['home_gifts', 'Gift Ideas Grid'],
+                            ] as [$hbType, $hbLabel])
+                                <div draggable="true"
+                                     @dragstart="event.dataTransfer.setData('text/plain', '{{ $hbType }}'); event.dataTransfer.effectAllowed = 'copy';"
+                                     wire:click="addSection('{{ $hbType }}')"
+                                     class="px-2.5 py-2 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing text-xs font-medium text-white flex items-center justify-between select-none">
+                                    <span>{{ $hbLabel }}</span>
+                                    <span class="text-[10px] text-emerald-400">+ Add</span>
                                 </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Gazette Feed + Sidebar</div>
-                                    <div class="text-[11px] text-gray-400 truncate">2-col story cards + trending category list</div>
-                                </div>
-                            </div>
+                            @endforeach
 
-                            <!-- Shoppable Product Shelf -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'shoppable_product_shelf'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('shoppable_product_shelf')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-[#C96A3D]/20 text-[#E79770] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                            <div class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold pt-2">Story, Makers & Trust</div>
+                            @foreach([
+                                ['home_story_timeline', 'Muslin & Jamdani Timeline'],
+                                ['home_makers', 'Our Makers Portraits'],
+                                ['home_why', 'Why Sorolata Pillars'],
+                                ['home_reviews', 'Customer Reviews'],
+                                ['home_stories', 'Craft Stories Grid'],
+                                ['home_newsletter', 'Newsletter Banner'],
+                            ] as [$hbType, $hbLabel])
+                                <div draggable="true"
+                                     @dragstart="event.dataTransfer.setData('text/plain', '{{ $hbType }}'); event.dataTransfer.effectAllowed = 'copy';"
+                                     wire:click="addSection('{{ $hbType }}')"
+                                     class="px-2.5 py-2 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing text-xs font-medium text-white flex items-center justify-between select-none">
+                                    <span>{{ $hbLabel }}</span>
+                                    <span class="text-[10px] text-emerald-400">+ Add</span>
                                 </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">In-Story Shoppable Shelf</div>
-                                    <div class="text-[11px] text-gray-400 truncate">4-item product row directly linked to articles</div>
-                                </div>
-                            </div>
-
-                            <!-- Video Reels Showcase -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'video_reels_showcase'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('video_reels_showcase')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Artisan Video Reels</div>
-                                    <div class="text-[11px] text-gray-400 truncate">Living craft video clips with play overlay</div>
-                                </div>
-                            </div>
-
-                            <!-- Heritage Club Newsletter -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'heritage_club_newsletter'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('heritage_club_newsletter')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Guild Gazette Newsletter</div>
-                                    <div class="text-[11px] text-gray-400 truncate">Collector club invitation & email subscription</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Category: Heritage & Provenance -->
-                    <div>
-                        <h4 class="text-[11px] font-semibold tracking-wider uppercase text-gray-400 mb-2 flex items-center justify-between">
-                            <span>Heritage & Artisans</span>
-                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#282d37] text-gray-300">Curated</span>
-                        </h4>
-                        <div class="grid grid-cols-1 gap-2">
-                            
-                            <!-- Artisan Spotlight Block -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'artisan_spotlight'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('artisan_spotlight')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-[#214E34]/20 text-[#A3D9B1] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Artisan Spotlight</div>
-                                    <div class="text-[11px] text-gray-400 truncate">Master weaver portrait, atelier quote & heritage loom</div>
-                                </div>
-                            </div>
-
-                            <!-- Heritage Provenance & GI Block -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'heritage_provenance'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('heritage_provenance')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-[#C96A3D]/20 text-[#E79770] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Heritage Provenance</div>
-                                    <div class="text-[11px] text-gray-400 truncate">GI Seal, river basin geography & craft certification</div>
-                                </div>
-                            </div>
-
-                            <!-- Specs & Craft Anatomy -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'specs_anatomy'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('specs_anatomy')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Specs & Craft Anatomy</div>
-                                    <div class="text-[11px] text-gray-400 truncate">Thread count, alloy mix, motif origins & care guide</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Category: Commerce & Conversion -->
-                    <div>
-                        <h4 class="text-[11px] font-semibold tracking-wider uppercase text-gray-400 mb-2 flex items-center justify-between">
-                            <span>Commerce Conversion</span>
-                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#282d37] text-gray-300">Revenue</span>
-                        </h4>
-                        <div class="grid grid-cols-1 gap-2">
-                            
-                            <!-- Hero Showcase -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'hero_cinematic'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('hero_cinematic')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Cinematic Hero Showcase</div>
-                                    <div class="text-[11px] text-gray-400 truncate">Large lifestyle framing, editorial heading & dynamic pricing</div>
-                                </div>
-                            </div>
-
-                            <!-- Sticky Purchase Box -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'sticky_purchase_box'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('sticky_purchase_box')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Editorial Purchase Box</div>
-                                    <div class="text-[11px] text-gray-400 truncate">Variant selector, add-to-cart & collector warranty</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Category: Editorial & Storytelling -->
-                    <div>
-                        <h4 class="text-[11px] font-semibold tracking-wider uppercase text-gray-400 mb-2 flex items-center justify-between">
-                            <span>Editorial & Story</span>
-                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#282d37] text-gray-300">Culture</span>
-                        </h4>
-                        <div class="grid grid-cols-1 gap-2">
-                            
-                            <!-- Interactive Visual Gallery -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'interactive_gallery'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('interactive_gallery')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Visual Gallery & Macro Details</div>
-                                    <div class="text-[11px] text-gray-400 truncate">High-definition closeups of artisanal weave & patina</div>
-                                </div>
-                            </div>
-
-                            <!-- Editorial Narrative -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'editorial_narrative'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('editorial_narrative')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Editorial Narrative</div>
-                                    <div class="text-[11px] text-gray-400 truncate">Longform story of ancient techniques & royal patronage</div>
-                                </div>
-                            </div>
-
-                            <!-- Testimonials -->
-                            <div draggable="true"
-                                 @dragstart="event.dataTransfer.setData('text/plain', 'testimonial_editorial'); event.dataTransfer.effectAllowed = 'copy';"
-                                 wire:click="addSection('testimonial_editorial')"
-                                 title="Drag & Drop onto Canvas or Click to Append"
-                                 class="group p-2.5 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing transition-all flex items-start space-x-3 select-none">
-                                <div class="w-8 h-8 rounded-md bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-semibold text-white group-hover:text-[#A3D9B1] transition-colors">Collector Impressions</div>
-                                    <div class="text-[11px] text-gray-400 truncate">Verified global expat & connoisseur appraisals</div>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>

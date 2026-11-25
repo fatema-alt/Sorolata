@@ -558,4 +558,62 @@
       </div>
     </div>
   </footer>
+
+@elseif($type === 'home_page_header')
+  <section style="position:relative; overflow:hidden; background:{{ $s['bg_color'] ?? '#F0E6D0' }}; border-bottom:1px solid #E3D8BC">
+    @if($s['show_pattern'] ?? true)
+      <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; left:0; top:0; pointer-events:none"><rect width="100%" height="100%" fill="url(#patJaliGold)" opacity="0.4"></rect></svg>
+    @endif
+    <div style="position:relative; max-width:1200px; margin:0 auto; padding:56px 24px; text-align:center">
+      @if(!empty($s['breadcrumb']))
+        <div style="display:inline-flex; align-items:center; gap:8px; font-size:12px; color:#5A5044; text-transform:uppercase; letter-spacing:0.12em; margin-bottom:14px">
+          <a href="{{ $linkHref('/') }}" style="color:#1F4D3A; font-weight:600">Home</a>
+          <span>/</span>
+          <span>{{ $s['breadcrumb'] }}</span>
+        </div>
+      @endif
+      <svg aria-hidden="true" width="180" height="24" viewBox="0 0 180 24" style="display:block; margin:0 auto 14px; color:#B8892F"><use href="#ornArt"></use></svg>
+      @if(!empty($s['eyebrow']))
+        <div style="font-size:12px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#8F3F26; margin-bottom:10px">{{ $s['eyebrow'] }}</div>
+      @endif
+      <h1 style="margin:0; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(36px,4.5vw,58px); line-height:1.05; color:{{ $s['text_color'] ?? '#1F2A24' }}">{{ $s['title'] ?? 'Sorolata Heritage' }}</h1>
+      <svg aria-hidden="true" width="120" height="10" style="display:block; margin:14px auto 14px"><rect width="120" height="10" fill="url(#patStitchGold)"></rect></svg>
+      @if(!empty($s['subtitle']))
+        <p style="margin:0 auto; max-width:680px; font-size:17px; color:#5A5044; line-height:1.6">{{ $s['subtitle'] }}</p>
+      @endif
+    </div>
+  </section>
+  @if($s['show_band'] ?? false)
+    <svg aria-hidden="true" width="100%" height="48" style="display:block; background:#FBF6EC"><rect width="100%" height="48" fill="url(#patBandGold)"></rect></svg>
+  @endif
+
+@elseif($type === 'home_rich_text')
+  <section style="background:{{ $s['bg_color'] ?? '#F7F5F0' }}">
+    <div style="max-width:1200px; margin:0 auto; padding:64px 24px; display:flex; flex-wrap:wrap; align-items:center; gap:48px">
+      <div style="flex:1.2 1 380px; min-width:0">
+        @if(!empty($s['eyebrow']))
+          <div style="font-size:12px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#8F3F26; margin-bottom:10px">{{ $s['eyebrow'] }}</div>
+        @endif
+        @if(!empty($s['heading']))
+          <h2 style="margin:0 0 14px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(32px,3.8vw,48px); line-height:1.08; color:{{ $s['text_color'] ?? '#1F2A24' }}">{{ $s['heading'] }}</h2>
+          <svg aria-hidden="true" width="120" height="10" style="display:block; margin:0 0 18px"><rect width="120" height="10" fill="url(#patStitchGold)"></rect></svg>
+        @endif
+        @if(!empty($s['body']))
+          <div style="font-size:17px; color:#5A5044; line-height:1.75; white-space:pre-line">{{ $s['body'] }}</div>
+        @endif
+        @if(!empty($s['cta_text']))
+          <div style="margin-top:24px">
+            <a href="{{ $linkHref($s['cta_href'] ?? '/shop') }}" style="display:inline-block; background:#1F4D3A; color:#FBF6EC; font-weight:600; padding:14px 28px; border-radius:999px; text-decoration:none; font-size:15px">{{ $s['cta_text'] }}</a>
+          </div>
+        @endif
+      </div>
+      @if(!empty($s['image_url']))
+        <div style="flex:1 1 340px; min-width:0">
+          <div style="border:1.5px solid #B8892F; border-radius:24px; padding:8px; background:#FBF6EC">
+            <img src="{{ $s['image_url'] }}" alt="{{ $s['heading'] ?? 'Sorolata' }}" style="width:100%; max-height:420px; object-fit:cover; border-radius:16px; display:block">
+          </div>
+        </div>
+      @endif
+    </div>
+  </section>
 @endif

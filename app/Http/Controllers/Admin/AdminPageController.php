@@ -67,19 +67,7 @@ class AdminPageController extends Controller
             'layout_json' => [
                 'version' => 1,
                 'page_type' => $validated['page_type'],
-                'sections' => [
-                    [
-                        'id' => 'sec_hero_' . uniqid(),
-                        'type' => 'hero_cinematic',
-                        'is_active' => true,
-                        'settings' => [
-                            'badge_text' => 'GI Certified Heritage Artifact',
-                            'headline' => $validated['title'],
-                            'subheadline' => 'An archival voyage into centuries of Bengali master artisans.',
-                            'primary_cta_text' => 'Explore Collection',
-                        ],
-                    ],
-                ],
+                'sections' => \App\Livewire\Builder\VisualPageBuilder::getSorolataPageDefaults($slug, $validated['title']),
             ],
             'seo_meta' => [
                 'title' => $validated['title'] . ' — Sorolata',

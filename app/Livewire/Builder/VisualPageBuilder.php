@@ -94,11 +94,12 @@ class VisualPageBuilder extends Component
             $this->seoDescription = $page->seo_meta['description'] ?? '';
 
             $isHome = ($this->slug === 'home' || $this->pageType === 'home');
+            $isCoreIndividual = in_array($this->slug, ['about', 'contact'], true);
             $hasHomeBlocks = !empty($this->sections) && collect($this->sections)->contains(
                 fn ($s) => is_array($s) && str_starts_with((string) ($s['type'] ?? ''), 'home_')
             );
 
-            if (empty($this->sections) || ($isHome && !$hasHomeBlocks)) {
+            if (empty($this->sections) || (($isHome || $isCoreIndividual) && !$hasHomeBlocks)) {
                 $this->loadDefaultPageSections($page);
             } elseif ($isHome) {
                 $this->ensureBilingualSections();
@@ -170,7 +171,29 @@ class VisualPageBuilder extends Component
         $newId = 'sec_' . Str::random(8);
         $blockType = BlockType::tryFrom($type) ?? BlockType::HERO_CINEMATIC;
 
-        if (str_starts_with($blockType->value, 'home_')) {
+        if ($blockType->value === 'home_page_header') {
+            $defaultSettings = [
+                'bg_color' => '#F0E6D0',
+                'text_color' => '#1F2A24',
+                'show_pattern' => true,
+                'show_band' => false,
+                'breadcrumb' => $this->title ?: 'Page',
+                'eyebrow' => 'Sorolata Heritage',
+                'title' => $this->title ?: 'Heritage Page Title',
+                'subtitle' => 'Handmade in Bangladesh. Passed down from parent to child.',
+            ];
+        } elseif ($blockType->value === 'home_rich_text') {
+            $defaultSettings = [
+                'bg_color' => '#F7F5F0',
+                'text_color' => '#1F2A24',
+                'eyebrow' => 'Our Craft',
+                'heading' => 'Passed down from parent to child',
+                'body' => 'Every piece at Sorolata is crafted slowly by hand in the villages and districts of Bangladesh.',
+                'cta_text' => 'Explore Catalog →',
+                'cta_href' => '/shop',
+                'image_url' => '',
+            ];
+        } elseif (str_starts_with($blockType->value, 'home_')) {
             $homeDefaults = collect(static::getSorolataHomepageSections())->keyBy('type');
             $defaultSettings = $homeDefaults[$blockType->value]['settings'] ?? [];
         } else {
@@ -587,10 +610,15 @@ class VisualPageBuilder extends Component
 
     public function resetHomepageToDefault(): void
     {
-        $this->sections = static::getSorolataHomepageSections();
+        if ($this->slug === 'home' || $this->pageType === 'home') {
+            $this->sections = static::getSorolataHomepageSections();
+            $this->statusMessage = '✓ Reset to Sorolata Homepage Template';
+        } else {
+            $this->sections = static::getSorolataPageDefaults($this->slug, $this->title);
+            $this->statusMessage = '✓ Reset to Sorolata Heritage Page Template';
+        }
         $this->selectedSectionId = $this->sections[0]['id'] ?? null;
         $this->autoSave();
-        $this->statusMessage = '✓ Reset to Sorolata Homepage Template';
     }
 
     public function moveSection(string $sectionId, string $direction): void
@@ -1317,12 +1345,130 @@ class VisualPageBuilder extends Component
         ];
     }
 
+    public static function getSorolataPageDefaults(string $slug, string $title = 'Sorolata'): array
+    {
+        $home = collect(static::getSorolataHomepageSections())->keyBy('type');
+
+        if ($slug === 'about') {
+            return [
+                [
+                    'id' => 'sec_page_header_' . uniqid(),
+                    'type' => BlockType::HOME_PAGE_HEADER->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'bg_color' => '#F0E6D0',
+                        'text_color' => '#1F2A24',
+                        'show_pattern' => true,
+                        'show_band' => true,
+                        'breadcrumb' => 'About Us',
+                        'eyebrow' => 'Heritage Manifesto',
+                        'title' => 'Craft as a Sacred Living Continuum',
+                        'subtitle' => 'We believe that true luxury is not machine precision; it is the patient, deliberate human touch passed down from parent to child.',
+                    ],
+                ],
+                [
+                    'id' => 'sec_rich_' . uniqid(),
+                    'type' => BlockType::HOME_RICH_TEXT->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'bg_color' => '#F7F5F0',
+                        'text_color' => '#1F2A24',
+                        'eyebrow' => 'Our Mission',
+                        'heading' => 'Rescuing What Power Looms Erased',
+                        'body' => "Every piece at Sorolata names its maker and the district it comes from.\n\nFrom the humid morning river mist of Sonargaon to the bell-metal foundries of Bogura, we partner directly with master artisans so their craft—and their families—thrive.",
+                        'cta_text' => 'Meet Our Makers →',
+                        'cta_href' => '/artisans',
+                        'image_url' => '',
+                    ],
+                ],
+                array_merge($home[BlockType::HOME_STORY_TIMELINE->value], ['id' => 'sec_timeline_' . uniqid()]),
+                array_merge($home[BlockType::HOME_WHY->value], ['id' => 'sec_why_' . uniqid()]),
+                array_merge($home[BlockType::HOME_NEWSLETTER->value], ['id' => 'sec_newsletter_' . uniqid()]),
+            ];
+        }
+
+        if ($slug === 'contact') {
+            return [
+                [
+                    'id' => 'sec_page_header_' . uniqid(),
+                    'type' => BlockType::HOME_PAGE_HEADER->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'bg_color' => '#F0E6D0',
+                        'text_color' => '#1F2A24',
+                        'show_pattern' => true,
+                        'show_band' => false,
+                        'breadcrumb' => 'Contact',
+                        'eyebrow' => 'Curator Concierge',
+                        'title' => 'Connect With Our Atelier',
+                        'subtitle' => 'Whether you wish to commission a family heirloom, verify a district piece, or arrange international delivery—our desk is at your service.',
+                    ],
+                ],
+                [
+                    'id' => 'sec_rich_' . uniqid(),
+                    'type' => BlockType::HOME_RICH_TEXT->value,
+                    'is_active' => true,
+                    'settings' => [
+                        'bg_color' => '#F7F5F0',
+                        'text_color' => '#1F2A24',
+                        'eyebrow' => 'Dhaka & Worldwide',
+                        'heading' => 'Direct Support for Collectors',
+                        'body' => "Reach us on WhatsApp, phone, or email for custom weaving requests, wedding gifting, and insured courier tracking to Bangladesh, USA, UK, Canada, and Europe.",
+                        'cta_text' => 'Track Your Order →',
+                        'cta_href' => '/track-order',
+                        'image_url' => '',
+                    ],
+                ],
+                array_merge($home[BlockType::HOME_WHY->value], ['id' => 'sec_why_' . uniqid()]),
+                array_merge($home[BlockType::HOME_NEWSLETTER->value], ['id' => 'sec_newsletter_' . uniqid()]),
+            ];
+        }
+
+        return [
+            [
+                'id' => 'sec_page_header_' . uniqid(),
+                'type' => BlockType::HOME_PAGE_HEADER->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F0E6D0',
+                    'text_color' => '#1F2A24',
+                    'show_pattern' => true,
+                    'show_band' => false,
+                    'breadcrumb' => $title,
+                    'eyebrow' => 'Sorolata Heritage',
+                    'title' => $title,
+                    'subtitle' => 'Handmade in Bangladesh. Passed down from parent to child.',
+                ],
+            ],
+            [
+                'id' => 'sec_rich_' . uniqid(),
+                'type' => BlockType::HOME_RICH_TEXT->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'text_color' => '#1F2A24',
+                    'eyebrow' => 'Story & Craft',
+                    'heading' => $title,
+                    'body' => 'Every piece names its maker and the district it comes from.',
+                    'cta_text' => 'Shop Collection →',
+                    'cta_href' => '/shop',
+                    'image_url' => '',
+                ],
+            ],
+            array_merge($home[BlockType::HOME_PRODUCTS->value], ['id' => 'sec_products_' . uniqid()]),
+            array_merge($home[BlockType::HOME_NEWSLETTER->value], ['id' => 'sec_newsletter_' . uniqid()]),
+        ];
+    }
+
     protected function loadDefaultPageSections(Page $page): void
     {
         if ($page->slug === 'home' || $page->page_type === 'home') {
             $this->sections = static::getSorolataHomepageSections();
             return;
         }
+
+        $this->sections = static::getSorolataPageDefaults($page->slug, $page->title);
+        return;
 
         if (false) {
             $defaults = $this->getBilingualHomepageDefaults();

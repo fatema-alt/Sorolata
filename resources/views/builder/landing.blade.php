@@ -36,6 +36,9 @@
             $containerWidth = ($settings['container_width'] ?? 'boxed') === 'full' ? 'w-full px-4' : 'max-w-7xl mx-auto px-6 lg:px-12';
         @endphp
 
+        @if (str_starts_with($type, 'home_'))
+            @include('storefront.sections.render-block', ['section' => $section, 'isBuilder' => false])
+        @else
         <section class="w-full transition-colors {{ $settings['custom_class'] ?? '' }}"
                  style="background-color: {{ $settings['bg_color'] ?? '#FFFFFF' }}; padding-top: {{ $settings['padding_top'] ?? '64px' }}; padding-bottom: {{ $settings['padding_bottom'] ?? '64px' }};">
             <div class="{{ $containerWidth }}">
@@ -827,6 +830,7 @@
 
             </div>
         </section>
+        @endif
     @empty
         <div class="min-h-[50vh] flex flex-col items-center justify-center text-center px-4">
             <h2 class="font-editorial-heading text-3xl text-[#1D1D1D] mb-2">Page Under Archival Curation</h2>

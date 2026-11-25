@@ -58,6 +58,8 @@ enum BlockType: string
     case HOME_STORIES = 'home_stories';
     case HOME_NEWSLETTER = 'home_newsletter';
     case HOME_FOOTER = 'home_footer';
+    case HOME_PAGE_HEADER = 'home_page_header';
+    case HOME_RICH_TEXT = 'home_rich_text';
 
     public function defaultTitle(): string
     {
@@ -113,6 +115,8 @@ enum BlockType: string
             self::HOME_STORIES => 'Craft Stories Grid',
             self::HOME_NEWSLETTER => 'Newsletter Banner',
             self::HOME_FOOTER => 'Heritage Footer',
+            self::HOME_PAGE_HEADER => 'Heritage Page Header Banner',
+            self::HOME_RICH_TEXT => 'Heritage Story & Media Block',
         };
     }
 

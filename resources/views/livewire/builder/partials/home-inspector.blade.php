@@ -691,6 +691,65 @@
         </div>
       @endforeach
     </div>
+
+  {{-- 14. HERITAGE PAGE HEADER --}}
+  @elseif($type === 'home_page_header')
+    <div class="{{ $cardClass }}">
+      <div>
+        <label class="{{ $labelClass }}">Breadcrumb Label</label>
+        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.breadcrumb" class="{{ $inputClass }}">
+      </div>
+      <div>
+        <label class="{{ $labelClass }}">Eyebrow</label>
+        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.eyebrow" class="{{ $inputClass }}">
+      </div>
+      <div>
+        <label class="{{ $labelClass }}">Page Title (H1)</label>
+        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.title" class="{{ $inputClass }}">
+      </div>
+      <div>
+        <label class="{{ $labelClass }}">Subtitle</label>
+        <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subtitle" class="{{ $inputClass }}"></textarea>
+      </div>
+    </div>
+
+  {{-- 15. HERITAGE STORY & MEDIA BLOCK --}}
+  @elseif($type === 'home_rich_text')
+    <div class="{{ $cardClass }}">
+      <div>
+        <label class="{{ $labelClass }}">Eyebrow</label>
+        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.eyebrow" class="{{ $inputClass }}">
+      </div>
+      <div>
+        <label class="{{ $labelClass }}">Heading</label>
+        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.heading" class="{{ $inputClass }}">
+      </div>
+      <div>
+        <label class="{{ $labelClass }}">Narrative Body</label>
+        <textarea rows="5" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.body" class="{{ $inputClass }}"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="{{ $labelClass }}">Button Text (optional)</label>
+          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.cta_text" class="{{ $inputClass }}">
+        </div>
+        <div>
+          <label class="{{ $labelClass }}">Button URL</label>
+          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.cta_href" class="{{ $inputClass }}">
+        </div>
+      </div>
+    </div>
+    <div class="{{ $cardClass }}">
+      <span class="text-xs font-semibold text-white block">Side Image (Optional)</span>
+      @if(!empty($s['image_url']))
+        <div class="relative rounded-lg overflow-hidden border border-[#282d37] h-28 bg-[#12141a]">
+          <img src="{{ $s['image_url'] }}" class="w-full h-full object-cover">
+          <button type="button" wire:click="removeImage" class="absolute top-1.5 right-1.5 px-2 py-0.5 rounded bg-red-600 text-white text-[10px] font-semibold">Remove</button>
+        </div>
+      @endif
+      <input type="file" wire:model="uploadedImage" accept="image/*" class="block w-full text-[11px] text-gray-300 file:mr-2 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-[11px] file:font-semibold file:bg-[#214E34] file:text-white">
+      <input type="text" placeholder="Or Image URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.image_url" class="{{ $inputClass }}">
+    </div>
   @endif
 
 @elseif($inspectorTab === 'style')
