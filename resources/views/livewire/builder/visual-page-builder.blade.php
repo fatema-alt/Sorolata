@@ -370,9 +370,6 @@
                             <div class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold pt-2">Showcase & Catalog</div>
                             @foreach([
                                 ['home_product_showcase', 'Product Hero & Gallery'],
-                                ['home_process_steps', 'How It Is Made Steps'],
-                                ['home_maker_feature', 'Meet the Maker Spotlight'],
-                                ['home_product_details', 'Product Specs & District'],
                                 ['home_hero', 'Hero & Arch Frame'],
                                 ['home_districts', 'Shop by District & Map'],
                                 ['home_crafts', 'Shop by Craft Grid'],

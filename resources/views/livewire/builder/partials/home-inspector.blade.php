@@ -780,15 +780,9 @@
         <label class="{{ $labelClass }}">Product Title</label>
         <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.title" class="{{ $inputClass }}">
       </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="{{ $labelClass }}">Maker Name</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.artisan_label" class="{{ $inputClass }}">
-        </div>
-        <div>
-          <label class="{{ $labelClass }}">Years / Workshop</label>
-          <input type="text" placeholder="32 years of handcraft" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.artisan_years" class="{{ $inputClass }}">
-        </div>
+      <div>
+        <label class="{{ $labelClass }}">Maker Name</label>
+        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.artisan_label" class="{{ $inputClass }}">
       </div>
       <div>
         <label class="{{ $labelClass }}">Short Subtitle</label>
@@ -804,46 +798,7 @@
           <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.wishlist_text" class="{{ $inputClass }}">
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="{{ $labelClass }}">WhatsApp Button</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.whatsapp_text" class="{{ $inputClass }}">
-        </div>
-        <div>
-          <label class="{{ $labelClass }}">WhatsApp URL</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.whatsapp_href" class="{{ $inputClass }}">
-        </div>
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Maker Payout Title</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.payout_title" class="{{ $inputClass }}">
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Maker Payout Note</label>
-        <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.payout_note" class="{{ $inputClass }}"></textarea>
-      </div>
       <p class="text-[10px] text-emerald-400">Product photos & price sync automatically from the Product Editor (Media & Gallery tab).</p>
-    </div>
-
-    <div class="{{ $cardClass }}">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-semibold text-white">Delivery Selector Options</span>
-        <button type="button" wire:click="addRepeaterItem('delivery_options')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add</button>
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Selector Heading</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.delivery_heading" class="{{ $inputClass }}">
-      </div>
-      @foreach(($s['delivery_options'] ?? []) as $i => $opt)
-        <div class="p-2 rounded bg-[#12141a] border border-[#282d37] space-y-1.5" wire:key="pdeliv-{{ $sIndex }}-{{ $i }}">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] text-gray-400">Option #{{ $i + 1 }}</span>
-            <button type="button" wire:click="removeRepeaterItem('delivery_options', {{ $i }})" class="text-red-400 text-xs">✕</button>
-          </div>
-          <input type="text" placeholder="Label" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.delivery_options.{{ $i }}.label" class="{{ $inputClass }}">
-          <input type="text" placeholder="Delivery note" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.delivery_options.{{ $i }}.note" class="{{ $inputClass }}">
-        </div>
-      @endforeach
     </div>
 
     <div class="{{ $cardClass }}">
@@ -857,132 +812,6 @@
           <button type="button" wire:click="removeRepeaterItem('trust_items', {{ $i }})" class="px-2 py-1.5 rounded bg-[#222731] text-red-400 text-xs">✕</button>
         </div>
       @endforeach
-    </div>
-
-  {{-- 17. HOW IT IS MADE (PROCESS STEPS) --}}
-  @elseif($type === 'home_process_steps')
-    <div class="{{ $cardClass }}">
-      <div>
-        <label class="{{ $labelClass }}">Eyebrow</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.eyebrow" class="{{ $inputClass }}">
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Heading</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.heading" class="{{ $inputClass }}">
-      </div>
-    </div>
-    <div class="{{ $cardClass }}">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-semibold text-white">Craft Steps ({{ count($s['items'] ?? []) }})</span>
-        <button type="button" wire:click="addRepeaterItem('items')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add</button>
-      </div>
-      @foreach(($s['items'] ?? []) as $i => $step)
-        <div class="p-2 rounded bg-[#12141a] border border-[#282d37] space-y-1.5" wire:key="pstep-{{ $sIndex }}-{{ $i }}">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] text-gray-400">Step #{{ $i + 1 }}</span>
-            <button type="button" wire:click="removeRepeaterItem('items', {{ $i }})" class="text-red-400 text-xs">✕</button>
-          </div>
-          <div class="grid grid-cols-4 gap-1.5">
-            <input type="text" placeholder="#" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.items.{{ $i }}.step" class="{{ $inputClass }}">
-            <input type="text" placeholder="Step Title" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.items.{{ $i }}.title" class="{{ $inputClass }} col-span-3">
-          </div>
-          <textarea rows="2" placeholder="Description" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.items.{{ $i }}.text" class="{{ $inputClass }}"></textarea>
-        </div>
-      @endforeach
-    </div>
-
-  {{-- 18. MEET THE MAKER SPOTLIGHT --}}
-  @elseif($type === 'home_maker_feature')
-    <div class="{{ $cardClass }}">
-      <div>
-        <label class="{{ $labelClass }}">Eyebrow</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.eyebrow" class="{{ $inputClass }}">
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Maker Name</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.name" class="{{ $inputClass }}">
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Craft · District · Years</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.meta" class="{{ $inputClass }}">
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Maker Quote</label>
-        <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.quote" class="{{ $inputClass }}"></textarea>
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Portrait Image URL (optional)</label>
-        <input type="text" placeholder="Auto from artisan profile" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.image_url" class="{{ $inputClass }}">
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="{{ $labelClass }}">Button Text</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.cta_text" class="{{ $inputClass }}">
-        </div>
-        <div>
-          <label class="{{ $labelClass }}">Button URL</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.cta_href" class="{{ $inputClass }}">
-        </div>
-      </div>
-    </div>
-
-  {{-- 19. PRODUCT DETAILS & DISTRICT SPOTLIGHT --}}
-  @elseif($type === 'home_product_details')
-    <div class="{{ $cardClass }}">
-      <div>
-        <label class="{{ $labelClass }}">Specs Eyebrow</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.eyebrow" class="{{ $inputClass }}">
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Specs Heading</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.heading" class="{{ $inputClass }}">
-      </div>
-      <div class="flex items-center justify-between pt-1">
-        <span class="text-xs font-semibold text-white">Specification Rows</span>
-        <button type="button" wire:click="addRepeaterItem('specs')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add</button>
-      </div>
-      @foreach(($s['specs'] ?? []) as $i => $spec)
-        <div class="p-2 rounded bg-[#12141a] border border-[#282d37] space-y-1.5" wire:key="pspec-{{ $sIndex }}-{{ $i }}">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] text-gray-400">Row #{{ $i + 1 }}</span>
-            <button type="button" wire:click="removeRepeaterItem('specs', {{ $i }})" class="text-red-400 text-xs">✕</button>
-          </div>
-          <input type="text" placeholder="Label (e.g. Materials)" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.specs.{{ $i }}.label" class="{{ $inputClass }}">
-          <input type="text" placeholder="Value" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.specs.{{ $i }}.value" class="{{ $inputClass }}">
-        </div>
-      @endforeach
-    </div>
-
-    <div class="{{ $cardClass }}">
-      <span class="text-xs font-semibold text-white block">District Spotlight Card</span>
-      <div>
-        <label class="{{ $labelClass }}">Card Eyebrow</label>
-        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.district_eyebrow" class="{{ $inputClass }}">
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="{{ $labelClass }}">District (EN)</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.district_title" class="{{ $inputClass }}">
-        </div>
-        <div>
-          <label class="{{ $labelClass }}">District (BN)</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.district_bn" class="{{ $inputClass }}">
-        </div>
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">District Story</label>
-        <textarea rows="3" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.district_body" class="{{ $inputClass }}"></textarea>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="{{ $labelClass }}">Button Text</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.district_cta_text" class="{{ $inputClass }}">
-        </div>
-        <div>
-          <label class="{{ $labelClass }}">Button URL</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.district_cta_href" class="{{ $inputClass }}">
-        </div>
-      </div>
     </div>
   @endif
 

@@ -35,18 +35,47 @@
     $artisanName = $product->artisan?->getLocalized('full_name') ?? __('Master Maker');
 @endphp
 
-<!-- Dynamic Product Page Builder Sections (Hero Gallery, How It Is Made, Meet the Maker, Details & District) -->
+<!-- Dynamic Product Page Builder Sections -->
 @foreach($sectionsToRender as $section)
     @if(str_starts_with($section['type'] ?? '', 'home_'))
         @include('storefront.sections.render-block', ['section' => $section, 'isBuilder' => false, 'product' => $product])
     @endif
 @endforeach
 
+<!-- Meet the Maker -->
+@if($product->artisan)
+<section style="background:#F0E6D0; position:relative; overflow:hidden">
+    <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; left:0; top:0; pointer-events:none"><rect width="100%" height="100%" fill="url(#patJaliGold)" opacity="0.4"></rect></svg>
+    <div style="position:relative; max-width:1000px; margin:0 auto; padding:72px 24px; display:flex; flex-wrap:wrap; align-items:center; gap:40px">
+        <div style="flex:0 0 260px; margin:0 auto">
+            <div style="border:1.5px solid #B8892F; border-radius:999px 999px 16px 16px; padding:7px; background:#FBF6EC">
+                <div style="height:300px; border-radius:999px 999px 10px 10px; overflow:hidden; background:#6E7FB8">
+                    <img src="{{ $product->artisan->portrait_url }}" alt="{{ $artisanName }}" style="width:100%; height:100%; object-fit:cover; display:block">
+                </div>
+            </div>
+        </div>
+        <div style="flex:1 1 340px; min-width:0">
+            <div style="font-size:12px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#8F3F26; margin-bottom:8px">{{ __('Our makers') }}</div>
+            <h2 style="margin:0 0 6px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:38px; line-height:1.1; color:#1F4D3A">{{ $artisanName }}</h2>
+            <div style="font-size:15px; font-weight:600; color:#2B2118; margin-bottom:14px">
+                {{ $product->artisan->craft_type?->title() }} · {{ $districtName }} · {{ __(':count years of work', ['count' => $product->artisan->years_of_mastery ?? 25]) }}
+            </div>
+            @if($product->artisan->bio_en || $product->artisan->bio_bn)
+                <p style="margin:0 0 22px; font-size:16px; color:#5A5044; line-height:1.65">{{ $product->artisan->getLocalized('bio') }}</p>
+            @endif
+            <a href="{{ route('artisan.show', $product->artisan->slug ?? $product->artisan->uuid) }}" style="display:inline-block; background:#1F4D3A; color:#FBF6EC; font-weight:600; padding:12px 26px; border-radius:999px; text-decoration:none; font-size:14px">
+                {{ __('See maker profile →') }}
+            </a>
+        </div>
+    </div>
+</section>
+@endif
+
 <!-- Story -->
 @if(isset($relatedStories) && $relatedStories->isNotEmpty())
 @php $story = $relatedStories->first(); @endphp
 <section style="background:#F7F5F0">
-    <div style="max-width:1000px; margin:0 auto; padding:56px 24px">
+    <div style="max-width:1000px; margin:0 auto; padding:64px 24px">
         <div style="background:#fff; border:1px solid #E3D8BC; border-radius:20px; padding:28px; display:flex; flex-wrap:wrap; gap:28px; align-items:center">
             <div style="flex:1 1 280px; border-radius:14px; overflow:hidden; aspect-ratio:16/10; background:#F0E6D0">
                 <img src="{{ $story->hero_image }}" alt="{{ $story->getLocalized('title') }}" style="width:100%; height:100%; object-fit:cover; display:block">
@@ -68,9 +97,9 @@
 </section>
 @endif
 
-<!-- Customer Reviews (Sand #F0E6D0 + Centered White .rev Card) -->
+<!-- Customer Reviews -->
 <section id="reviews" style="background:#F0E6D0">
-    <svg aria-hidden="true" width="100%" height="18" style="display:block; background:#FBF6EC"><rect width="100%" height="18" fill="url(#patBandGold)"></rect></svg>
+    <svg aria-hidden="true" width="100%" height="10" style="display:block"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
     <div style="max-width:1000px; margin:0 auto; padding:72px 24px">
         @if(session('review_success'))
             <div style="margin-bottom:24px; padding:14px 18px; border-radius:14px; background:#E7EEE4; border:1px solid #C5D3BF; color:#1F4D3A; font-size:14px; font-weight:600">
@@ -90,8 +119,8 @@
         @if($reviews->isNotEmpty())
             <div style="display:flex; flex-wrap:wrap; gap:20px; margin-bottom:40px">
                 @foreach($reviews as $rev)
-                    <div style="position:relative; flex:1 1 280px; min-width:0; border:1px solid #D9C28A; border-radius:18px; padding:26px; background:#fff; box-shadow:0 8px 20px rgba(43,33,24,0.04); overflow:hidden">
-                        <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" style="position:absolute; right:0; top:0; color:#B8892F; opacity:0.6"><use href="#cornerArt"></use></svg>
+                    <div style="position:relative; flex:1 1 280px; min-width:0; border:2px dashed #BBA57B; border-radius:18px; padding:26px; background:#FBF6EC; overflow:hidden">
+                        <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" style="position:absolute; right:0; top:0; color:#B8892F; opacity:0.7"><use href="#cornerArt"></use></svg>
                         <div style="font-family:'Cormorant Garamond',Georgia,serif; font-size:56px; line-height:0.7; color:#B8892F; height:24px" aria-hidden="true">“</div>
                         @if($rev->title)
                             <div style="font-weight:700; font-size:15px; color:#1F4D3A; margin-bottom:6px">{{ $rev->title }}</div>
@@ -103,16 +132,16 @@
             </div>
         @endif
 
-        <div style="max-width:740px; margin:0 auto; background:#fff; border:1px solid #D9C28A; border-radius:20px; padding:32px; box-shadow:0 10px 28px rgba(43,33,24,0.05)">
-            <h3 style="margin:0 0 16px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:28px; color:#1F4D3A; text-align:center">
+        <div style="background:#fff; border:1px solid #E3D8BC; border-radius:20px; padding:32px">
+            <h3 style="margin:0 0 16px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:28px; color:#1F4D3A">
                 {{ __('Write a review') }}
             </h3>
             <form action="{{ route('products.review.submit', $product->slug) }}" method="POST" style="display:flex; flex-direction:column; gap:16px" x-data="{ rating: 5 }">
                 @csrf
-                <div style="display:flex; align-items:center; justify-content:center; gap:8px">
+                <div style="display:flex; align-items:center; gap:8px">
                     <span style="font-size:14px; font-weight:600; color:#2B2118">{{ __('Rating:') }}</span>
                     <template x-for="star in 5" :key="star">
-                        <button type="button" @click="rating = star" style="border:0; background:none; font-size:22px; padding:0 2px; cursor:pointer" :style="star <= rating ? 'color:#B8892F' : 'color:#D9D2C0'">★</button>
+                        <button type="button" @click="rating = star" style="border:0; background:none; font-size:22px; padding:0 2px" :style="star <= rating ? 'color:#B8892F' : 'color:#D9D2C0'">★</button>
                     </template>
                     <input type="hidden" name="rating" :value="rating">
                 </div>
@@ -126,8 +155,8 @@
 
                 <textarea name="content" rows="3" required placeholder="{{ __('Write your review here...') }}" style="border:1px solid #D9C28A; border-radius:16px; padding:14px 18px; font-size:14px; background:#FBF6EC; color:#2B2118">{{ old('content') }}</textarea>
 
-                <div style="text-align:center">
-                    <button type="submit" style="background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:13px 32px; font-size:15px; font-weight:600; cursor:pointer">
+                <div>
+                    <button type="submit" style="background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:13px 28px; font-size:15px; font-weight:600">
                         {{ __('Submit review →') }}
                     </button>
                 </div>
@@ -135,32 +164,6 @@
         </div>
     </div>
 </section>
-
-<!-- More from District -->
-@if(isset($relatedProducts) && $relatedProducts->isNotEmpty())
-<section style="background:#F7F5F0; position:relative; overflow:hidden">
-    <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; left:0; top:0; pointer-events:none"><rect width="100%" height="100%" fill="url(#patJaliDark)"></rect></svg>
-    <div style="position:relative; max-width:1200px; margin:0 auto; padding:68px 24px">
-        <div style="display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:32px">
-            <div>
-                <div style="font-size:12px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#8F3F26; margin-bottom:8px">{{ __('Keep exploring') }}</div>
-                <h2 style="margin:0; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(30px,3.6vw,44px); line-height:1.1; color:#1F2A24">
-                    {{ __('More from') }} {{ $districtName }}
-                </h2>
-            </div>
-            <a href="{{ route('shop.index') }}" style="display:inline-flex; align-items:center; gap:6px; border:1.5px solid #1F4D3A; color:#1F4D3A; border-radius:999px; padding:10px 22px; font-size:14px; font-weight:600">
-                {{ __('See all pieces →') }}
-            </a>
-        </div>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:24px">
-            @foreach($relatedProducts as $relProduct)
-                <x-product-card :product="$relProduct" />
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

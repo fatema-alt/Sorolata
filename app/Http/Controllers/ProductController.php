@@ -109,20 +109,6 @@ class ProductController extends Controller
         $relatedStories = $product->stories;
         $reviews = $product->reviews;
         $averageRating = $reviews->count() > 0 ? round($reviews->avg('rating'), 1) : 5.0;
-        $relatedProducts = Product::with(['artisan', 'district', 'media'])
-            ->where('status', 'published')
-            ->where('id', '!=', $product->id)
-            ->when($product->district_id, fn($q) => $q->where('district_id', $product->district_id))
-            ->take(4)
-            ->get();
-
-        if ($relatedProducts->isEmpty()) {
-            $relatedProducts = Product::with(['artisan', 'district', 'media'])
-                ->where('status', 'published')
-                ->where('id', '!=', $product->id)
-                ->take(4)
-                ->get();
-        }
 
         return view('products.show', [
             'product' => $product,
@@ -132,7 +118,6 @@ class ProductController extends Controller
             'relatedStories' => $relatedStories,
             'reviews' => $reviews,
             'averageRating' => $averageRating,
-            'relatedProducts' => $relatedProducts,
         ]);
     }
 
