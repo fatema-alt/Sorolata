@@ -1259,6 +1259,7 @@ class VisualPageBuilder extends Component
                     'search_href' => '/search',
                     'cart_href' => '/cart',
                     'nav_links' => [
+                        ['label' => 'Home', 'href' => '/'],
                         ['label' => 'Shop', 'href' => '/shop'],
                         ['label' => 'Districts', 'href' => '/districts'],
                         ['label' => 'Our Makers', 'href' => '/artisans'],
@@ -1528,6 +1529,7 @@ class VisualPageBuilder extends Component
                     'tagline' => 'Handmade things from the districts of Bangladesh, sent from the maker to your home.',
                     'col1_title' => 'Shop',
                     'shop_links' => [
+                        ['label' => 'Home', 'href' => '/'],
                         ['label' => 'All products', 'href' => '/shop'],
                         ['label' => 'By district', 'href' => '/districts'],
                         ['label' => 'By craft', 'href' => '/shop'],

@@ -69,6 +69,7 @@
         $hs = $headerBlock['settings'] ?? [];
         $fs = $footerBlock['settings'] ?? [];
         $navLinks = $hs['nav_links'] ?? [
+            ['label' => 'Home', 'href' => '/'],
             ['label' => 'Shop', 'href' => '/shop'],
             ['label' => 'Districts', 'href' => '/districts'],
             ['label' => 'Our Makers', 'href' => '/artisans'],
@@ -76,6 +77,9 @@
             ['label' => 'About Us', 'href' => '/about'],
             ['label' => 'Contact', 'href' => '/contact'],
         ];
+        if (!collect($navLinks)->contains(fn($l) => ($l['href'] ?? '') === '/' || strtolower((string) ($l['label'] ?? '')) === 'home')) {
+            array_unshift($navLinks, ['label' => 'Home', 'href' => '/']);
+        }
         $bagCount = count(session('sorolata_collector_bag', []));
     @endphp
 
@@ -190,11 +194,15 @@
     <!-- Heritage Footer (Homepage Essence) -->
     @php
         $shopLinks = $fs['shop_links'] ?? [
+            ['label' => 'Home', 'href' => '/'],
             ['label' => 'All products', 'href' => '/shop'],
             ['label' => 'By district', 'href' => '/districts'],
             ['label' => 'By craft', 'href' => '/shop'],
             ['label' => 'Gifts', 'href' => '/shop'],
         ];
+        if (!collect($shopLinks)->contains(fn($l) => ($l['href'] ?? '') === '/' || strtolower((string) ($l['label'] ?? '')) === 'home')) {
+            array_unshift($shopLinks, ['label' => 'Home', 'href' => '/']);
+        }
         $helpLinks = $fs['help_links'] ?? [
             ['label' => 'Track your order', 'href' => '/track-order'],
             ['label' => 'Delivery and returns', 'href' => '/contact'],

@@ -22,6 +22,9 @@
     $topBarColor = $s['topbar_color'] ?? '#FBF6EC';
     $headerBg = $s['bg_color'] ?? '#F7F5F0';
     $navLinks = $s['nav_links'] ?? [];
+    if (!collect($navLinks)->contains(fn($l) => ($l['href'] ?? '') === '/' || strtolower((string) ($l['label'] ?? '')) === 'home')) {
+        array_unshift($navLinks, ['label' => 'Home', 'href' => '/']);
+    }
   @endphp
   @if(($s['show_topbar'] ?? true))
     <div style="background:{{ $topBarBg }}; color:{{ $topBarColor }}; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-align:center; padding:10px 16px">
@@ -599,6 +602,9 @@
 @elseif($type === 'home_footer')
   @php
     $shopLinks = $s['shop_links'] ?? [];
+    if (!collect($shopLinks)->contains(fn($l) => ($l['href'] ?? '') === '/' || strtolower((string) ($l['label'] ?? '')) === 'home')) {
+        array_unshift($shopLinks, ['label' => 'Home', 'href' => '/']);
+    }
     $helpLinks = $s['help_links'] ?? [];
     $contactLines = $s['contact_lines'] ?? [];
   @endphp
