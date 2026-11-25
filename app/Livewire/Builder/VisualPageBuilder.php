@@ -207,15 +207,74 @@ class VisualPageBuilder extends Component
                 'district_label' => '',
                 'title' => $this->title ?: 'Heritage Piece',
                 'artisan_label' => '',
+                'artisan_years' => '32 years of handcraft',
                 'subtitle' => '',
-                'add_to_cart_text' => 'Add to Cart',
-                'wishlist_text' => 'Save to Wishlist',
-                'wishlist_saved_text' => 'Saved in Wishlist',
+                'delivery_heading' => 'Where should we send it?',
+                'delivery_options' => [
+                    ['label' => 'Inside Bangladesh', 'note' => 'Delivered in 2 to 4 days · Pay on delivery or online · Free over ৳ 5,000'],
+                    ['label' => 'Send abroad (USA, UK, EU, Canada)', 'note' => 'Tracked air parcel in 7 to 10 days · Customs receipt included'],
+                ],
+                'add_to_cart_text' => 'Bring it home',
+                'whatsapp_text' => 'Ask us on WhatsApp',
+                'whatsapp_href' => 'https://wa.me/8801711000000',
+                'wishlist_text' => 'Save for later',
+                'wishlist_saved_text' => 'Saved',
+                'payout_title' => 'Fair pay to the maker',
+                'payout_note' => 'Most of what you pay goes straight to the maker, not a middleman.',
                 'trust_items' => [
                     ['text' => 'Made by hand'],
                     ['text' => 'Fair pay to makers'],
                     ['text' => 'Ships worldwide'],
                 ],
+            ];
+        } elseif ($blockType->value === 'home_process_steps') {
+            $defaultSettings = [
+                'bg_color' => '#F7F5F0',
+                'text_color' => '#1F2A24',
+                'show_pattern' => true,
+                'show_band' => true,
+                'eyebrow' => 'From the village',
+                'heading' => 'How it is made',
+                'items' => [
+                    ['step' => '1', 'title' => 'Prepared by hand', 'text' => 'Raw local materials are cleaned, sorted, and prepared in the maker’s courtyard.'],
+                    ['step' => '2', 'title' => 'Shaped on traditional tools', 'text' => 'Using wooden looms, bamboo frames, or hand hammers passed down for generations.'],
+                    ['step' => '3', 'title' => 'Detailed slowly', 'text' => 'Patterns and motifs are worked one section at a time with no shortcuts or machines.'],
+                    ['step' => '4', 'title' => 'Checked & packed', 'text' => 'Inspected for quality, wrapped in breathable cloth, and shipped with the maker’s card.'],
+                ],
+            ];
+        } elseif ($blockType->value === 'home_maker_feature') {
+            $defaultSettings = [
+                'bg_color' => '#F0E6D0',
+                'text_color' => '#1F2A24',
+                'show_pattern' => true,
+                'show_band' => true,
+                'eyebrow' => 'Meet the maker',
+                'name' => '',
+                'meta' => '',
+                'quote' => 'When you hold this piece, you hold the patience of our whole family. Every thread and hammer stroke is done the way our elders taught us.',
+                'image_url' => '',
+                'cta_text' => 'See maker profile →',
+                'cta_href' => '/artisans',
+            ];
+        } elseif ($blockType->value === 'home_product_details') {
+            $defaultSettings = [
+                'bg_color' => '#F7F5F0',
+                'text_color' => '#1F2A24',
+                'show_pattern' => true,
+                'show_band' => false,
+                'eyebrow' => 'In the box',
+                'heading' => 'Product details',
+                'specs' => [
+                    ['label' => 'Materials', 'value' => '100% natural, locally sourced'],
+                    ['label' => 'Origin', 'value' => 'Handcrafted in Bangladesh'],
+                    ['label' => 'Care', 'value' => 'Handle gently; keep dry and away from harsh detergents'],
+                ],
+                'district_eyebrow' => 'Where it comes from',
+                'district_title' => '',
+                'district_bn' => '',
+                'district_body' => '',
+                'district_cta_text' => 'Explore district →',
+                'district_cta_href' => '/districts',
             ];
         } elseif (str_starts_with($blockType->value, 'home_')) {
             $homeDefaults = collect(static::getSorolataHomepageSections())->keyBy('type');
@@ -580,6 +639,9 @@ class VisualPageBuilder extends Component
         $newItem = match ($type . ':' . $listKey) {
             'home_header:nav_links' => ['label' => 'New Link', 'href' => '#products'],
             'home_hero:trust_items', 'home_product_showcase:trust_items' => ['text' => 'Authentic handmade craft'],
+            'home_product_showcase:delivery_options' => ['label' => 'New Delivery Option', 'note' => 'Estimated delivery time and details'],
+            'home_process_steps:items' => ['step' => (string) (count($items) + 1), 'title' => 'New Craft Step', 'text' => 'Describe this traditional stage of making.'],
+            'home_product_details:specs' => ['label' => 'Detail', 'value' => 'Handcrafted specification'],
             'home_districts:items' => ['n' => (string) (count($items) + 1), 'name' => 'New District', 'bn' => 'নতুন জেলা', 'craft' => 'Traditional craft', 'href' => '#products', 'cta_text' => 'See products →'],
             'home_crafts:items' => ['name' => 'New Craft', 'line' => 'Handcrafted heritage', 'photo_label' => 'Photo: craft', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#5B6FAE,#26356A)', 'pattern' => 'patCloth', 'href' => '#products'],
             'home_products:items' => ['district' => 'Narayanganj', 'name' => 'New Heritage Piece', 'maker' => 'Master Artisan', 'price' => '৳ 12,000', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9B48A,#8E7545)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'Add to Cart'],
@@ -1376,13 +1438,34 @@ class VisualPageBuilder extends Component
     public static function getSorolataProductDefaults(Product $product): array
     {
         $districtName = $product->district?->name_en ?? $product->district?->getLocalized('name') ?? 'Bangladesh';
+        $districtBn = $product->district?->name_bn ?? '';
+        $districtStory = $product->district?->craft_specialty_en ?? $product->district?->description_en ?? 'A historic craft center of Bengal where families have kept traditional skills alive for generations.';
+        $districtSlug = $product->district?->slug ?? '';
         $artisanName = $product->artisan?->getLocalized('full_name') ?? 'Master Maker';
-        $body = trim(implode("\n\n", array_filter([
-            $product->getLocalized('description'),
-            $product->getLocalized('heritage_story'),
-        ])));
+        $artisanYears = $product->artisan?->years_of_experience ? ($product->artisan->years_of_experience . ' years of handcraft') : 'Traditional family workshop';
+        $artisanCraft = $product->artisan?->craft_specialty_en ?? 'Master Artisan';
+        $artisanQuote = $product->getLocalized('heritage_story') ?: ($product->artisan?->bio_en ?: 'Every piece carries the rhythm of our village and the patience of hands that refuse to rush.');
+        $artisanSlug = $product->artisan?->slug ?? '';
 
-        $sections = [
+        $specs = [];
+        if ($product->materials) {
+            $specs[] = ['label' => 'Materials', 'value' => $product->materials];
+        }
+        if ($product->dimensions) {
+            $specs[] = ['label' => 'Dimensions', 'value' => $product->dimensions];
+        }
+        if ($product->weight_grams) {
+            $specs[] = ['label' => 'Weight', 'value' => $product->weight_grams . ' g'];
+        }
+        if ($product->production_time_days) {
+            $specs[] = ['label' => 'Time to make', 'value' => $product->production_time_days . ' days by hand'];
+        }
+        $specs[] = ['label' => 'Made in', 'value' => $districtName . ', Bangladesh'];
+        if ($product->care_instructions_en) {
+            $specs[] = ['label' => 'Care', 'value' => $product->care_instructions_en];
+        }
+
+        return [
             [
                 'id' => 'sec_prod_showcase_' . uniqid(),
                 'type' => BlockType::HOME_PRODUCT_SHOWCASE->value,
@@ -1395,10 +1478,20 @@ class VisualPageBuilder extends Component
                     'district_label' => $districtName,
                     'title' => $product->getLocalized('title'),
                     'artisan_label' => $artisanName,
-                    'subtitle' => $product->getLocalized('subtitle') ?? '',
-                    'add_to_cart_text' => 'Add to Cart',
-                    'wishlist_text' => 'Save to Wishlist',
-                    'wishlist_saved_text' => 'Saved in Wishlist',
+                    'artisan_years' => $artisanYears,
+                    'subtitle' => $product->getLocalized('subtitle') ?? ($product->getLocalized('description') ? \Illuminate\Support\Str::limit(strip_tags($product->getLocalized('description')), 150) : ''),
+                    'delivery_heading' => 'Where should we send it?',
+                    'delivery_options' => [
+                        ['label' => 'Inside Bangladesh', 'note' => 'Delivered in 2 to 4 days · Pay on delivery or online · Free over ৳ 5,000'],
+                        ['label' => 'Send abroad (USA, UK, EU, Canada)', 'note' => 'Tracked air parcel in 7 to 10 days · Customs receipt included'],
+                    ],
+                    'add_to_cart_text' => 'Bring it home',
+                    'whatsapp_text' => 'Ask us on WhatsApp',
+                    'whatsapp_href' => 'https://wa.me/8801711000000',
+                    'wishlist_text' => 'Save for later',
+                    'wishlist_saved_text' => 'Saved',
+                    'payout_title' => 'Fair pay to the maker',
+                    'payout_note' => 'Most of what you pay goes straight to ' . $artisanName . ', not a middleman.',
                     'trust_items' => [
                         ['text' => 'Made by hand'],
                         ['text' => 'Fair pay to makers'],
@@ -1406,27 +1499,64 @@ class VisualPageBuilder extends Component
                     ],
                 ],
             ],
-        ];
-
-        if ($body !== '') {
-            $sections[] = [
-                'id' => 'sec_prod_about_' . uniqid(),
-                'type' => BlockType::HOME_RICH_TEXT->value,
+            [
+                'id' => 'sec_prod_process_' . uniqid(),
+                'type' => BlockType::HOME_PROCESS_STEPS->value,
                 'is_active' => true,
                 'settings' => [
                     'bg_color' => '#F7F5F0',
                     'text_color' => '#1F2A24',
-                    'eyebrow' => 'Craft & Details',
-                    'heading' => 'About this piece',
-                    'body' => $body,
-                    'cta_text' => '',
-                    'cta_href' => '/shop',
-                    'image_url' => '',
+                    'show_pattern' => true,
+                    'show_band' => true,
+                    'eyebrow' => 'From ' . $districtName,
+                    'heading' => 'How it is made',
+                    'items' => [
+                        ['step' => '1', 'title' => 'Prepared by hand', 'text' => 'Raw local materials are cleaned, sorted, and prepared in the maker’s courtyard.'],
+                        ['step' => '2', 'title' => 'Shaped on traditional tools', 'text' => 'Using wooden looms, bamboo frames, or hand hammers passed down for generations.'],
+                        ['step' => '3', 'title' => 'Detailed slowly', 'text' => 'Patterns and motifs are worked one section at a time with no shortcuts or machines.'],
+                        ['step' => '4', 'title' => 'Checked & packed', 'text' => 'Inspected for quality, wrapped in breathable cloth, and shipped with the maker’s card.'],
+                    ],
                 ],
-            ];
-        }
-
-        return $sections;
+            ],
+            [
+                'id' => 'sec_prod_maker_' . uniqid(),
+                'type' => BlockType::HOME_MAKER_FEATURE->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F0E6D0',
+                    'text_color' => '#1F2A24',
+                    'show_pattern' => true,
+                    'show_band' => true,
+                    'eyebrow' => 'Meet the maker',
+                    'name' => $artisanName,
+                    'meta' => $artisanCraft . ' · ' . $districtName . ' · ' . $artisanYears,
+                    'quote' => \Illuminate\Support\Str::limit(strip_tags($artisanQuote), 240),
+                    'image_url' => '',
+                    'cta_text' => 'See maker profile →',
+                    'cta_href' => $artisanSlug ? '/artisans/' . $artisanSlug : '/artisans',
+                ],
+            ],
+            [
+                'id' => 'sec_prod_details_' . uniqid(),
+                'type' => BlockType::HOME_PRODUCT_DETAILS->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'text_color' => '#1F2A24',
+                    'show_pattern' => true,
+                    'show_band' => false,
+                    'eyebrow' => 'In the box',
+                    'heading' => 'Product details',
+                    'specs' => $specs,
+                    'district_eyebrow' => 'Where it comes from',
+                    'district_title' => $districtName,
+                    'district_bn' => $districtBn,
+                    'district_body' => \Illuminate\Support\Str::limit(strip_tags($districtStory), 200),
+                    'district_cta_text' => 'More from ' . $districtName . ' →',
+                    'district_cta_href' => $districtSlug ? '/districts/' . $districtSlug : '/districts',
+                ],
+            ],
+        ];
     }
 
     public static function getSorolataPageDefaults(string $slug, string $title = 'Sorolata'): array
