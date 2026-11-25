@@ -116,7 +116,13 @@
       <div style="flex:1 1 420px; min-width:0">
         <h1 style="margin:0 0 22px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(46px,5.8vw,80px); line-height:1.0; letter-spacing:-0.01em; color:{{ $s['text_color'] ?? '#1F2A24' }}">{{ $s['headline'] ?? '' }}</h1>
         <p style="margin:0 0 32px; font-size:18px; color:#5A5044; max-width:500px">{{ $s['subheadline'] ?? '' }}</p>
-        <div style="display:flex; flex-wrap:wrap; gap:14px; margin-bottom:36px">
+        <style>
+          @media (max-width: 767px) {
+            .soro-hero-btns { gap: 10px !important; flex-wrap: nowrap !important; }
+            .soro-hero-btns a { padding: 12px 16px !important; font-size: 14px !important; white-space: nowrap; }
+          }
+        </style>
+        <div class="soro-hero-btns" style="display:flex; flex-wrap:wrap; gap:14px; margin-bottom:36px">
           @if(!empty($s['primary_cta_text']))
             <a href="{{ $linkHref($s['primary_cta_href'] ?? '#products') }}" style="background:{{ $primaryBg }}; color:#fff; font-weight:600; padding:16px 30px; border-radius:999px; text-decoration:none; font-size:16px">{{ $s['primary_cta_text'] }}</a>
           @endif
@@ -459,13 +465,18 @@
         <h2 style="margin:0; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(34px,4vw,50px); line-height:1.05; color:{{ $s['text_color'] ?? '#1F2A24' }}">{{ $s['heading'] ?? 'Why people buy from Sorolata' }}</h2>
       </div>
       <div style="display:flex; flex-wrap:wrap; gap:28px">
-        @foreach($whysList as $w)
-          <div style="flex:1 1 230px; min-width:0; text-align:center; display:flex; flex-direction:column; align-items:center; gap:10px">
-            <div style="position:relative; width:96px; height:96px; display:flex; align-items:center; justify-content:center">
-              <svg aria-hidden="true" width="96" height="96" viewBox="0 0 48 48" style="position:absolute; left:0; top:0; color:#B8892F"><use href="#rosetteArt"></use></svg>
-              <div style="position:relative; width:54px; height:54px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center">
-                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ $w['d'] ?? 'M12 4a8 8 0 100 16 8 8 0 000-16z' }}"></path></svg>
-              </div>
+        @php
+          $refinedWhyIcons = [
+            'M12 2L14.4 8.6L21 11L14.4 13.4L12 20L9.6 13.4L3 11L9.6 8.6L12 2Z',
+            'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',
+            'M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10zm0-7a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+            'M12 2l7 4v6c0 5-3.5 9-7 10-3.5-1-7-5-7-10V6l7-4zm-2 10l2 2 4-4',
+          ];
+        @endphp
+        @foreach($whysList as $wIdx => $w)
+          <div style="flex:1 1 230px; min-width:0; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px">
+            <div style="width:66px; height:66px; border-radius:50%; background:#fff; border:1.5px solid #D9C28A; box-shadow:0 4px 14px rgba(43,33,24,0.06); display:flex; align-items:center; justify-content:center">
+              <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ $refinedWhyIcons[$wIdx % 4] ?? ($w['d'] ?? 'M12 4a8 8 0 100 16 8 8 0 000-16z') }}"></path></svg>
             </div>
             <h3 style="margin:0; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:26px; line-height:1.1; color:#1F4D3A">{{ $w['title'] ?? '' }}</h3>
             <p style="margin:0; font-size:15px; color:#5A5044; max-width:260px">{{ $w['text'] ?? '' }}</p>

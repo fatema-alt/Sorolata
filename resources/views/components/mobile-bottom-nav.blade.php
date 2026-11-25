@@ -10,34 +10,38 @@
         right: 0;
         bottom: 0;
         z-index: 50;
-        background: rgba(251, 246, 236, 0.96);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background: #FBF6EC;
         border-top: 1px solid #D9C28A;
-        box-shadow: 0 -6px 24px rgba(43, 33, 24, 0.1);
+        box-shadow: 0 -6px 24px rgba(43, 33, 24, 0.12);
         display: flex;
         align-items: center;
+        justify-content: flex-start;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
         gap: 2px;
+        box-sizing: border-box;
     }
     .soro-mobile-bnav::-webkit-scrollbar { display: none; }
     .soro-mobile-bnav a {
         flex: 0 0 auto;
-        min-width: 64px;
+        min-width: 58px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 3px;
-        padding: 4px 6px;
+        padding: 4px 4px;
         text-decoration: none;
         font-size: 10px;
-        line-height: 1.1;
+        line-height: 1.15;
         position: relative;
         color: #5A5044;
+    }
+    .soro-mobile-bnav a svg {
+        width: 18px;
+        height: 18px;
     }
     .soro-mobile-bnav a.is-active {
         color: #1F4D3A;
