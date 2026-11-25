@@ -230,6 +230,9 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
 
     // Provenance Hubs: Artisans, Districts, Collections
     Route::get('/artisans', [\App\Http\Controllers\Admin\AdminArtisanDistrictController::class, 'artisans'])->name('artisans.index');
+    Route::post('/artisans', [\App\Http\Controllers\Admin\AdminArtisanDistrictController::class, 'storeArtisan'])->name('artisans.store');
+    Route::put('/artisans/{id}', [\App\Http\Controllers\Admin\AdminArtisanDistrictController::class, 'updateArtisan'])->name('artisans.update');
+    Route::delete('/artisans/{id}', [\App\Http\Controllers\Admin\AdminArtisanDistrictController::class, 'destroyArtisan'])->name('artisans.destroy');
     Route::get('/districts', [\App\Http\Controllers\Admin\AdminArtisanDistrictController::class, 'districts'])->name('districts.index');
     Route::post('/districts', [\App\Http\Controllers\Admin\AdminArtisanDistrictController::class, 'storeDistrict'])->name('districts.store');
     Route::put('/districts/{id}', [\App\Http\Controllers\Admin\AdminArtisanDistrictController::class, 'updateDistrict'])->name('districts.update');
