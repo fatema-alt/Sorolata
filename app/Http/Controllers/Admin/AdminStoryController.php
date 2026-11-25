@@ -51,6 +51,22 @@ class AdminStoryController extends Controller
         ]);
     }
 
+    private function handleHeroUpload(Request $request): ?string
+    {
+        if (!$request->hasFile('hero_image_file')) {
+            return null;
+        }
+        $file = $request->file('hero_image_file');
+        $dir = public_path('uploads/stories');
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        $filename = 'story_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+        $file->move($dir, $filename);
+
+        return '/uploads/stories/' . $filename;
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -61,7 +77,8 @@ class AdminStoryController extends Controller
             'category_bn' => 'nullable|string|max:100',
             'author_name' => 'required|string|max:150',
             'author_name_bn' => 'nullable|string|max:150',
-            'hero_image' => 'nullable|url|max:500',
+            'hero_image' => 'nullable|string|max:500',
+            'hero_image_file' => 'nullable|image|max:5120',
             'reading_time' => 'required|integer|min:1',
             'excerpt' => 'nullable|string|max:1000',
             'excerpt_bn' => 'nullable|string|max:1000',
@@ -73,6 +90,7 @@ class AdminStoryController extends Controller
         ]);
 
         $slug = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
+        $uploadedHero = $this->handleHeroUpload($request);
 
         $story = Story::create([
             'uuid' => (string) Str::uuid(),
@@ -83,7 +101,7 @@ class AdminStoryController extends Controller
             'category_bn' => $validated['category_bn'] ?? null,
             'author_name' => $validated['author_name'],
             'author_name_bn' => $validated['author_name_bn'] ?? null,
-            'hero_image' => $validated['hero_image'] ?? 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1200',
+            'hero_image' => $uploadedHero ?? ($validated['hero_image'] ?: 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1200'),
             'reading_time' => (int) $validated['reading_time'],
             'excerpt' => $validated['excerpt'] ?? null,
             'excerpt_bn' => $validated['excerpt_bn'] ?? null,
@@ -128,7 +146,8 @@ class AdminStoryController extends Controller
             'category_bn' => 'nullable|string|max:100',
             'author_name' => 'required|string|max:150',
             'author_name_bn' => 'nullable|string|max:150',
-            'hero_image' => 'nullable|url|max:500',
+            'hero_image' => 'nullable|string|max:500',
+            'hero_image_file' => 'nullable|image|max:5120',
             'reading_time' => 'required|integer|min:1',
             'excerpt' => 'nullable|string|max:1000',
             'excerpt_bn' => 'nullable|string|max:1000',
@@ -139,6 +158,8 @@ class AdminStoryController extends Controller
             'product_ids.*' => 'exists:products,id',
         ]);
 
+        $uploadedHero = $this->handleHeroUpload($request);
+
         $story->update([
             'slug' => Str::slug($validated['slug']),
             'title' => $validated['title'],
@@ -147,7 +168,7 @@ class AdminStoryController extends Controller
             'category_bn' => $validated['category_bn'] ?? null,
             'author_name' => $validated['author_name'],
             'author_name_bn' => $validated['author_name_bn'] ?? null,
-            'hero_image' => $validated['hero_image'] ?? $story->hero_image,
+            'hero_image' => $uploadedHero ?? ($validated['hero_image'] ?: $story->hero_image),
             'reading_time' => (int) $validated['reading_time'],
             'excerpt' => $validated['excerpt'] ?? null,
             'excerpt_bn' => $validated['excerpt_bn'] ?? null,

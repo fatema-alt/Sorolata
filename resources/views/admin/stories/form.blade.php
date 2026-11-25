@@ -37,7 +37,7 @@
         @endif
     </div>
 
-    <form method="POST" action="{{ $isEdit ? route('admin.stories.update', $story->id) : route('admin.stories.store') }}" class="space-y-6">
+    <form method="POST" action="{{ $isEdit ? route('admin.stories.update', $story->id) : route('admin.stories.store') }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @if($isEdit)
             @method('PUT')
@@ -204,10 +204,17 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1.5">Hero Image URL</label>
-                    <input type="url" name="hero_image" value="{{ old('hero_image', $story->hero_image) }}" 
-                           placeholder="https://images.unsplash.com/..."
-                           class="w-full bg-[#12141a] border border-[#282d37] rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-[#214E34]">
+                    <label class="block text-xs font-medium text-gray-300 mb-1.5">Hero Image (Upload or URL)</label>
+                    <div class="space-y-2">
+                        @if(!empty($story->hero_image))
+                            <img src="{{ $story->hero_image }}" alt="" class="w-20 h-12 rounded-lg object-cover border border-[#282d37]">
+                        @endif
+                        <input type="file" name="hero_image_file" accept="image/*"
+                               class="block w-full text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#222733] file:text-white cursor-pointer">
+                        <input type="text" name="hero_image" value="{{ old('hero_image', $story->hero_image) }}" 
+                               placeholder="https://images.unsplash.com/..."
+                               class="w-full bg-[#12141a] border border-[#282d37] rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-[#214E34]">
+                    </div>
                 </div>
 
                 <div>
