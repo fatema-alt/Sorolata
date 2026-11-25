@@ -1161,7 +1161,7 @@ class VisualPageBuilder extends Component
                     'topbar_color' => '#FBF6EC',
                     'bg_color' => '#F7F5F0',
                     'brand_name' => 'Sorolata',
-                    'brand_bn' => 'সারলতা',
+                    'brand_bn' => 'সরলতা',
                     'brand_href' => '/',
                     'show_lang_toggle' => true,
                     'show_stitch_border' => true,
@@ -1409,7 +1409,7 @@ class VisualPageBuilder extends Component
                 'settings' => [
                     'bg_color' => '#163829',
                     'brand_name' => 'Sorolata',
-                    'brand_bn' => 'সারলতা',
+                    'brand_bn' => 'সরলতা',
                     'tagline' => 'Handmade things from the districts of Bangladesh, sent from the maker to your home.',
                     'col1_title' => 'Shop',
                     'shop_links' => [

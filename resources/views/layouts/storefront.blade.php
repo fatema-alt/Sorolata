@@ -91,8 +91,9 @@
         <div style="max-width:1200px; margin:0 auto; padding:14px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 28px">
             <a href="{{ url('/') }}" style="display:flex; align-items:center; gap:12px; text-decoration:none">
                 <span style="font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:34px; color:#1F2A24; letter-spacing:-0.01em; line-height:1">{{ $hs['brand_name'] ?? 'Sorolata' }}</span>
-                @if(!empty($hs['brand_bn'] ?? 'সারলতা'))
-                    <span style="font-family:'Noto Serif Bengali',serif; font-weight:500; font-size:13px; color:#1F4D3A; background:#E7EEE4; border:1px solid #C5D3BF; border-radius:999px; padding:2px 12px">{{ $hs['brand_bn'] ?? 'সারলতা' }}</span>
+                @php $headerBrandBn = (($hs['brand_bn'] ?? '') === 'সারলতা' || empty($hs['brand_bn'])) ? 'সরলতা' : $hs['brand_bn']; @endphp
+                @if(!empty($headerBrandBn))
+                    <span style="font-family:'Noto Serif Bengali',serif; font-weight:500; font-size:13px; color:#1F4D3A; background:#E7EEE4; border:1px solid #C5D3BF; border-radius:999px; padding:2px 12px">{{ $headerBrandBn }}</span>
                 @endif
             </a>
 
@@ -214,8 +215,9 @@
             <div style="flex:1.5 1 300px; min-width:0">
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px">
                     <span style="font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:38px; color:#FBF6EC">{{ $fs['brand_name'] ?? 'Sorolata' }}</span>
-                    @if(!empty($fs['brand_bn'] ?? 'সারলতা'))
-                        <span style="font-family:'Noto Serif Bengali',serif; font-weight:500; font-size:13px; color:#E3C26F; border:1px solid #E3C26F; border-radius:999px; padding:2px 12px">{{ $fs['brand_bn'] ?? 'সারলতা' }}</span>
+                    @php $footerBrandBn = (($fs['brand_bn'] ?? '') === 'সারলতা' || empty($fs['brand_bn'])) ? 'সরলতা' : $fs['brand_bn']; @endphp
+                    @if(!empty($footerBrandBn))
+                        <span style="font-family:'Noto Serif Bengali',serif; font-weight:500; font-size:13px; color:#E3C26F; border:1px solid #E3C26F; border-radius:999px; padding:2px 12px">{{ $footerBrandBn }}</span>
                     @endif
                 </div>
                 <p style="margin:0; font-size:15px; max-width:380px; color:#E8E0CF">{{ $fs['tagline'] ?? 'Handmade things from the districts of Bangladesh, sent from the maker to your home.' }}</p>

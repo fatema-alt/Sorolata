@@ -32,8 +32,9 @@
     <div style="max-width:1200px; margin:0 auto; padding:14px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 28px">
       <a href="{{ $linkHref($s['brand_href'] ?? '#top') }}" style="display:flex; align-items:center; gap:12px; text-decoration:none">
         <span style="font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:34px; color:#1F2A24; letter-spacing:-0.01em">{{ $s['brand_name'] ?? 'Sorolata' }}</span>
-        @if(!empty($s['brand_bn'] ?? 'সারলতা'))
-          <span style="font-family:'Noto Serif Bengali',serif; font-weight:500; font-size:13px; color:#1F4D3A; background:#E7EEE4; border:1px solid #C5D3BF; border-radius:999px; padding:2px 12px">{{ $s['brand_bn'] ?? 'সারলতা' }}</span>
+        @php $blkHeaderBrandBn = (($s['brand_bn'] ?? '') === 'সারলতা' || empty($s['brand_bn'])) ? 'সরলতা' : $s['brand_bn']; @endphp
+        @if(!empty($blkHeaderBrandBn))
+          <span style="font-family:'Noto Serif Bengali',serif; font-weight:500; font-size:13px; color:#1F4D3A; background:#E7EEE4; border:1px solid #C5D3BF; border-radius:999px; padding:2px 12px">{{ $blkHeaderBrandBn }}</span>
         @endif
       </a>
       <nav aria-label="Main" style="display:flex; flex-wrap:wrap; gap:4px 26px; font-weight:500; font-size:15px; color:#3A332B">
@@ -564,8 +565,9 @@
       <div style="flex:1.5 1 300px; min-width:0">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px">
           <span style="font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:38px; color:#FBF6EC">{{ $s['brand_name'] ?? 'Sorolata' }}</span>
-          @if(!empty($s['brand_bn'] ?? 'সারলতা'))
-            <span style="font-family:'Noto Serif Bengali',serif; font-weight:500; font-size:13px; color:#E3C26F; border:1px solid #E3C26F; border-radius:999px; padding:2px 12px">{{ $s['brand_bn'] ?? 'সারলতা' }}</span>
+          @php $blkFooterBrandBn = (($s['brand_bn'] ?? '') === 'সারলতা' || empty($s['brand_bn'])) ? 'সরলতা' : $s['brand_bn']; @endphp
+          @if(!empty($blkFooterBrandBn))
+            <span style="font-family:'Noto Serif Bengali',serif; font-weight:500; font-size:13px; color:#E3C26F; border:1px solid #E3C26F; border-radius:999px; padding:2px 12px">{{ $blkFooterBrandBn }}</span>
           @endif
         </div>
         <p style="margin:0; font-size:15px; max-width:380px; color:#E8E0CF">{{ $s['tagline'] ?? '' }}</p>
