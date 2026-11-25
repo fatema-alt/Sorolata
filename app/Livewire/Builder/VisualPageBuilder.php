@@ -13,6 +13,7 @@ use App\Models\Page;
 use App\Models\PageRevision;
 use App\Models\PageTemplate;
 use App\Models\Product;
+use App\Models\Story;
 use App\Services\Builder\BlockRegistry;
 use App\Services\Builder\DynamicDataParserService;
 use App\Services\Builder\LayoutEngineService;
@@ -696,6 +697,51 @@ class VisualPageBuilder extends Component
         $this->sections[$this->selectedIndex]['settings']['items'][$index] = static::mapArtisanToCardItem($artisan);
         $this->autoSave();
         $this->statusMessage = 'Artisan linked';
+    }
+
+    public static function mapStoryToCardItem(Story $story): array
+    {
+        return [
+            'story_id' => $story->id,
+            'tag' => $story->getLocalized('category') ?: 'Story',
+            'read' => ($story->reading_time ?: 4) . ' min read',
+            'title' => $story->getLocalized('title'),
+            'photo_label' => 'Story photo',
+            'image_url' => $story->hero_image ?: '',
+            'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)',
+            'pattern' => 'patCloth',
+            'href' => '/stories/' . ($story->slug ?: $story->uuid),
+        ];
+    }
+
+    public function addExistingStoryToSection(int $storyId): void
+    {
+        if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex])) {
+            return;
+        }
+        $story = Story::find($storyId);
+        if (!$story) {
+            return;
+        }
+        $items = $this->sections[$this->selectedIndex]['settings']['items'] ?? [];
+        $items[] = static::mapStoryToCardItem($story);
+        $this->sections[$this->selectedIndex]['settings']['items'] = $items;
+        $this->autoSave();
+        $this->statusMessage = 'Story added to section';
+    }
+
+    public function selectExistingStoryForItem(int $index, int $storyId): void
+    {
+        if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex]['settings']['items'][$index])) {
+            return;
+        }
+        $story = Story::find($storyId);
+        if (!$story) {
+            return;
+        }
+        $this->sections[$this->selectedIndex]['settings']['items'][$index] = static::mapStoryToCardItem($story);
+        $this->autoSave();
+        $this->statusMessage = 'Story linked';
     }
 
     public function removeRepeaterItem(string $listKey, int $index): void
@@ -1438,11 +1484,23 @@ class VisualPageBuilder extends Component
                     'heading' => 'Read about the crafts',
                     'cta_text' => 'All stories →',
                     'cta_href' => '/stories',
-                    'items' => [
-                        ['tag' => 'Cloth', 'read' => '4 min read', 'title' => 'How Jamdani and Muslin are coming back', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)', 'pattern' => 'patCloth', 'href' => '/stories'],
-                        ['tag' => 'History', 'read' => '7 min read', 'title' => 'Phuti Karpas: the lost cotton behind fine muslin', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C89A3A,#7A5710)', 'pattern' => 'patBrass', 'href' => '/stories'],
-                        ['tag' => 'Weaving', 'read' => '5 min read', 'title' => 'How weavers remember Jamdani patterns without drawing them', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#D98A62,#7C3523)', 'pattern' => 'patCarpet', 'href' => '/stories'],
-                    ],
+                    'items' => (function () {
+                        $realStories = Story::where('is_published', true)
+                            ->orderByDesc('published_at')
+                            ->orderBy('id', 'asc')
+                            ->take(3)
+                            ->get();
+
+                        if ($realStories->isNotEmpty()) {
+                            return $realStories->map(fn ($st) => static::mapStoryToCardItem($st))->values()->all();
+                        }
+
+                        return [
+                            ['tag' => 'Cloth', 'read' => '4 min read', 'title' => 'How Jamdani and Muslin are coming back', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)', 'pattern' => 'patCloth', 'href' => '/stories'],
+                            ['tag' => 'History', 'read' => '7 min read', 'title' => 'Phuti Karpas: the lost cotton behind fine muslin', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C89A3A,#7A5710)', 'pattern' => 'patBrass', 'href' => '/stories'],
+                            ['tag' => 'Weaving', 'read' => '5 min read', 'title' => 'How weavers remember Jamdani patterns without drawing them', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#D98A62,#7C3523)', 'pattern' => 'patCarpet', 'href' => '/stories'],
+                        ];
+                    })(),
                 ],
             ],
             [
@@ -1830,6 +1888,7 @@ class VisualPageBuilder extends Component
             'product' => $product,
             'catalogProducts' => Product::select('id', 'title', 'slug', 'price')->orderBy('title')->take(100)->get(),
             'catalogArtisans' => Artisan::with('district')->orderBy('full_name')->take(100)->get(),
+            'catalogStories' => Story::select('id', 'title', 'slug', 'category')->orderBy('title')->take(100)->get(),
             'parser' => $parser,
             'selectedSection' => $this->selectedSection,
             'selectedIndex' => $this->selectedIndex,

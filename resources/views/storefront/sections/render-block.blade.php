@@ -511,7 +511,24 @@
   </section>
 
 @elseif($type === 'home_stories')
-  @php $storiesList = $s['items'] ?? []; @endphp
+  @php
+    $storiesList = $s['items'] ?? [];
+    $allStoryPlaceholders = !empty($storiesList) && collect($storiesList)->every(
+        fn ($item) => empty($item['story_id']) && empty($item['image_url'])
+    );
+    if (empty($storiesList) || $allStoryPlaceholders) {
+        $liveStories = \App\Models\Story::where('is_published', true)
+            ->orderByDesc('published_at')
+            ->orderBy('id', 'asc')
+            ->take(3)
+            ->get();
+        if ($liveStories->isNotEmpty()) {
+            $storiesList = $liveStories->map(
+                fn ($st) => \App\Livewire\Builder\VisualPageBuilder::mapStoryToCardItem($st)
+            )->values()->all();
+        }
+    }
+  @endphp
   <section id="stories" style="background:{{ $s['bg_color'] ?? '#F7F5F0' }}">
     <div style="max-width:1200px; margin:0 auto; padding:80px 24px">
       <div style="text-align:center; max-width:680px; margin:0 auto 48px">

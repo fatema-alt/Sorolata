@@ -2184,6 +2184,7 @@
                             'inspectorTab' => $inspectorTab,
                             'catalogProducts' => $catalogProducts ?? collect(),
                             'catalogArtisans' => $catalogArtisans ?? collect(),
+                            'catalogStories' => $catalogStories ?? collect(),
                         ])
                     @else
                     <!-- TAB 1: CONTENT (কনটেন্ট) -->
