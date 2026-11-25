@@ -3,7 +3,17 @@
   $s = $section['settings'] ?? [];
   $isBuilder = $isBuilder ?? false;
   $isBn = $isBuilder ? (($previewLocale ?? 'en') === 'bn') : (app()->getLocale() === 'bn');
-  $linkHref = fn(string $url) => $isBuilder ? 'javascript:void(0)' : $url;
+  $anchorMap = [
+    '#top' => '/',
+    '#products' => '/shop',
+    '#districts' => '/districts',
+    '#makers' => '/artisans',
+    '#stories' => '/stories',
+    '#why' => '/about',
+    '#contact' => '/contact',
+  ];
+  $resolveUrl = fn(string $url) => $anchorMap[trim($url)] ?? $url;
+  $linkHref = fn(string $url) => $isBuilder ? 'javascript:void(0)' : $resolveUrl($url);
 @endphp
 
 @if($type === 'home_header')
@@ -260,7 +270,7 @@
                   <span style="font-size:14px; color:#6B5F50; text-decoration:line-through">{{ $p['old_price'] }}</span>
                 @endif
               </div>
-              <button type="button" @if(!$isBuilder) onclick="window.location='{{ $p['href'] ?? route('shop.index') }}'" @endif style="margin-top:12px; background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:13px 20px; font-size:15px; font-weight:600; min-height:46px">{{ $p['button_text'] ?? 'Add to Cart' }}</button>
+              <button type="button" @if(!$isBuilder) onclick="window.location='{{ $resolveUrl($p['href'] ?? route('shop.index')) }}'" @endif style="margin-top:12px; background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:13px 20px; font-size:15px; font-weight:600; min-height:46px">{{ $p['button_text'] ?? 'Add to Cart' }}</button>
             </div>
           </article>
         @endforeach
@@ -327,23 +337,25 @@
       <div style="display:flex; flex-wrap:wrap; gap:22px">
         @foreach($makersList as $m)
           <article style="flex:1 1 250px; min-width:0; text-align:center">
-            <div style="border:1.5px solid #B8892F; border-radius:999px 999px 16px 16px; padding:7px; box-sizing:border-box">
-              <div style="position:relative; height:310px; border-radius:999px 999px 10px 10px; overflow:hidden; background:{{ $m['bg'] ?? 'linear-gradient(160deg,#6E7FB8,#2A3A6B)' }}">
-                @if(!empty($m['image_url']))
-                  <img src="{{ $m['image_url'] }}" alt="{{ $m['name'] ?? '' }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover">
-                @else
-                  <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; left:0; top:0"><rect width="100%" height="100%" fill="url(#patJaliLight)"></rect></svg>
-                  <svg aria-hidden="true" viewBox="0 0 200 240" width="100%" height="100%" preserveAspectRatio="xMidYMax meet" style="position:absolute; left:0; top:0">
-                    <circle cx="100" cy="96" r="38" fill="#FFFFFF" fill-opacity="0.38"></circle>
-                    <path d="M30 240c0-52 31-84 70-84s70 32 70 84z" fill="#FFFFFF" fill-opacity="0.38"></path>
-                  </svg>
-                  <div style="position:absolute; left:50%; bottom:14px; transform:translateX(-50%); background:rgba(30,18,10,0.62); color:#FBF6EC; font-size:12px; padding:5px 12px; border-radius:999px; white-space:nowrap">{{ $m['photo_label'] ?? 'Real portrait photo' }}</div>
-                @endif
+            <a href="{{ $linkHref($m['href'] ?? '/artisans') }}" style="display:block; text-decoration:none; color:inherit">
+              <div style="border:1.5px solid #B8892F; border-radius:999px 999px 16px 16px; padding:7px; box-sizing:border-box">
+                <div style="position:relative; height:310px; border-radius:999px 999px 10px 10px; overflow:hidden; background:{{ $m['bg'] ?? 'linear-gradient(160deg,#6E7FB8,#2A3A6B)' }}">
+                  @if(!empty($m['image_url']))
+                    <img src="{{ $m['image_url'] }}" alt="{{ $m['name'] ?? '' }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover">
+                  @else
+                    <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; left:0; top:0"><rect width="100%" height="100%" fill="url(#patJaliLight)"></rect></svg>
+                    <svg aria-hidden="true" viewBox="0 0 200 240" width="100%" height="100%" preserveAspectRatio="xMidYMax meet" style="position:absolute; left:0; top:0">
+                      <circle cx="100" cy="96" r="38" fill="#FFFFFF" fill-opacity="0.38"></circle>
+                      <path d="M30 240c0-52 31-84 70-84s70 32 70 84z" fill="#FFFFFF" fill-opacity="0.38"></path>
+                    </svg>
+                    <div style="position:absolute; left:50%; bottom:14px; transform:translateX(-50%); background:rgba(30,18,10,0.62); color:#FBF6EC; font-size:12px; padding:5px 12px; border-radius:999px; white-space:nowrap">{{ $m['photo_label'] ?? 'Real portrait photo' }}</div>
+                  @endif
+                </div>
               </div>
-            </div>
-            <h3 style="margin:16px 0 2px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:28px; line-height:1.1; color:#1F4D3A">{{ $m['name'] ?? '' }}</h3>
-            <div style="font-size:15px; font-weight:600; color:#2B2118">{{ $m['craft'] ?? '' }}</div>
-            <div style="font-size:14px; color:#5A5044">{{ $m['place'] ?? '' }} · {{ $m['years'] ?? '' }} years of work</div>
+              <h3 style="margin:16px 0 2px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:28px; line-height:1.1; color:#1F4D3A">{{ $m['name'] ?? '' }}</h3>
+              <div style="font-size:15px; font-weight:600; color:#2B2118">{{ $m['craft'] ?? '' }}</div>
+              <div style="font-size:14px; color:#5A5044">{{ $m['place'] ?? '' }} · {{ $m['years'] ?? '' }} years of work</div>
+            </a>
           </article>
         @endforeach
       </div>
