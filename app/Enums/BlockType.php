@@ -44,6 +44,21 @@ enum BlockType: string
     case ELEMENT_ARTISAN_QUOTE = 'element_artisan_quote';
     case ELEMENT_DIVIDER = 'element_divider';
 
+    // Sorolata Heritage Homepage Blocks
+    case HOME_HEADER = 'home_header';
+    case HOME_HERO = 'home_hero';
+    case HOME_DISTRICTS = 'home_districts';
+    case HOME_CRAFTS = 'home_crafts';
+    case HOME_PRODUCTS = 'home_products';
+    case HOME_STORY_TIMELINE = 'home_story_timeline';
+    case HOME_MAKERS = 'home_makers';
+    case HOME_WHY = 'home_why';
+    case HOME_GIFTS = 'home_gifts';
+    case HOME_REVIEWS = 'home_reviews';
+    case HOME_STORIES = 'home_stories';
+    case HOME_NEWSLETTER = 'home_newsletter';
+    case HOME_FOOTER = 'home_footer';
+
     public function defaultTitle(): string
     {
         return match ($this) {
@@ -83,6 +98,21 @@ enum BlockType: string
             self::ELEMENT_PRODUCT_CARD => 'Shoppable Product Card',
             self::ELEMENT_ARTISAN_QUOTE => 'Artisan Quote & Atelier Seal',
             self::ELEMENT_DIVIDER => 'Ornamental Divider & Spacer',
+
+            // Sorolata Heritage Homepage Blocks
+            self::HOME_HEADER => 'Top Bar & Navigation Header',
+            self::HOME_HERO => 'Hero Showcase & Arch Frame',
+            self::HOME_DISTRICTS => 'Shop by District & Map',
+            self::HOME_CRAFTS => 'Shop by Craft Grid',
+            self::HOME_PRODUCTS => 'Popular Products Grid',
+            self::HOME_STORY_TIMELINE => 'Muslin & Jamdani Timeline',
+            self::HOME_MAKERS => 'Our Makers Portraits',
+            self::HOME_WHY => 'Why Sorolata Pillars',
+            self::HOME_GIFTS => 'Gift Ideas Grid',
+            self::HOME_REVIEWS => 'Customer Reviews',
+            self::HOME_STORIES => 'Craft Stories Grid',
+            self::HOME_NEWSLETTER => 'Newsletter Banner',
+            self::HOME_FOOTER => 'Heritage Footer',
         };
     }
 

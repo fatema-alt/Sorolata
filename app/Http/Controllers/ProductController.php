@@ -26,7 +26,15 @@ class ProductController extends Controller
     {
         // 1. Fetch published builder sections if configured for Home page
         $homePage = Page::where('slug', 'home')->first();
-        $builderSections = collect($homePage?->layout_json['sections'] ?? [])
+        $rawSections = $homePage?->layout_json['sections'] ?? [];
+        $hasHomeBlocks = collect($rawSections)->contains(
+            fn ($s) => is_array($s) && str_starts_with((string) ($s['type'] ?? ''), 'home_')
+        );
+        $homeSections = $hasHomeBlocks
+            ? array_values(array_filter($rawSections, fn ($s) => is_array($s) && ($s['is_active'] ?? true)))
+            : \App\Livewire\Builder\VisualPageBuilder::getSorolataHomepageSections();
+
+        $builderSections = collect($rawSections)
             ->filter(fn ($s) => $s['is_active'] ?? true)
             ->keyBy('type');
 
@@ -78,6 +86,7 @@ class ProductController extends Controller
             'artisans' => $masterArtisans,
             'collections' => $collections,
             'builderSections' => $builderSections,
+            'homeSections' => $homeSections,
             'homePage' => $homePage,
             'instaShots' => $instaShots,
         ]);

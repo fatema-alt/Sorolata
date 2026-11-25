@@ -51,6 +51,15 @@ class VisualPageBuilder extends Component
      */
     public $uploadedImage = null;
 
+    /**
+     * Livewire file upload property for repeater item images
+     * @var mixed
+     */
+    public $uploadedItemImage = null;
+    public ?string $uploadListKey = null;
+    public ?int $uploadItemIndex = null;
+    public string $uploadFieldKey = 'image_url';
+
     // SEO properties
     public string $seoTitle = '';
     public string $seoDescription = '';
@@ -85,9 +94,11 @@ class VisualPageBuilder extends Component
             $this->seoDescription = $page->seo_meta['description'] ?? '';
 
             $isHome = ($this->slug === 'home' || $this->pageType === 'home');
-            $hasAuthenticHomeBlocks = !empty($this->sections) && collect($this->sections)->pluck('type')->contains('featured_collections');
+            $hasHomeBlocks = !empty($this->sections) && collect($this->sections)->contains(
+                fn ($s) => is_array($s) && str_starts_with((string) ($s['type'] ?? ''), 'home_')
+            );
 
-            if (empty($this->sections) || ($isHome && !$hasAuthenticHomeBlocks)) {
+            if (empty($this->sections) || ($isHome && !$hasHomeBlocks)) {
                 $this->loadDefaultPageSections($page);
             } elseif ($isHome) {
                 $this->ensureBilingualSections();
@@ -159,25 +170,30 @@ class VisualPageBuilder extends Component
         $newId = 'sec_' . Str::random(8);
         $blockType = BlockType::tryFrom($type) ?? BlockType::HERO_CINEMATIC;
 
-        $defaultSettings = [
-            'headline' => $blockType->defaultTitle(),
-            'subheadline' => 'An archival voyage into centuries of Bengali master artisans.',
-            'badge_text' => 'GI Certified Heritage Artifact',
-            'primary_cta_text' => 'Explore Collection',
-            'primary_cta_url' => '/shop',
-            'secondary_cta_text' => 'Read Artisan Story',
-            'secondary_cta_url' => '/stories',
-            'media_type' => 'none',
-            'image_url' => '',
-            'video_url' => '',
-            'alignment' => 'center',
-            'text_color' => '#1D1D1D',
-            'headline_size' => 'text-4xl',
-            'padding_top' => '64px',
-            'padding_bottom' => '64px',
-            'bg_color' => '#FFFFFF',
-            'container_width' => 'boxed',
-        ];
+        if (str_starts_with($blockType->value, 'home_')) {
+            $homeDefaults = collect(static::getSorolataHomepageSections())->keyBy('type');
+            $defaultSettings = $homeDefaults[$blockType->value]['settings'] ?? [];
+        } else {
+            $defaultSettings = [
+                'headline' => $blockType->defaultTitle(),
+                'subheadline' => 'An archival voyage into centuries of Bengali master artisans.',
+                'badge_text' => 'GI Certified Heritage Artifact',
+                'primary_cta_text' => 'Explore Collection',
+                'primary_cta_url' => '/shop',
+                'secondary_cta_text' => 'Read Artisan Story',
+                'secondary_cta_url' => '/stories',
+                'media_type' => 'none',
+                'image_url' => '',
+                'video_url' => '',
+                'alignment' => 'center',
+                'text_color' => '#1D1D1D',
+                'headline_size' => 'text-4xl',
+                'padding_top' => '64px',
+                'padding_bottom' => '64px',
+                'bg_color' => '#FFFFFF',
+                'container_width' => 'boxed',
+            ];
+        }
 
         $newSection = [
             'id' => $newId,
@@ -434,7 +450,10 @@ class VisualPageBuilder extends Component
         $url = '/storage/' . $path;
 
         if ($this->selectedIndex !== null && isset($this->sections[$this->selectedIndex])) {
-            $this->sections[$this->selectedIndex]['settings']['image_url'] = $url;
+            $fieldKey = ($this->sections[$this->selectedIndex]['type'] ?? '') === 'home_districts'
+                ? 'map_image_url'
+                : 'image_url';
+            $this->sections[$this->selectedIndex]['settings'][$fieldKey] = $url;
             $this->sections[$this->selectedIndex]['settings']['media_type'] = 'image';
             $this->autoSave();
             $this->statusMessage = '✓ Image uploaded successfully';
@@ -446,10 +465,132 @@ class VisualPageBuilder extends Component
     public function removeImage(): void
     {
         if ($this->selectedIndex !== null && isset($this->sections[$this->selectedIndex])) {
-            $this->sections[$this->selectedIndex]['settings']['image_url'] = '';
+            $fieldKey = ($this->sections[$this->selectedIndex]['type'] ?? '') === 'home_districts'
+                ? 'map_image_url'
+                : 'image_url';
+            $this->sections[$this->selectedIndex]['settings'][$fieldKey] = '';
             $this->autoSave();
             $this->statusMessage = 'Image removed';
         }
+    }
+
+    public function setItemUploadTarget(string $listKey, int $index, string $fieldKey = 'image_url'): void
+    {
+        $this->uploadListKey = $listKey;
+        $this->uploadItemIndex = $index;
+        $this->uploadFieldKey = $fieldKey;
+    }
+
+    public function updatedUploadedItemImage(): void
+    {
+        if (!$this->uploadedItemImage) {
+            return;
+        }
+
+        $this->validate([
+            'uploadedItemImage' => 'file|mimes:jpeg,jpg,png,webp|max:10240',
+        ]);
+
+        $filename = 'craft_item_' . Str::random(12) . '.' . $this->uploadedItemImage->getClientOriginalExtension();
+        $path = $this->uploadedItemImage->storeAs('builder_uploads', $filename, 'public');
+        $url = '/storage/' . $path;
+
+        if (
+            $this->selectedIndex !== null
+            && $this->uploadListKey !== null
+            && $this->uploadItemIndex !== null
+            && isset($this->sections[$this->selectedIndex]['settings'][$this->uploadListKey][$this->uploadItemIndex])
+        ) {
+            $this->sections[$this->selectedIndex]['settings'][$this->uploadListKey][$this->uploadItemIndex][$this->uploadFieldKey] = $url;
+            $this->autoSave();
+            $this->statusMessage = '✓ Item image uploaded';
+        }
+
+        $this->uploadedItemImage = null;
+    }
+
+    public function removeItemImage(string $listKey, int $index, string $fieldKey = 'image_url'): void
+    {
+        if (
+            $this->selectedIndex !== null
+            && isset($this->sections[$this->selectedIndex]['settings'][$listKey][$index])
+        ) {
+            $this->sections[$this->selectedIndex]['settings'][$listKey][$index][$fieldKey] = '';
+            $this->autoSave();
+            $this->statusMessage = 'Item image removed';
+        }
+    }
+
+    public function addRepeaterItem(string $listKey): void
+    {
+        if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex])) {
+            return;
+        }
+
+        $type = $this->sections[$this->selectedIndex]['type'] ?? '';
+        $items = $this->sections[$this->selectedIndex]['settings'][$listKey] ?? [];
+
+        $newItem = match ($type . ':' . $listKey) {
+            'home_header:nav_links' => ['label' => 'New Link', 'href' => '#products'],
+            'home_hero:trust_items' => ['text' => 'Authentic handmade craft'],
+            'home_districts:items' => ['n' => (string) (count($items) + 1), 'name' => 'New District', 'bn' => 'নতুন জেলা', 'craft' => 'Traditional craft', 'href' => '#products', 'cta_text' => 'See products →'],
+            'home_crafts:items' => ['name' => 'New Craft', 'line' => 'Handcrafted heritage', 'photo_label' => 'Photo: craft', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#5B6FAE,#26356A)', 'pattern' => 'patCloth', 'href' => '#products'],
+            'home_products:items' => ['district' => 'Narayanganj', 'name' => 'New Heritage Piece', 'maker' => 'Master Artisan', 'price' => '৳ 12,000', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9B48A,#8E7545)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'Add to Cart'],
+            'home_story_timeline:items' => ['when' => '2026', 'text' => 'A new chapter in Bangladesh’s living craft heritage.'],
+            'home_makers:items' => ['name' => 'Artisan Name', 'craft' => 'Master Weaver', 'place' => 'Tangail', 'years' => '25', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)'],
+            'home_why:items' => ['title' => 'Authentic Craft', 'text' => 'Made slowly by hand using traditional methods.', 'd' => 'M12 4a8 8 0 100 16 8 8 0 000-16z'],
+            'home_gifts:items' => ['name' => 'Special Gift', 'text' => 'A thoughtful handmade gift from Bengal.', 'cta_text' => 'See ideas →', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#2F6B50,#163829)', 'pattern' => 'patJaliLight', 'href' => '#products'],
+            'home_reviews:items' => ['text' => 'A wonderful handcrafted piece with extraordinary detail.', 'who' => 'Customer Name, Dhaka'],
+            'home_stories:items' => ['tag' => 'Craft', 'read' => '4 min read', 'title' => 'A new story from the weaving villages', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)', 'pattern' => 'patCloth', 'href' => '#stories'],
+            'home_footer:shop_links', 'home_footer:help_links' => ['label' => 'New Link', 'href' => '#contact'],
+            'home_footer:contact_lines' => ['text' => 'Email: hello@sorolata.com'],
+            default => ['text' => 'New item'],
+        };
+
+        $items[] = $newItem;
+        $this->sections[$this->selectedIndex]['settings'][$listKey] = $items;
+        $this->autoSave();
+        $this->statusMessage = 'Item added';
+    }
+
+    public function removeRepeaterItem(string $listKey, int $index): void
+    {
+        if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex]['settings'][$listKey][$index])) {
+            return;
+        }
+
+        $items = $this->sections[$this->selectedIndex]['settings'][$listKey];
+        array_splice($items, $index, 1);
+        $this->sections[$this->selectedIndex]['settings'][$listKey] = array_values($items);
+        $this->autoSave();
+        $this->statusMessage = 'Item removed';
+    }
+
+    public function moveRepeaterItem(string $listKey, int $index, string $direction): void
+    {
+        if ($this->selectedIndex === null || !isset($this->sections[$this->selectedIndex]['settings'][$listKey])) {
+            return;
+        }
+
+        $items = $this->sections[$this->selectedIndex]['settings'][$listKey];
+        $target = $direction === 'up' ? $index - 1 : $index + 1;
+        if ($target < 0 || $target >= count($items)) {
+            return;
+        }
+
+        $tmp = $items[$target];
+        $items[$target] = $items[$index];
+        $items[$index] = $tmp;
+        $this->sections[$this->selectedIndex]['settings'][$listKey] = array_values($items);
+        $this->autoSave();
+    }
+
+    public function resetHomepageToDefault(): void
+    {
+        $this->sections = static::getSorolataHomepageSections();
+        $this->selectedSectionId = $this->sections[0]['id'] ?? null;
+        $this->autoSave();
+        $this->statusMessage = '✓ Reset to Sorolata Homepage Template';
     }
 
     public function moveSection(string $sectionId, string $direction): void
@@ -897,9 +1038,296 @@ class VisualPageBuilder extends Component
         unset($sec);
     }
 
+    public static function getSorolataHomepageSections(): array
+    {
+        return [
+            [
+                'id' => 'sec_home_header',
+                'type' => BlockType::HOME_HEADER->value,
+                'is_active' => true,
+                'settings' => [
+                    'show_topbar' => true,
+                    'topbar_text' => 'Free insured delivery to Bangladesh, USA, UK, Canada and Europe',
+                    'topbar_bg' => '#1F4D3A',
+                    'topbar_color' => '#FBF6EC',
+                    'bg_color' => '#F7F5F0',
+                    'brand_name' => 'Sorolata',
+                    'brand_bn' => 'সারলতা',
+                    'brand_href' => '#top',
+                    'show_lang_toggle' => true,
+                    'show_stitch_border' => true,
+                    'search_href' => '/search',
+                    'cart_href' => '/cart',
+                    'nav_links' => [
+                        ['label' => 'Shop', 'href' => '#products'],
+                        ['label' => 'Districts', 'href' => '#districts'],
+                        ['label' => 'Our Makers', 'href' => '#makers'],
+                        ['label' => 'Stories', 'href' => '#stories'],
+                        ['label' => 'About Us', 'href' => '#why'],
+                        ['label' => 'Contact', 'href' => '#contact'],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sec_home_hero',
+                'type' => BlockType::HOME_HERO->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'text_color' => '#1F2A24',
+                    'primary_color' => '#1F4D3A',
+                    'accent_color' => '#B8892F',
+                    'show_pattern' => true,
+                    'show_band' => true,
+                    'badge_text' => 'Handmade in 64 districts of Bangladesh',
+                    'headline' => 'Handmade in Bangladesh. Passed down from parent to child.',
+                    'subheadline' => 'Muslin, brass, clay and more. Every piece names its maker and the district it comes from.',
+                    'primary_cta_text' => 'Shop Now →',
+                    'primary_cta_href' => '#products',
+                    'secondary_cta_text' => 'Shop by District',
+                    'secondary_cta_href' => '#districts',
+                    'trust_items' => [
+                        ['text' => 'Made by hand'],
+                        ['text' => 'Fair pay to makers'],
+                        ['text' => 'Ships worldwide'],
+                    ],
+                    'image_url' => '',
+                    'photo_pill' => "Photo: a weaver's hands at the loom",
+                    'featured_eyebrow' => 'Featured · Narayanganj (Sonargaon)',
+                    'featured_title' => 'Imperial Sonargaon Muslin Scarf',
+                    'featured_price' => '৳ 18,500',
+                    'featured_href' => '#products',
+                ],
+            ],
+            [
+                'id' => 'sec_home_districts',
+                'type' => BlockType::HOME_DISTRICTS->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'text_color' => '#1F2A24',
+                    'map_card_bg' => '#F0E6D0',
+                    'eyebrow' => 'Shop by district',
+                    'heading' => 'Every district has its own craft',
+                    'subtitle' => 'Tap a district to see what is made there, and who makes it.',
+                    'map_image_url' => '',
+                    'map_image_alt' => 'Map of Bangladesh craft districts',
+                    'map_caption' => 'A simple drawing, not to scale',
+                    'coming_soon_text' => 'More districts are coming soon, including clay and terracotta from the villages.',
+                    'items' => [
+                        ['n' => '1', 'name' => 'Narayanganj (Sonargaon)', 'bn' => 'নারায়ণগঞ্জ (সোনারগাঁ)', 'craft' => 'Muslin and Jamdani cloth', 'href' => '#products', 'cta_text' => 'See products →'],
+                        ['n' => '2', 'name' => 'Tangail', 'bn' => 'টাঙ্গাইল', 'craft' => 'Tangail sarees and silk', 'href' => '#products', 'cta_text' => 'See products →'],
+                        ['n' => '3', 'name' => 'Bogura', 'bn' => 'বগুড়া', 'craft' => 'Brass and bell-metal ware', 'href' => '#products', 'cta_text' => 'See products →'],
+                        ['n' => '4', 'name' => 'Rangpur (Nisbetganj)', 'bn' => 'রংপুর (নিসবেতগঞ্জ)', 'craft' => 'Shatranji carpets', 'href' => '#products', 'cta_text' => 'See products →'],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sec_home_crafts',
+                'type' => BlockType::HOME_CRAFTS->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F0E6D0',
+                    'text_color' => '#1F2A24',
+                    'show_pattern' => true,
+                    'eyebrow' => 'Shop by craft',
+                    'heading' => 'Four old crafts, still made by hand',
+                    'items' => [
+                        ['name' => 'Cloth', 'line' => 'Muslin, Jamdani and silk', 'photo_label' => 'Photo: cloth', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#5B6FAE,#26356A)', 'pattern' => 'patCloth', 'href' => '#products'],
+                        ['name' => 'Brass and Bell Metal', 'line' => 'Kettles, plates and bowls', 'photo_label' => 'Photo: metalwork', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#D6A94A,#7A5710)', 'pattern' => 'patBrass', 'href' => '#products'],
+                        ['name' => 'Carpets and Mats', 'line' => 'Shatranji and woven floor art', 'photo_label' => 'Photo: carpets', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9795A,#7C3523)', 'pattern' => 'patCarpet', 'href' => '#products'],
+                        ['name' => 'Clay and Terracotta', 'line' => 'Coming soon', 'photo_label' => 'Photo: clay pots', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#B58A6A,#5E3C28)', 'pattern' => 'patClay', 'href' => '#products'],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sec_home_products',
+                'type' => BlockType::HOME_PRODUCTS->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'text_color' => '#1F2A24',
+                    'eyebrow' => 'Our pieces',
+                    'heading' => 'Popular right now',
+                    'cta_text' => 'View all products →',
+                    'cta_href' => '/shop',
+                    'items' => [
+                        ['district' => 'Narayanganj (Sonargaon)', 'name' => 'Imperial Sonargaon Muslin Scarf', 'maker' => 'Alimuddin', 'price' => '৳ 18,500', 'old_price' => '৳ 22,000', 'badge' => '16% off', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9B48A,#8E7545)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'Add to Cart'],
+                        ['district' => 'Tangail', 'name' => 'Heirloom Tangail Silk Jamdani', 'maker' => 'Rabeya Begum', 'price' => '৳ 24,500', 'old_price' => '৳ 29,000', 'badge' => '16% off', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#7A4B8A,#3B1F52)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'Add to Cart'],
+                        ['district' => 'Bogura', 'name' => 'Hand-Chiseled Bogura Kettle', 'maker' => 'Gourango Karmakar', 'price' => '৳ 12,800', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#D8B25A,#8A6410)', 'pattern' => 'patBrass', 'href' => '/shop', 'button_text' => 'Add to Cart'],
+                        ['district' => 'Rangpur (Nisbetganj)', 'name' => 'Rangpur Shatranji Carpet', 'maker' => 'Mofizul Islam', 'price' => '৳ 15,600', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9795A,#6E2E1E)', 'pattern' => 'patCarpet', 'href' => '/shop', 'button_text' => 'Add to Cart'],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sec_home_story_timeline',
+                'type' => BlockType::HOME_STORY_TIMELINE->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#163829',
+                    'text_color' => '#FBF6EC',
+                    'show_bands' => true,
+                    'show_pattern' => true,
+                    'eyebrow' => 'The story of Muslin and Jamdani',
+                    'heading' => 'A cloth so fine, the world wanted it',
+                    'subtitle' => 'When you buy a piece from Sorolata, you help this story go on.',
+                    'cta_text' => 'Read the full story',
+                    'cta_href' => '#stories',
+                    'items' => [
+                        ['when' => '1600s', 'text' => 'Dhaka muslin is known across the world, and loved in royal courts.'],
+                        ['when' => '1800s', 'text' => 'Cheap machine-made cloth arrives. The finest muslin almost disappears.'],
+                        ['when' => '2013', 'text' => 'UNESCO lists Jamdani weaving as part of the world’s cultural heritage.'],
+                        ['when' => 'Today', 'text' => 'Weavers in Sonargaon and Tangail still make it by hand, one thread at a time.'],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sec_home_makers',
+                'type' => BlockType::HOME_MAKERS->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'text_color' => '#1F2A24',
+                    'eyebrow' => 'Our makers',
+                    'heading' => 'Meet the hands behind every piece',
+                    'subtitle' => 'Each maker has spent a lifetime learning their craft.',
+                    'items' => [
+                        ['name' => 'Alimuddin', 'craft' => 'Muslin weaver', 'place' => 'Narayanganj (Sonargaon)', 'years' => '42', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)'],
+                        ['name' => 'Rabeya Begum', 'craft' => 'Jamdani weaver', 'place' => 'Tangail', 'years' => '38', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#A06AB0,#4A2862)'],
+                        ['name' => 'Gourango Karmakar', 'craft' => 'Bell-metal maker', 'place' => 'Bogura', 'years' => '46', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C89A3A,#7A5710)'],
+                        ['name' => 'Mofizul Islam', 'craft' => 'Shatranji weaver', 'place' => 'Rangpur (Nisbetganj)', 'years' => '32', 'photo_label' => 'Real portrait photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#D98A62,#7C3523)'],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sec_home_why',
+                'type' => BlockType::HOME_WHY->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F0E6D0',
+                    'text_color' => '#1F2A24',
+                    'show_pattern' => true,
+                    'heading' => 'Why people buy from Sorolata',
+                    'items' => [
+                        ['title' => 'Made by hand', 'text' => 'No factory. Each piece is made slowly by one maker.', 'd' => 'M4 6h16M4 12h16M4 18h16M8 4v16M16 4v16'],
+                        ['title' => 'Fair pay to makers', 'text' => 'The people who make your piece are paid fairly.', 'd' => 'M12 4a8 8 0 100 16 8 8 0 000-16zM12 8v8M9.5 10.5h3.5a1.5 1.5 0 010 3h-3a1.5 1.5 0 000 3h3.5'],
+                        ['title' => 'Know where it is from', 'text' => 'Every piece shows its maker and its district.', 'd' => 'M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11zM12 12a2 2 0 100-4 2 2 0 000 4z'],
+                        ['title' => 'Safe delivery', 'text' => 'Packed with care and insured, to Bangladesh and abroad.', 'd' => 'M3 8l9-5 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8'],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sec_home_gifts',
+                'type' => BlockType::HOME_GIFTS->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'text_color' => '#1F2A24',
+                    'eyebrow' => 'Gift ideas',
+                    'heading' => 'A gift with a story inside',
+                    'subtitle' => 'Every piece arrives with the name of its maker.',
+                    'items' => [
+                        ['name' => 'Eid gifts', 'text' => 'Silk, scarves and brass for the ones you love.', 'cta_text' => 'See ideas →', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#2F6B50,#163829)', 'pattern' => 'patJaliLight', 'href' => '#products'],
+                        ['name' => 'Pohela Boishakh', 'text' => 'Bring red and white colour and craft into the new year.', 'cta_text' => 'See ideas →', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9654A,#7C2E1E)', 'pattern' => 'patCloth', 'href' => '#products'],
+                        ['name' => 'Wedding gifts', 'text' => 'A gift that will be kept for a lifetime.', 'cta_text' => 'See ideas →', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)', 'pattern' => 'patCarpet', 'href' => '#products'],
+                        ['name' => 'Gifts from abroad', 'text' => 'Send a piece of home to family in Bangladesh, or to yourself.', 'cta_text' => 'See ideas →', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#B8892F,#6B4A0D)', 'pattern' => 'patBrass', 'href' => '#products'],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sec_home_reviews',
+                'type' => BlockType::HOME_REVIEWS->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F0E6D0',
+                    'text_color' => '#1F2A24',
+                    'eyebrow' => 'Customer reviews',
+                    'heading' => 'What our customers say',
+                    'note' => 'These are empty boxes for the demo. Fill them with real reviews and photos from your buyers.',
+                    'items' => [
+                        ['text' => 'A short review from a customer in Bangladesh goes here.', 'who' => 'Customer name, City'],
+                        ['text' => 'A short review from a customer abroad goes here.', 'who' => 'Customer name, Country'],
+                        ['text' => 'A photo of the piece in a customer’s home goes here, with a few words.', 'who' => 'Customer name, City'],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sec_home_stories',
+                'type' => BlockType::HOME_STORIES->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'text_color' => '#1F2A24',
+                    'eyebrow' => 'Stories',
+                    'heading' => 'Read about the crafts',
+                    'cta_text' => 'All stories →',
+                    'cta_href' => '/stories',
+                    'items' => [
+                        ['tag' => 'Cloth', 'read' => '4 min read', 'title' => 'How Jamdani and Muslin are coming back', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)', 'pattern' => 'patCloth', 'href' => '/stories'],
+                        ['tag' => 'History', 'read' => '7 min read', 'title' => 'Phuti Karpas: the lost cotton behind fine muslin', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C89A3A,#7A5710)', 'pattern' => 'patBrass', 'href' => '/stories'],
+                        ['tag' => 'Weaving', 'read' => '5 min read', 'title' => 'How weavers remember Jamdani patterns without drawing them', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#D98A62,#7C3523)', 'pattern' => 'patCarpet', 'href' => '/stories'],
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sec_home_newsletter',
+                'type' => BlockType::HOME_NEWSLETTER->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'card_bg' => '#1F4D3A',
+                    'heading' => 'Get updates from Sorolata',
+                    'subtitle' => 'We write when a maker finishes a new batch. No spam.',
+                    'email_label' => 'Your email',
+                    'email_placeholder' => 'name@example.com',
+                    'button_text' => 'Join',
+                ],
+            ],
+            [
+                'id' => 'sec_home_footer',
+                'type' => BlockType::HOME_FOOTER->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#163829',
+                    'brand_name' => 'Sorolata',
+                    'brand_bn' => 'সারলতা',
+                    'tagline' => 'Handmade things from the districts of Bangladesh, sent from the maker to your home.',
+                    'col1_title' => 'Shop',
+                    'shop_links' => [
+                        ['label' => 'All products', 'href' => '#products'],
+                        ['label' => 'By district', 'href' => '#districts'],
+                        ['label' => 'By craft', 'href' => '#products'],
+                        ['label' => 'Gifts', 'href' => '#products'],
+                    ],
+                    'col2_title' => 'Help',
+                    'help_links' => [
+                        ['label' => 'Track your order', 'href' => '#contact'],
+                        ['label' => 'Delivery and returns', 'href' => '#contact'],
+                        ['label' => 'FAQ', 'href' => '#contact'],
+                        ['label' => 'Privacy', 'href' => '#contact'],
+                        ['label' => 'Terms', 'href' => '#contact'],
+                    ],
+                    'col3_title' => 'Talk to us',
+                    'contact_lines' => [
+                        ['text' => 'WhatsApp: [your real number]'],
+                        ['text' => 'Phone: [your real number]'],
+                        ['text' => 'Facebook: facebook.com/sorolatabangladesh'],
+                    ],
+                    'copyright_text' => '© 2026 Sorolata. All rights reserved.',
+                    'payment_text' => 'We accept bKash, Nagad, Visa and Mastercard',
+                ],
+            ],
+        ];
+    }
+
     protected function loadDefaultPageSections(Page $page): void
     {
         if ($page->slug === 'home' || $page->page_type === 'home') {
+            $this->sections = static::getSorolataHomepageSections();
+            return;
+        }
+
+        if (false) {
             $defaults = $this->getBilingualHomepageDefaults();
             $this->sections = [
                 [

@@ -343,6 +343,40 @@
                 </div>
 
                 <div class="flex-1 overflow-y-auto builder-scroll p-3 space-y-5">
+
+                    @if($slug === 'home' || $pageType === 'home')
+                        <div class="p-2.5 rounded-lg bg-[#214E34]/15 border border-[#214E34]/40 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-semibold uppercase tracking-wider text-emerald-300">Sorolata Homepage</span>
+                                <button type="button" wire:click="resetHomepageToDefault" wire:confirm="Reset the homepage layout to all 13 default Sorolata sections?" class="px-2 py-1 rounded bg-[#214E34] hover:bg-[#2c6846] text-[10px] font-semibold text-white">Reset Default</button>
+                            </div>
+                            <div class="grid grid-cols-1 gap-1.5">
+                                @foreach([
+                                    ['home_header', 'Top Bar & Header'],
+                                    ['home_hero', 'Hero & Arch Frame'],
+                                    ['home_districts', 'Shop by District & Map'],
+                                    ['home_crafts', 'Shop by Craft Grid'],
+                                    ['home_products', 'Popular Products Grid'],
+                                    ['home_story_timeline', 'Muslin & Jamdani Timeline'],
+                                    ['home_makers', 'Our Makers Portraits'],
+                                    ['home_why', 'Why Sorolata Pillars'],
+                                    ['home_gifts', 'Gift Ideas Grid'],
+                                    ['home_reviews', 'Customer Reviews'],
+                                    ['home_stories', 'Craft Stories Grid'],
+                                    ['home_newsletter', 'Newsletter Banner'],
+                                    ['home_footer', 'Heritage Footer'],
+                                ] as [$hbType, $hbLabel])
+                                    <div draggable="true"
+                                         @dragstart="event.dataTransfer.setData('text/plain', '{{ $hbType }}'); event.dataTransfer.effectAllowed = 'copy';"
+                                         wire:click="addSection('{{ $hbType }}')"
+                                         class="px-2.5 py-2 rounded-lg border border-[#282d37] hover:border-[#214E34] bg-[#222731] hover:bg-[#252b36] cursor-grab active:cursor-grabbing text-xs font-medium text-white flex items-center justify-between select-none">
+                                        <span>{{ $hbLabel }}</span>
+                                        <span class="text-[10px] text-emerald-400">+ Add</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                     
                     <!-- Category: Shajgoj Content-to-Commerce Magazine Blocks -->
                     <div>
@@ -741,6 +775,7 @@
                  @dragover.prevent="event.dataTransfer.dropEffect = 'copy'">
 
                 <!-- Inner Content Container -->
+                @include('storefront.sections.defs')
                 <div class="min-h-[800px] flex flex-col divide-y divide-[#E8E8E8]"
                      @dragover.prevent="event.dataTransfer.dropEffect = 'copy'">
                     
@@ -814,7 +849,7 @@
                                  :class="{
                                      '!ring-4 !ring-[#214E34] !ring-offset-2 shadow-2xl': dropPos !== null,
                                  }"
-                                 style="background-color: {{ $settings['bg_color'] ?? '#FFFFFF' }}; padding-top: {{ $settings['padding_top'] ?? '48px' }}; padding-bottom: {{ $settings['padding_bottom'] ?? '48px' }};">
+                                 style="{{ str_starts_with($section['type'] ?? '', 'home_') ? '' : 'background-color: ' . ($settings['bg_color'] ?? '#FFFFFF') . '; padding-top: ' . ($settings['padding_top'] ?? '48px') . '; padding-bottom: ' . ($settings['padding_bottom'] ?? '48px') . ';' }}">
                             
                             <!-- Visual Drop Indicator Above Section -->
                             <div x-show="dropPos === 'top'" 
@@ -935,6 +970,11 @@
                                 $containerWidth = ($settings['container_width'] ?? 'boxed') === 'full' ? 'w-full px-4' : 'max-w-6xl mx-auto px-6 lg:px-12';
                             @endphp
 
+                            @if (str_starts_with($section['type'] ?? '', 'home_'))
+                                <div class="w-full pointer-events-none">
+                                    @include('storefront.sections.render-block', ['section' => $section, 'isBuilder' => true, 'previewLocale' => $previewLocale ?? 'en'])
+                                </div>
+                            @else
                             <div class="{{ $containerWidth }} pointer-events-none">
                                 
                                 @if ($section['type'] === 'hero_cinematic')
@@ -2181,6 +2221,7 @@
                                 </div>
 
                             </div>
+                            @endif
                         </section>
 
                         <!-- Elementor Inter-Section Dropzone (Between Sections at Index $index + 1) -->
@@ -2324,6 +2365,13 @@
                 @endphp
                 <div class="flex-1 overflow-y-auto builder-scroll p-4 space-y-4">
                     
+                    @if (str_starts_with($selectedSection['type'] ?? '', 'home_') && in_array($inspectorTab, ['content', 'style'], true))
+                        @include('livewire.builder.partials.home-inspector', [
+                            'section' => $selectedSection,
+                            'sIndex' => $sIndex,
+                            'inspectorTab' => $inspectorTab,
+                        ])
+                    @else
                     <!-- TAB 1: CONTENT (কনটেন্ট) -->
                     @if ($inspectorTab === 'content')
                         <!-- Dynamic Heritage Tags Helper -->
@@ -3867,6 +3915,7 @@
                     @endif
 
                     <!-- TAB 3: ADVANCED (অ্যাডভান্সড) -->
+                    @endif
                     @if ($inspectorTab === 'advanced')
                         <!-- Container Width -->
                         <div>
