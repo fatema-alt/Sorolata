@@ -160,18 +160,12 @@
               </g>
             </svg>
           @endif
-          @if(!empty($s['map_caption']))
-            <div style="position:relative; font-size:13px; color:#5A5044; margin-top:10px">{{ $s['map_caption'] }}</div>
-          @endif
         </div>
         <div style="flex:1.4 1 420px; min-width:0; display:flex; flex-direction:column; gap:14px">
           @foreach($districtsList as $d)
             <a href="{{ $linkHref($d['href'] ?? '#products') }}" style="position:relative; overflow:hidden; display:flex; align-items:center; gap:18px; background:#fff; border:1px solid #E3D8BC; border-radius:18px; padding:20px 24px; text-decoration:none">
               <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" style="position:absolute; right:0; top:0; color:#B8892F; opacity:0.75"><use href="#cornerArt"></use></svg>
-              <div style="position:relative; width:52px; height:52px; flex:none; display:flex; align-items:center; justify-content:center">
-                <svg aria-hidden="true" width="52" height="52" viewBox="0 0 48 48" style="position:absolute; left:0; top:0; color:#B8892F"><use href="#rosetteArt"></use></svg>
-                <div style="position:relative; width:30px; height:30px; border-radius:50%; background:#1F4D3A; color:#FBF6EC; display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',Georgia,serif; font-weight:700; font-size:18px">{{ $d['n'] ?? ($loop->iteration) }}</div>
-              </div>
+              <div style="width:46px; height:46px; flex:none; border-radius:50%; background:#1F4D3A; color:#FBF6EC; border:2px solid #E3C26F; box-shadow:0 4px 14px rgba(31,77,58,0.28); display:flex; align-items:center; justify-content:center; font-family:'Manrope',sans-serif; font-weight:700; font-size:18px; line-height:1">{{ $d['n'] ?? ($loop->iteration) }}</div>
               <div style="flex:1 1 auto; min-width:0; padding-right:40px">
                 <div style="display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 12px">
                   <h3 style="margin:0; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:26px; line-height:1.15; color:#1F4D3A">{{ $d['name'] ?? '' }}</h3>

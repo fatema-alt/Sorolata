@@ -1110,7 +1110,6 @@ class VisualPageBuilder extends Component
                     'subtitle' => 'Tap a district to see what is made there, and who makes it.',
                     'map_image_url' => '',
                     'map_image_alt' => 'Map of Bangladesh craft districts',
-                    'map_caption' => 'A simple drawing, not to scale',
                     'coming_soon_text' => 'More districts are coming soon, including clay and terracotta from the villages.',
                     'items' => [
                         ['n' => '1', 'name' => 'Narayanganj (Sonargaon)', 'bn' => 'নারায়ণগঞ্জ (সোনারগাঁ)', 'craft' => 'Muslin and Jamdani cloth', 'href' => '#products', 'cta_text' => 'See products →'],
