@@ -60,6 +60,7 @@ enum BlockType: string
     case HOME_FOOTER = 'home_footer';
     case HOME_PAGE_HEADER = 'home_page_header';
     case HOME_RICH_TEXT = 'home_rich_text';
+    case HOME_PRODUCT_SHOWCASE = 'home_product_showcase';
 
     public function defaultTitle(): string
     {
@@ -117,6 +118,7 @@ enum BlockType: string
             self::HOME_FOOTER => 'Heritage Footer',
             self::HOME_PAGE_HEADER => 'Heritage Page Header Banner',
             self::HOME_RICH_TEXT => 'Heritage Story & Media Block',
+            self::HOME_PRODUCT_SHOWCASE => 'Product Hero & Multi-Image Gallery',
         };
     }
 

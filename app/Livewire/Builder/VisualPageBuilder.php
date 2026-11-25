@@ -79,10 +79,15 @@ class VisualPageBuilder extends Component
             $this->seoTitle = $product->title . ' — Bengal Heritage Guild';
             $this->seoDescription = $product->subtitle ?? '';
 
-            if (!empty($product->layout_config) && isset($product->layout_config['sections'])) {
-                $this->sections = $product->layout_config['sections'];
+            $existingSections = $product->layout_config['sections'] ?? [];
+            $hasHomeBlocks = !empty($existingSections) && collect($existingSections)->contains(
+                fn ($s) => is_array($s) && str_starts_with((string) ($s['type'] ?? ''), 'home_')
+            );
+
+            if ($hasHomeBlocks) {
+                $this->sections = $existingSections;
             } else {
-                $this->loadDefaultProductSections($product);
+                $this->sections = static::getSorolataProductDefaults($product);
             }
         } elseif ($pageId) {
             $page = Page::findOrFail($pageId);
@@ -192,6 +197,25 @@ class VisualPageBuilder extends Component
                 'cta_text' => 'Explore Catalog →',
                 'cta_href' => '/shop',
                 'image_url' => '',
+            ];
+        } elseif ($blockType->value === 'home_product_showcase') {
+            $defaultSettings = [
+                'bg_color' => '#F7F5F0',
+                'text_color' => '#1F2A24',
+                'show_pattern' => true,
+                'show_band' => true,
+                'district_label' => '',
+                'title' => $this->title ?: 'Heritage Piece',
+                'artisan_label' => '',
+                'subtitle' => '',
+                'add_to_cart_text' => 'Add to Cart',
+                'wishlist_text' => 'Save to Wishlist',
+                'wishlist_saved_text' => 'Saved in Wishlist',
+                'trust_items' => [
+                    ['text' => 'Made by hand'],
+                    ['text' => 'Fair pay to makers'],
+                    ['text' => 'Ships worldwide'],
+                ],
             ];
         } elseif (str_starts_with($blockType->value, 'home_')) {
             $homeDefaults = collect(static::getSorolataHomepageSections())->keyBy('type');
@@ -555,7 +579,7 @@ class VisualPageBuilder extends Component
 
         $newItem = match ($type . ':' . $listKey) {
             'home_header:nav_links' => ['label' => 'New Link', 'href' => '#products'],
-            'home_hero:trust_items' => ['text' => 'Authentic handmade craft'],
+            'home_hero:trust_items', 'home_product_showcase:trust_items' => ['text' => 'Authentic handmade craft'],
             'home_districts:items' => ['n' => (string) (count($items) + 1), 'name' => 'New District', 'bn' => 'নতুন জেলা', 'craft' => 'Traditional craft', 'href' => '#products', 'cta_text' => 'See products →'],
             'home_crafts:items' => ['name' => 'New Craft', 'line' => 'Handcrafted heritage', 'photo_label' => 'Photo: craft', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#5B6FAE,#26356A)', 'pattern' => 'patCloth', 'href' => '#products'],
             'home_products:items' => ['district' => 'Narayanganj', 'name' => 'New Heritage Piece', 'maker' => 'Master Artisan', 'price' => '৳ 12,000', 'old_price' => '', 'badge' => '', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#C9B48A,#8E7545)', 'pattern' => 'patCloth', 'href' => '/shop', 'button_text' => 'Add to Cart'],
@@ -610,7 +634,11 @@ class VisualPageBuilder extends Component
 
     public function resetHomepageToDefault(): void
     {
-        if ($this->slug === 'home' || $this->pageType === 'home') {
+        if ($this->productId) {
+            $product = Product::with(['artisan', 'district', 'media'])->findOrFail($this->productId);
+            $this->sections = static::getSorolataProductDefaults($product);
+            $this->statusMessage = '✓ Reset to Sorolata Product Template';
+        } elseif ($this->slug === 'home' || $this->pageType === 'home') {
             $this->sections = static::getSorolataHomepageSections();
             $this->statusMessage = '✓ Reset to Sorolata Homepage Template';
         } else {
@@ -1343,6 +1371,62 @@ class VisualPageBuilder extends Component
                 ],
             ],
         ];
+    }
+
+    public static function getSorolataProductDefaults(Product $product): array
+    {
+        $districtName = $product->district?->name_en ?? $product->district?->getLocalized('name') ?? 'Bangladesh';
+        $artisanName = $product->artisan?->getLocalized('full_name') ?? 'Master Maker';
+        $body = trim(implode("\n\n", array_filter([
+            $product->getLocalized('description'),
+            $product->getLocalized('heritage_story'),
+        ])));
+
+        $sections = [
+            [
+                'id' => 'sec_prod_showcase_' . uniqid(),
+                'type' => BlockType::HOME_PRODUCT_SHOWCASE->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'text_color' => '#1F2A24',
+                    'show_pattern' => true,
+                    'show_band' => true,
+                    'district_label' => $districtName,
+                    'title' => $product->getLocalized('title'),
+                    'artisan_label' => $artisanName,
+                    'subtitle' => $product->getLocalized('subtitle') ?? '',
+                    'add_to_cart_text' => 'Add to Cart',
+                    'wishlist_text' => 'Save to Wishlist',
+                    'wishlist_saved_text' => 'Saved in Wishlist',
+                    'trust_items' => [
+                        ['text' => 'Made by hand'],
+                        ['text' => 'Fair pay to makers'],
+                        ['text' => 'Ships worldwide'],
+                    ],
+                ],
+            ],
+        ];
+
+        if ($body !== '') {
+            $sections[] = [
+                'id' => 'sec_prod_about_' . uniqid(),
+                'type' => BlockType::HOME_RICH_TEXT->value,
+                'is_active' => true,
+                'settings' => [
+                    'bg_color' => '#F7F5F0',
+                    'text_color' => '#1F2A24',
+                    'eyebrow' => 'Craft & Details',
+                    'heading' => 'About this piece',
+                    'body' => $body,
+                    'cta_text' => '',
+                    'cta_href' => '/shop',
+                    'image_url' => '',
+                ],
+            ];
+        }
+
+        return $sections;
     }
 
     public static function getSorolataPageDefaults(string $slug, string $title = 'Sorolata'): array

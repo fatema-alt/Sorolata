@@ -643,4 +643,190 @@
       @endif
     </div>
   </section>
+
+@elseif($type === 'home_product_showcase')
+  @php
+    $pObj = $product ?? null;
+    $galleryImages = $pObj ? $pObj->media->map(fn($m) => [
+        'url' => url($m->file_path),
+        'alt' => $m->alt_text ?: $pObj->getLocalized('title'),
+    ])->values()->all() : [];
+
+    if (empty($galleryImages)) {
+        $galleryImages = [[
+            'url' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1000&auto=format&fit=crop',
+            'alt' => $s['title'] ?? 'Sorolata Piece',
+        ]];
+    }
+
+    $hasDiscount = $pObj && !empty($pObj->compare_at_price) && $pObj->compare_at_price > $pObj->price;
+    $discountPercent = $hasDiscount ? round((($pObj->compare_at_price - $pObj->price) / $pObj->compare_at_price) * 100) : 0;
+    $isOutOfStock = $pObj && (!$pObj->is_in_stock || $pObj->status === 'out_of_stock' || (is_object($pObj->status) && $pObj->status->value === 'out_of_stock'));
+    $isWishlisted = (!$isBuilder && $pObj) ? in_array($pObj->id, session('sorolata_wishlist', [])) : false;
+    $districtName = !empty($s['district_label']) ? $s['district_label'] : ($pObj?->district?->name_en ?? $pObj?->district?->getLocalized('name') ?? 'Bangladesh');
+    $pieceTitle = !empty($s['title']) ? $s['title'] : ($pObj ? $pObj->getLocalized('title') : 'Handcrafted Piece');
+    $artisanName = !empty($s['artisan_label']) ? $s['artisan_label'] : ($pObj?->artisan?->getLocalized('full_name') ?? 'Master Maker');
+    $subtitleText = !empty($s['subtitle']) ? $s['subtitle'] : ($pObj ? $pObj->getLocalized('subtitle') : '');
+    $trustItems = $s['trust_items'] ?? [['text' => 'Made by hand'], ['text' => 'Fair pay to makers'], ['text' => 'Ships worldwide']];
+
+    $priceVal = $pObj ? (float) $pObj->price : 18500;
+    $formattedPrice = '৳ ' . number_format($priceVal, 0);
+    $compareVal = $hasDiscount ? (float) $pObj->compare_at_price : null;
+    $formattedCompare = $compareVal ? '৳ ' . number_format($compareVal, 0) : null;
+  @endphp
+  <section style="position:relative; overflow:hidden; background:{{ $s['bg_color'] ?? '#F7F5F0' }}">
+    @if($s['show_pattern'] ?? true)
+      <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; left:0; top:0; pointer-events:none"><rect width="100%" height="100%" fill="url(#patJaliDark)"></rect></svg>
+    @endif
+    <div style="position:relative; max-width:1200px; margin:0 auto; padding:32px 24px 72px">
+      @if($pObj)
+        <nav aria-label="Breadcrumb" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:13px; color:#5A5044; margin-bottom:28px">
+          <a href="{{ $linkHref('/') }}" style="color:#1F4D3A; font-weight:600">Home</a>
+          <span>/</span>
+          <a href="{{ $linkHref('/shop') }}" style="color:#1F4D3A; font-weight:600">Shop</a>
+          @if($pObj->district)
+            <span>/</span>
+            <a href="{{ $linkHref(route('district.show', $pObj->district->slug ?? $pObj->district->uuid)) }}" style="color:#1F4D3A; font-weight:600">{{ $districtName }}</a>
+          @endif
+          <span>/</span>
+          <span>{{ $pieceTitle }}</span>
+        </nav>
+      @endif
+
+      <div style="display:flex; flex-wrap:wrap; gap:48px; align-items:flex-start"
+           x-data="{
+               active: 0,
+               images: @js($galleryImages),
+               prev() { this.active = (this.active - 1 + this.images.length) % this.images.length },
+               next() { this.active = (this.active + 1) % this.images.length }
+           }">
+
+        <!-- Left: Multi-Image Gallery -->
+        <div style="flex:1 1 440px; min-width:0">
+          <div style="border:2px solid #B8892F; border-radius:24px; padding:10px; background:#FBF6EC">
+            <div style="border:1px solid #B8892F; border-radius:16px; padding:8px">
+              <div style="position:relative; aspect-ratio:4/5; border-radius:12px; overflow:hidden; background:#F0E6D0">
+                <template x-for="(img, idx) in images" :key="idx">
+                  <img x-show="active === idx" :src="img.url" :alt="img.alt" style="width:100%; height:100%; object-fit:cover; display:block">
+                </template>
+
+                @if($isOutOfStock)
+                  <div style="position:absolute; right:16px; top:16px; background:#2B2118; color:#FBF6EC; font-weight:700; font-size:12px; padding:6px 14px; border-radius:999px">Sold out</div>
+                @elseif($hasDiscount)
+                  <div style="position:absolute; right:16px; top:16px; background:#B8553A; color:#fff; font-weight:700; font-size:12px; padding:6px 14px; border-radius:999px">{{ $discountPercent }}% off</div>
+                @endif
+
+                @if(count($galleryImages) > 1 && !$isBuilder)
+                  <button type="button" @click="prev()" aria-label="Previous photo"
+                          style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:50%; border:1px solid #D9C28A; background:rgba(251,246,236,0.92); color:#1F4D3A; font-weight:700; display:flex; align-items:center; justify-content:center">←</button>
+                  <button type="button" @click="next()" aria-label="Next photo"
+                          style="position:absolute; right:12px; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:50%; border:1px solid #D9C28A; background:rgba(251,246,236,0.92); color:#1F4D3A; font-weight:700; display:flex; align-items:center; justify-content:center">→</button>
+                @endif
+              </div>
+            </div>
+          </div>
+
+          @if(count($galleryImages) > 1)
+            <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:16px">
+              @foreach($galleryImages as $idx => $img)
+                <button type="button"
+                        @if(!$isBuilder) @click="active = {{ $idx }}" @endif
+                        :style="active === {{ $idx }} ? 'border:2px solid #1F4D3A; padding:3px; background:#FBF6EC;' : 'border:1px solid #D9C28A; padding:3px; background:#fff; opacity:0.78;'"
+                        style="width:80px; height:80px; border-radius:14px; overflow:hidden; cursor:pointer">
+                  <img src="{{ $img['url'] }}" alt="{{ $img['alt'] }}" style="width:100%; height:100%; object-fit:cover; border-radius:10px; display:block">
+                </button>
+              @endforeach
+            </div>
+          @endif
+        </div>
+
+        <!-- Right: Product Info & Popping Price -->
+        <div style="flex:1 1 440px; min-width:0; padding-top:8px">
+          <div style="font-size:12px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#8F3F26; margin-bottom:10px">
+            {{ $districtName }}
+          </div>
+
+          <h1 style="margin:0 0 10px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(36px,4.2vw,54px); line-height:1.04; color:{{ $s['text_color'] ?? '#1F2A24' }}">
+            {{ $pieceTitle }}
+          </h1>
+
+          <div style="font-size:16px; color:#5A5044; margin-bottom:18px">
+            Made by
+            @if($pObj && $pObj->artisan)
+              <a href="{{ $linkHref(route('artisan.show', $pObj->artisan->slug ?? $pObj->artisan->uuid)) }}" style="color:#1F4D3A; font-weight:700; text-decoration:underline; text-underline-offset:4px">{{ $artisanName }}</a>
+            @else
+              <span style="color:#1F4D3A; font-weight:700">{{ $artisanName }}</span>
+            @endif
+          </div>
+
+          <!-- High-Contrast Popping Price Card -->
+          <div style="display:inline-flex; flex-wrap:wrap; align-items:baseline; gap:14px; background:#FBF6EC; border:1.5px solid #D9C28A; border-radius:14px; padding:10px 20px; box-shadow:0 4px 14px rgba(31,77,58,0.08); margin-bottom:22px">
+            <span style="font-family:'Manrope','Hind Siliguri',sans-serif; font-weight:800; font-size:28px; line-height:1.1; color:#1F4D3A">{{ $formattedPrice }}</span>
+            @if($formattedCompare)
+              <span style="font-family:'Manrope',sans-serif; font-size:16px; font-weight:600; color:#8F3F26; text-decoration:line-through">{{ $formattedCompare }}</span>
+            @endif
+          </div>
+
+          @if($subtitleText)
+            <p style="margin:0 0 24px; font-size:17px; color:#5A5044; line-height:1.6">{{ $subtitleText }}</p>
+          @endif
+
+          <svg aria-hidden="true" width="100%" height="10" style="display:block; margin-bottom:24px"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
+
+          @if(!$isBuilder && session('success'))
+            <div style="margin-bottom:16px; padding:12px 16px; border-radius:14px; background:#E7EEE4; border:1px solid #C5D3BF; color:#1F4D3A; font-size:14px; font-weight:600">
+              {{ session('success') }}
+            </div>
+          @endif
+
+          @if(!$isOutOfStock)
+            <form @if(!$isBuilder && $pObj) action="{{ route('cart.store') }}" method="POST" @else onsubmit="event.preventDefault();" @endif style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:20px" x-data="{ qty: 1 }">
+              @if(!$isBuilder) @csrf @endif
+              @if($pObj)<input type="hidden" name="product_id" value="{{ $pObj->id }}">@endif
+              <input type="hidden" name="quantity" :value="qty">
+
+              <div style="display:inline-flex; align-items:center; border:1.5px solid #D9C28A; border-radius:999px; background:#fff; padding:4px">
+                <button type="button" @click="if(qty > 1) qty--" style="width:38px; height:38px; border:0; background:none; color:#1F4D3A; font-size:18px; font-weight:700">−</button>
+                <span x-text="qty" style="min-width:32px; text-align:center; font-weight:700; font-size:15px; color:#2B2118">1</span>
+                <button type="button" @click="qty++" style="width:38px; height:38px; border:0; background:none; color:#1F4D3A; font-size:18px; font-weight:700">+</button>
+              </div>
+
+              <button type="submit" style="flex:1 1 200px; background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:15px 30px; font-size:16px; font-weight:600; min-height:50px">
+                {{ $s['add_to_cart_text'] ?? 'Add to Cart' }}
+              </button>
+            </form>
+          @else
+            <form @if(!$isBuilder && $pObj) action="{{ route('products.notify-restock', $pObj->slug) }}" method="POST" @else onsubmit="event.preventDefault();" @endif style="background:#FBF6EC; border:1px solid #D9C28A; border-radius:18px; padding:18px; margin-bottom:20px">
+              @if(!$isBuilder) @csrf @endif
+              <div style="font-size:14px; font-weight:700; color:#1F2A24; margin-bottom:8px">This piece is sold out. Get notified when a new one is ready:</div>
+              <div style="display:flex; flex-wrap:wrap; gap:10px">
+                <input type="email" name="email" required placeholder="Your email" style="flex:1 1 200px; height:46px; border-radius:999px; border:1px solid #D9C28A; padding:0 18px; font-size:14px; background:#fff; color:#2B2118">
+                <button type="submit" style="height:46px; border:0; border-radius:999px; background:#1F4D3A; color:#FBF6EC; font-weight:600; font-size:14px; padding:0 24px">Notify me</button>
+              </div>
+            </form>
+          @endif
+
+          <form @if(!$isBuilder && $pObj) action="{{ route('wishlist.toggle') }}" method="POST" @else onsubmit="event.preventDefault();" @endif style="margin-bottom:28px">
+            @if(!$isBuilder) @csrf @endif
+            @if($pObj)<input type="hidden" name="product_id" value="{{ $pObj->id }}">@endif
+            <button type="submit" style="display:inline-flex; align-items:center; gap:8px; border:1.5px solid #D9C28A; background:{{ $isWishlisted ? '#B8553A' : '#fff' }}; color:{{ $isWishlisted ? '#fff' : '#1F4D3A' }}; border-radius:999px; padding:10px 22px; font-size:14px; font-weight:600">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="{{ $isWishlisted ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <span>{{ $isWishlisted ? ($s['wishlist_saved_text'] ?? 'Saved in Wishlist') : ($s['wishlist_text'] ?? 'Save to Wishlist') }}</span>
+            </button>
+          </form>
+
+          @if(count($trustItems) > 0)
+            <div style="display:flex; flex-wrap:wrap; gap:14px 28px; font-size:14px; font-weight:600; color:#2B2118">
+              @foreach($trustItems as $t)
+                <span style="display:flex; align-items:center; gap:8px"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 48 48" style="color:#B8892F"><use href="#rosetteArt"></use></svg>{{ $t['text'] ?? $t }}</span>
+              @endforeach
+            </div>
+          @endif
+        </div>
+      </div>
+    </div>
+  </section>
+  @if($s['show_band'] ?? true)
+    <svg aria-hidden="true" width="100%" height="48" style="display:block; background:#FBF6EC"><rect width="100%" height="48" fill="url(#patBandGold)"></rect></svg>
+  @endif
 @endif

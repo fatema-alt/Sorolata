@@ -369,6 +369,7 @@
 
                             <div class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold pt-2">Showcase & Catalog</div>
                             @foreach([
+                                ['home_product_showcase', 'Product Hero & Gallery'],
                                 ['home_hero', 'Hero & Arch Frame'],
                                 ['home_districts', 'Shop by District & Map'],
                                 ['home_crafts', 'Shop by Craft Grid'],
@@ -732,7 +733,7 @@
 
                             @if (str_starts_with($section['type'] ?? '', 'home_'))
                                 <div class="w-full pointer-events-none">
-                                    @include('storefront.sections.render-block', ['section' => $section, 'isBuilder' => true, 'previewLocale' => $previewLocale ?? 'en'])
+                                    @include('storefront.sections.render-block', ['section' => $section, 'isBuilder' => true, 'previewLocale' => $previewLocale ?? 'en', 'product' => $product ?? null])
                                 </div>
                             @else
                             <div class="{{ $containerWidth }} pointer-events-none">

@@ -768,6 +768,51 @@
       <input type="file" wire:model="uploadedImage" accept="image/*" class="block w-full text-[11px] text-gray-300 file:mr-2 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-[11px] file:font-semibold file:bg-[#214E34] file:text-white">
       <input type="text" placeholder="Or Image URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.image_url" class="{{ $inputClass }}">
     </div>
+
+  {{-- 16. PRODUCT HERO & MULTI-IMAGE GALLERY --}}
+  @elseif($type === 'home_product_showcase')
+    <div class="{{ $cardClass }}">
+      <div>
+        <label class="{{ $labelClass }}">District Eyebrow</label>
+        <input type="text" placeholder="Auto from product district" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.district_label" class="{{ $inputClass }}">
+      </div>
+      <div>
+        <label class="{{ $labelClass }}">Product Title</label>
+        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.title" class="{{ $inputClass }}">
+      </div>
+      <div>
+        <label class="{{ $labelClass }}">Maker Name</label>
+        <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.artisan_label" class="{{ $inputClass }}">
+      </div>
+      <div>
+        <label class="{{ $labelClass }}">Short Subtitle</label>
+        <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subtitle" class="{{ $inputClass }}"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="{{ $labelClass }}">Cart Button Text</label>
+          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.add_to_cart_text" class="{{ $inputClass }}">
+        </div>
+        <div>
+          <label class="{{ $labelClass }}">Wishlist Text</label>
+          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.wishlist_text" class="{{ $inputClass }}">
+        </div>
+      </div>
+      <p class="text-[10px] text-emerald-400">Product photos & price sync automatically from the Product Editor (Media & Gallery tab).</p>
+    </div>
+
+    <div class="{{ $cardClass }}">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white">Trust Badges</span>
+        <button type="button" wire:click="addRepeaterItem('trust_items')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add</button>
+      </div>
+      @foreach(($s['trust_items'] ?? []) as $i => $item)
+        <div class="flex items-center gap-1.5" wire:key="ptrust-{{ $sIndex }}-{{ $i }}">
+          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.trust_items.{{ $i }}.text" class="{{ $inputClass }}">
+          <button type="button" wire:click="removeRepeaterItem('trust_items', {{ $i }})" class="px-2 py-1.5 rounded bg-[#222731] text-red-400 text-xs">✕</button>
+        </div>
+      @endforeach
+    </div>
   @endif
 
 @elseif($inspectorTab === 'style')
