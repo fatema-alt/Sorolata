@@ -40,8 +40,8 @@
 
         <!-- Hero Image -->
         @if($story->hero_image)
-            <div class="rounded-3xl overflow-hidden aspect-[16/9] shadow-sm bg-[#F8F6F2] border border-[#EBE7DF]">
-                <img src="{{ $story->hero_image }}" alt="{{ $title }}" class="w-full h-full object-cover">
+            <div class="rounded-3xl overflow-hidden aspect-[16/9] shadow-sm bg-[#F0E6D0] border border-[#D9C28A]">
+                <img src="{{ $story->hero_image }}" alt="{{ $title }}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1200&auto=format&fit=crop';" class="w-full h-full object-cover">
             </div>
         @endif
 
@@ -79,13 +79,13 @@
                     @foreach($featuredProducts as $item)
                         @php
                             $itemTitle = $item->getLocalized('title');
-                            $itemImage = $item->media->first()?->url ?? 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600';
+                            $itemImage = $item->media->first()?->file_path ? url($item->media->first()->file_path) : 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600&auto=format&fit=crop';
                             $itemArtisan = $item->artisan?->getLocalized('full_name');
                         @endphp
                         <div class="group rounded-2xl border border-[#E8E4DC] bg-white p-4 flex flex-col justify-between hover:shadow-md transition-all">
                             <div>
-                                <a href="{{ route('products.show', $item->slug) }}" class="block aspect-square rounded-xl overflow-hidden bg-[#F4F1EA] mb-3">
-                                    <img src="{{ $itemImage }}" alt="{{ $itemTitle }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <a href="{{ route('products.show', $item->slug) }}" class="block aspect-square rounded-xl overflow-hidden bg-[#F0E6D0] mb-3">
+                                    <img src="{{ $itemImage }}" alt="{{ $itemTitle }}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600&auto=format&fit=crop';" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                 </a>
                                 @if($item->district)
                                     <span class="text-[10px] tracking-widest uppercase font-semibold text-[#C96A3D] block mb-1">
@@ -125,8 +125,8 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     @foreach($relatedStories as $rel)
                         <a href="{{ route('stories.show', $rel->slug) }}" class="group block space-y-2">
-                            <div class="aspect-[16/10] rounded-xl overflow-hidden bg-[#F8F6F2]">
-                                <img src="{{ $rel->hero_image }}" alt="{{ $rel->getLocalized('title') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            <div class="aspect-[16/10] rounded-xl overflow-hidden bg-[#F0E6D0]">
+                                <img src="{{ $rel->hero_image }}" alt="{{ $rel->getLocalized('title') }}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop';" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                             </div>
                             <span class="text-[10px] uppercase font-bold text-[#C96A3D] tracking-wider block">
                                 {{ $rel->getLocalized('category') }}

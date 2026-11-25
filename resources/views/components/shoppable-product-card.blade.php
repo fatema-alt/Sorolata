@@ -8,14 +8,14 @@
     $artisanName = $artisan ? $artisan->getLocalized('full_name') : null;
     $district = $product->district;
     $districtName = $district ? ($locale === 'bn' ? $district->name_bn : $district->name_en) : null;
-    $image = $product->media->first()?->url ?? 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600';
+    $image = $product->media->first()?->file_path ? url($product->media->first()->file_path) : 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600&auto=format&fit=crop';
     $isOutOfStock = ! $product->is_in_stock || $product->status === 'out_of_stock' || (is_object($product->status) && $product->status->value === 'out_of_stock');
 @endphp
 
 <div x-data="{ 
         adding: false, 
         added: false,
-        buttonText: @json(__('Add to Bag'), JSON_UNESCAPED_UNICODE),
+        buttonText: '{{ addslashes(__('Bring it home')) }}',
         addToCart() {
             this.adding = true;
             fetch('{{ route('cart.store') }}', {
@@ -31,19 +31,19 @@
             .then(data => {
                 this.adding = false;
                 this.added = true;
-                this.buttonText = '✓ ' + @json(__('Added to Bag'), JSON_UNESCAPED_UNICODE);
+                this.buttonText = '✓ {{ addslashes(__('Added')) }}';
                 window.dispatchEvent(new CustomEvent('cart-count-updated', { detail: { count: data.cart_count } }));
                 if (window.sorolataAnalytics && data.analytics) {
                     window.sorolataAnalytics.pushAddToCart(data.analytics.item, data.analytics.item.quantity, data.analytics.event_id);
                 }
                 setTimeout(() => {
                     this.added = false;
-                    this.buttonText = @json(__('Add to Bag'), JSON_UNESCAPED_UNICODE);
+                    this.buttonText = '{{ addslashes(__('Bring it home')) }}';
                 }, 3000);
             })
             .catch(err => {
                 this.adding = false;
-                alert(@json(__('Something went wrong. Please try again.'), JSON_UNESCAPED_UNICODE));
+                alert('{{ addslashes(__('Something went wrong. Please try again.')) }}');
             });
         }
      }"
@@ -52,7 +52,7 @@
     <div class="flex flex-col sm:flex-row gap-5 items-center">
         <!-- Product Thumbnail with Hover Zoom -->
         <a href="{{ route('products.show', $product->slug) }}" class="relative shrink-0 w-full sm:w-44 aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-[#ECE8DF] group">
-            <img src="{{ $image }}" alt="{{ $title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <img src="{{ $image }}" alt="{{ $title }}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600&auto=format&fit=crop';" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
             @if($product->free_shipping_eligible)
                 <span class="absolute top-2 left-2 text-[10px] tracking-wider uppercase font-semibold bg-[#214E34]/90 text-white px-2 py-0.5 rounded-full backdrop-blur-sm">
                     {{ __('Free Shipping') }}
@@ -144,7 +144,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                 </svg>
                             </template>
-                            <span x-text="buttonText">{{ __('Add to Bag') }}</span>
+                            <span x-text="buttonText">{{ __('Bring it home') }}</span>
                         </button>
                     @endif
 
