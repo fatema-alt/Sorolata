@@ -91,8 +91,15 @@
     @endif
 
     <!-- Heritage Header (Homepage Essence) -->
+    <style>
+        @media (max-width: 767px) {
+            .soro-hdr-inner { justify-content: center !important; padding: 12px 16px !important; }
+            .soro-hdr-nav, .soro-hdr-actions { display: none !important; }
+            .soro-page-wrap { padding-bottom: 66px; }
+        }
+    </style>
     <header style="background:{{ $hs['bg_color'] ?? '#F7F5F0' }}; position:sticky; top:0; z-index:40">
-        <div style="max-width:1200px; margin:0 auto; padding:14px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 28px">
+        <div class="soro-hdr-inner" style="max-width:1200px; margin:0 auto; padding:14px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 28px">
             <a href="{{ url('/') }}" style="display:flex; align-items:center; gap:12px; text-decoration:none">
                 <span style="font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:34px; color:#1F2A24; letter-spacing:-0.01em; line-height:1">{{ $hs['brand_name'] ?? 'Sorolata' }}</span>
                 @php $headerBrandBn = (($hs['brand_bn'] ?? '') === 'সারলতা' || empty($hs['brand_bn'])) ? 'সরলতা' : $hs['brand_bn']; @endphp
@@ -101,7 +108,7 @@
                 @endif
             </a>
 
-            <nav aria-label="Main" class="hidden md:flex" style="flex-wrap:wrap; gap:4px 26px; font-weight:500; font-size:15px; color:#3A332B">
+            <nav aria-label="Main" class="soro-hdr-nav hidden md:flex" style="flex-wrap:wrap; gap:4px 26px; font-weight:500; font-size:15px; color:#3A332B">
                 @foreach($navLinks as $n)
                     @php
                         $href = $resolveUrl($n['href'] ?? '/');
@@ -113,7 +120,7 @@
                 @endforeach
             </nav>
 
-            <div style="display:flex; align-items:center; gap:10px">
+            <div class="soro-hdr-actions" style="display:flex; align-items:center; gap:10px">
                 @if($hs['show_lang_toggle'] ?? true)
                     <div style="display:flex; align-items:center; border:1px solid #D9D2C0; border-radius:999px; padding:3px; background:#fff; font-size:13px; font-weight:600">
                         <button type="button" onclick="window.location='{{ route('language.switch', 'en') }}'" style="border:0; background:{{ !$isBn ? '#1F4D3A' : 'none' }}; color:{{ !$isBn ? '#fff' : '#3A332B' }}; border-radius:999px; padding:6px 12px; font-size:13px; font-weight:600; cursor:pointer">EN</button>
@@ -263,6 +270,8 @@
             </div>
         </div>
     </footer>
+
+    <x-mobile-bottom-nav />
 
     @livewireScripts
 </body>

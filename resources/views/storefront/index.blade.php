@@ -28,7 +28,7 @@
   $sectionsToRender = $homeSections ?? \App\Livewire\Builder\VisualPageBuilder::getSorolataHomepageSections();
 @endphp
 
-<div style="background:#F7F5F0; color:#2B2118; font-family:'Manrope','Hind Siliguri',system-ui,sans-serif; line-height:1.6; font-size:16px; min-width:0; position:relative">
+<div class="soro-page-wrap" style="background:#F7F5F0; color:#2B2118; font-family:'Manrope','Hind Siliguri',system-ui,sans-serif; line-height:1.6; font-size:16px; min-width:0; position:relative">
   @include('storefront.sections.defs')
 
   @foreach($sectionsToRender as $section)
@@ -37,6 +37,8 @@
     @endif
   @endforeach
 </div>
+
+<x-mobile-bottom-nav />
 
 </body>
 </html>

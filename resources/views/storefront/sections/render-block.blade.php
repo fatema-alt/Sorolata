@@ -31,8 +31,17 @@
       {{ $s['topbar_text'] ?? 'Free insured delivery to Bangladesh, USA, UK, Canada and Europe' }}
     </div>
   @endif
+  @if(!$isBuilder)
+    <style>
+      @media (max-width: 767px) {
+        .soro-hdr-inner { justify-content: center !important; padding: 12px 16px !important; }
+        .soro-hdr-nav, .soro-hdr-actions { display: none !important; }
+        .soro-page-wrap { padding-bottom: 66px; }
+      }
+    </style>
+  @endif
   <header style="background:{{ $headerBg }}">
-    <div style="max-width:1200px; margin:0 auto; padding:14px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 28px">
+    <div class="soro-hdr-inner" style="max-width:1200px; margin:0 auto; padding:14px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 28px">
       <a href="{{ $linkHref($s['brand_href'] ?? '#top') }}" style="display:flex; align-items:center; gap:12px; text-decoration:none">
         <span style="font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:34px; color:#1F2A24; letter-spacing:-0.01em">{{ $s['brand_name'] ?? 'Sorolata' }}</span>
         @php $blkHeaderBrandBn = (($s['brand_bn'] ?? '') === 'সারলতা' || empty($s['brand_bn'])) ? 'সরলতা' : $s['brand_bn']; @endphp
@@ -40,12 +49,12 @@
           <span style="font-family:'Noto Serif Bengali',serif; font-weight:500; font-size:13px; color:#1F4D3A; background:#E7EEE4; border:1px solid #C5D3BF; border-radius:999px; padding:2px 12px">{{ $blkHeaderBrandBn }}</span>
         @endif
       </a>
-      <nav aria-label="Main" style="display:flex; flex-wrap:wrap; gap:4px 26px; font-weight:500; font-size:15px; color:#3A332B">
+      <nav aria-label="Main" class="soro-hdr-nav" style="display:flex; flex-wrap:wrap; gap:4px 26px; font-weight:500; font-size:15px; color:#3A332B">
         @foreach($navLinks as $n)
           <a href="{{ $linkHref($n['href'] ?? '#') }}" style="padding:10px 0">{{ $n['label'] ?? '' }}</a>
         @endforeach
       </nav>
-      <div style="display:flex; align-items:center; gap:10px">
+      <div class="soro-hdr-actions" style="display:flex; align-items:center; gap:10px">
         @if($s['show_lang_toggle'] ?? true)
           <div style="display:flex; align-items:center; border:1px solid #D9D2C0; border-radius:999px; padding:3px; background:#fff; font-size:13px; font-weight:600">
             <button type="button" @if(!$isBuilder) onclick="window.location='{{ route('language.switch', 'en') }}'" @endif style="border:0; background:{{ !$isBn ? '#1F4D3A' : 'none' }}; color:{{ !$isBn ? '#fff' : '#3A332B' }}; border-radius:999px; padding:6px 12px; font-size:13px; font-weight:600">EN</button>
