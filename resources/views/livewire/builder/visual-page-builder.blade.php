@@ -5,9 +5,9 @@
         
         <!-- Left: Brand & Page Context -->
         <div class="flex items-center space-x-3">
-            <a href="{{ $productId ? route('products.show', $product?->slug ?? '') : url('/') }}" 
+            <a href="{{ $productId ? route('admin.products.index') : route('admin.pages.index') }}" 
                class="p-1.5 text-gray-400 hover:text-white hover:bg-[#282d37] rounded-lg transition-colors"
-               title="Exit to Storefront">
+               title="{{ $productId ? 'Back to Admin Products' : 'Back to Admin Pages' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>

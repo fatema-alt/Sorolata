@@ -51,9 +51,36 @@
         <button type="button" aria-label="Search" @if(!$isBuilder) onclick="window.location='{{ $s['search_href'] ?? route('search.index') }}'" @endif style="width:44px; height:44px; border:1px solid #D9D2C0; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0">
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
         </button>
-        <button type="button" aria-label="Cart" @if(!$isBuilder) onclick="window.location='{{ $s['cart_href'] ?? route('cart.index') }}'" @endif style="width:44px; height:44px; border:1px solid #D9D2C0; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0">
+        @if($s['show_wishlist'] ?? true)
+          @php $wlCount = $isBuilder ? 0 : count(session('sorolata_wishlist', [])); @endphp
+          <button type="button" aria-label="Wishlist" @if(!$isBuilder) onclick="window.location='{{ $s['wishlist_href'] ?? route('wishlist.index') }}'" @endif style="position:relative; width:44px; height:44px; border:1px solid #D9D2C0; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            @if($wlCount > 0)
+              <span style="position:absolute; top:-2px; right:-2px; width:18px; height:18px; background:#B8553A; color:#fff; border-radius:50%; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center">{{ $wlCount }}</span>
+            @endif
+          </button>
+        @endif
+        <button type="button" aria-label="Cart" @if(!$isBuilder) onclick="window.location='{{ $s['cart_href'] ?? route('cart.index') }}'" @endif style="position:relative; width:44px; height:44px; border:1px solid #D9D2C0; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0">
+          @php $cartCount = $isBuilder ? 0 : count(session('sorolata_collector_bag', [])); @endphp
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1.5 12h-11L5 7z"></path><path d="M9 7a3 3 0 016 0"></path></svg>
+          @if($cartCount > 0)
+            <span style="position:absolute; top:-2px; right:-2px; width:18px; height:18px; background:#B8553A; color:#fff; border-radius:50%; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center">{{ $cartCount }}</span>
+          @endif
         </button>
+        @if($s['show_account'] ?? true)
+          @php
+            $authUser = !$isBuilder ? auth()->user() : null;
+            $accountUrl = $s['account_href'] ?? ($authUser ? route('account.index') : route('login'));
+            $initials = $authUser ? strtoupper(mb_substr($authUser->name ?? 'S', 0, 1)) : '';
+          @endphp
+          <button type="button" aria-label="Account" @if(!$isBuilder) onclick="window.location='{{ $accountUrl }}'" @endif style="width:44px; height:44px; border:1px solid {{ $authUser ? '#1F4D3A' : '#D9D2C0' }}; background:{{ $authUser ? '#E7EEE4' : '#fff' }}; color:#1F4D3A; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; font-weight:700; font-size:15px">
+            @if($authUser)
+              <span>{{ $initials }}</span>
+            @else
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            @endif
+          </button>
+        @endif
       </div>
     </div>
     @if($s['show_stitch_border'] ?? true)

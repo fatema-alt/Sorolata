@@ -46,10 +46,28 @@
           <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.cart_href" class="{{ $inputClass }}">
         </div>
       </div>
-      <div class="flex items-center gap-4 pt-1">
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="{{ $labelClass }}">Wishlist URL</label>
+          <input type="text" placeholder="/wishlist" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.wishlist_href" class="{{ $inputClass }}">
+        </div>
+        <div>
+          <label class="{{ $labelClass }}">Account URL</label>
+          <input type="text" placeholder="/account" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.account_href" class="{{ $inputClass }}">
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 pt-1">
         <label class="inline-flex items-center gap-1.5 text-xs text-gray-300 cursor-pointer">
           <input type="checkbox" wire:model.live="sections.{{ $sIndex }}.settings.show_lang_toggle" class="rounded bg-[#12141a] border-[#282d37] text-[#214E34]">
-          <span>EN / বাং Toggle</span>
+          <span>EN / বাং</span>
+        </label>
+        <label class="inline-flex items-center gap-1.5 text-xs text-gray-300 cursor-pointer">
+          <input type="checkbox" wire:model.live="sections.{{ $sIndex }}.settings.show_wishlist" class="rounded bg-[#12141a] border-[#282d37] text-[#214E34]">
+          <span>Wishlist</span>
+        </label>
+        <label class="inline-flex items-center gap-1.5 text-xs text-gray-300 cursor-pointer">
+          <input type="checkbox" wire:model.live="sections.{{ $sIndex }}.settings.show_account" class="rounded bg-[#12141a] border-[#282d37] text-[#214E34]">
+          <span>Avatar</span>
         </label>
         <label class="inline-flex items-center gap-1.5 text-xs text-gray-300 cursor-pointer">
           <input type="checkbox" wire:model.live="sections.{{ $sIndex }}.settings.show_stitch_border" class="rounded bg-[#12141a] border-[#282d37] text-[#214E34]">

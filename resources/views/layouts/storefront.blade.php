@@ -120,12 +120,37 @@
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
                 </a>
 
+                @if($hs['show_wishlist'] ?? true)
+                    @php $wishlistCount = count(session('sorolata_wishlist', [])); @endphp
+                    <a href="{{ $hs['wishlist_href'] ?? route('wishlist.index') }}" aria-label="{{ __('Wishlist') }}" style="position:relative; width:44px; height:44px; border:1px solid #D9D2C0; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; text-decoration:none">
+                        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        @if($wishlistCount > 0)
+                            <span style="position:absolute; top:-2px; right:-2px; width:18px; height:18px; background:#B8553A; color:#fff; border-radius:50%; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center">{{ $wishlistCount }}</span>
+                        @endif
+                    </a>
+                @endif
+
                 <a href="{{ $hs['cart_href'] ?? route('cart.index') }}" aria-label="{{ __('Cart') }}" style="position:relative; width:44px; height:44px; border:1px solid #D9D2C0; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; text-decoration:none">
                     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1.5 12h-11L5 7z"></path><path d="M9 7a3 3 0 016 0"></path></svg>
                     @if($bagCount > 0)
                         <span style="position:absolute; top:-2px; right:-2px; width:18px; height:18px; background:#B8553A; color:#fff; border-radius:50%; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center">{{ $bagCount }}</span>
                     @endif
                 </a>
+
+                @if($hs['show_account'] ?? true)
+                    @php
+                        $authUser = auth()->user();
+                        $accountUrl = $hs['account_href'] ?? ($authUser ? route('account.index') : route('login'));
+                        $initials = $authUser ? strtoupper(mb_substr($authUser->name ?? 'S', 0, 1)) : '';
+                    @endphp
+                    <a href="{{ $accountUrl }}" aria-label="{{ __('Account') }}" style="width:44px; height:44px; border:1px solid {{ $authUser ? '#1F4D3A' : '#D9D2C0' }}; background:{{ $authUser ? '#E7EEE4' : '#fff' }}; color:#1F4D3A; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; text-decoration:none; font-weight:700; font-size:15px">
+                        @if($authUser)
+                            <span>{{ $initials }}</span>
+                        @else
+                            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        @endif
+                    </a>
+                @endif
             </div>
         </div>
         @if($hs['show_stitch_border'] ?? true)
