@@ -39,6 +39,7 @@
 </div>
 
 <x-mobile-bottom-nav />
+<x-sorolata-animations />
 
 </body>
 </html>

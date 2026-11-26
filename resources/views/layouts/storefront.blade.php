@@ -319,6 +319,7 @@
     </footer>
 
     <x-mobile-bottom-nav />
+    <x-sorolata-animations />
 
     @livewireScripts
 </body>
