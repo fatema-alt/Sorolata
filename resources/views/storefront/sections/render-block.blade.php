@@ -44,7 +44,7 @@
   @else
     <style>.soro-mob-avatar-wrap { display: none; }</style>
   @endif
-  <header style="background:{{ $headerBg }}; position:relative; z-index:40">
+  <header style="background:{{ $headerBg }}">
     <div class="soro-hdr-inner" style="max-width:1200px; margin:0 auto; padding:14px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 28px">
       <a href="{{ $linkHref($s['brand_href'] ?? '#top') }}" style="display:flex; align-items:center; gap:12px; text-decoration:none">
         <span style="font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:34px; color:#1F2A24; letter-spacing:-0.01em">{{ $s['brand_name'] ?? 'Sorolata' }}</span>
@@ -148,7 +148,7 @@
       @endif
     </div>
     @if($s['show_stitch_border'] ?? true)
-      <svg aria-hidden="true" width="100%" height="10" style="position:absolute; left:0; right:0; bottom:-5px; z-index:41; pointer-events:none; display:block"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
+      <svg aria-hidden="true" width="100%" height="10" style="display:block"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
     @endif
   </header>
 
