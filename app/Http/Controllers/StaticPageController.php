@@ -24,31 +24,11 @@ class StaticPageController extends Controller
 
     public function about(): View
     {
-        $page = Page::where('slug', 'about')->where('status', 'published')->first();
-        if ($page && !empty($page->layout_json['sections'])) {
-            $sections = array_filter($page->layout_json['sections'], fn ($s) => $s['is_active'] ?? true);
-            return view('builder.landing', [
-                'page' => $page,
-                'sections' => $sections,
-                'parser' => $this->parser,
-            ]);
-        }
-
         return view('pages.about');
     }
 
     public function contact(): View
     {
-        $page = Page::where('slug', 'contact')->where('status', 'published')->first();
-        if ($page && !empty($page->layout_json['sections'])) {
-            $sections = array_filter($page->layout_json['sections'], fn ($s) => $s['is_active'] ?? true);
-            return view('builder.landing', [
-                'page' => $page,
-                'sections' => $sections,
-                'parser' => $this->parser,
-            ]);
-        }
-
         return view('pages.contact');
     }
 
