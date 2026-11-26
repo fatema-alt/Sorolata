@@ -1184,6 +1184,9 @@ class VisualPageBuilder extends Component
 
         foreach ($this->sections as &$sec) {
             $type = $sec['type'] ?? '';
+            if ($type === BlockType::HOME_HERO->value && empty($sec['settings']['slides'])) {
+                $sec['settings']['slides'] = static::getDefaultHeroSlides($sec['settings'] ?? []);
+            }
             if (isset($defaults[$type])) {
                 $defSettings = $defaults[$type];
                 $sec['settings'] = $sec['settings'] ?? [];
@@ -1249,6 +1252,52 @@ class VisualPageBuilder extends Component
         unset($sec);
     }
 
+    public static function getDefaultHeroSlides(array $s = []): array
+    {
+        return [
+            [
+                'headline' => !empty($s['headline']) ? $s['headline'] : 'Handmade in Bangladesh. Passed down from parent to child.',
+                'subheadline' => !empty($s['subheadline']) ? $s['subheadline'] : 'Muslin, brass, clay and more. Every piece names its maker and the district it comes from.',
+                'cta_text' => $s['primary_cta_text'] ?? 'Shop Now →',
+                'cta_href' => $s['primary_cta_href'] ?? '/shop',
+                'secondary_text' => $s['secondary_cta_text'] ?? 'Shop by District',
+                'secondary_href' => $s['secondary_cta_href'] ?? '/districts',
+                'image_url' => !empty($s['image_url']) ? $s['image_url'] : 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1600&auto=format&fit=crop',
+                'bg' => 'linear-gradient(135deg,#1F4D3A 0%,#163829 60%,#3B2314 100%)',
+            ],
+            [
+                'headline' => 'Woven on wooden pit looms, one thread at a time.',
+                'subheadline' => 'Heirloom sarees and scarves crafted by generational weavers who memorize every floral motif by heart.',
+                'cta_text' => 'Explore Cloth →',
+                'cta_href' => '/shop?category=cloth',
+                'secondary_text' => 'Meet Our Makers',
+                'secondary_href' => '/artisans',
+                'image_url' => 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=1600&auto=format&fit=crop',
+                'bg' => 'linear-gradient(135deg,#2C2240 0%,#1F4D3A 65%,#5E2618 100%)',
+            ],
+            [
+                'headline' => 'Hand-hammered brass, ringing with generations of craft.',
+                'subheadline' => 'Kettles, plates, and bowls shaped in family foundries with zero machines and pure bell-metal resonance.',
+                'cta_text' => 'Shop Brassware →',
+                'cta_href' => '/shop?category=brass',
+                'secondary_text' => 'Explore Bogura',
+                'secondary_href' => '/districts',
+                'image_url' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1600&auto=format&fit=crop',
+                'bg' => 'linear-gradient(135deg,#4A3510 0%,#2B2118 65%,#163829 100%)',
+            ],
+            [
+                'headline' => 'Earthy patterns from the river basins of Bengal.',
+                'subheadline' => 'Thick hand-woven floor carpets and sun-baked clayware sent straight from the village workshop to your home.',
+                'cta_text' => 'View All Pieces →',
+                'cta_href' => '/shop',
+                'secondary_text' => 'Read Stories',
+                'secondary_href' => '/stories',
+                'image_url' => 'https://images.unsplash.com/photo-1590736969955-71cc94901144?q=80&w=1600&auto=format&fit=crop',
+                'bg' => 'linear-gradient(135deg,#5E2618 0%,#2B2118 60%,#1F4D3A 100%)',
+            ],
+        ];
+    }
+
     public static function getSorolataHomepageSections(): array
     {
         return [
@@ -1307,6 +1356,7 @@ class VisualPageBuilder extends Component
                     'featured_title' => 'Imperial Sonargaon Muslin Scarf',
                     'featured_price' => '৳ 18,500',
                     'featured_href' => '/shop',
+                    'slides' => static::getDefaultHeroSlides(),
                 ],
             ],
             [

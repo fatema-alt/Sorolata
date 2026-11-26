@@ -99,46 +99,20 @@
       @endforeach
     </div>
 
-  {{-- 2. HOME HERO --}}
+  {{-- 2. HOME HERO SLIDER --}}
   @elseif($type === 'home_hero')
-    <div class="{{ $cardClass }}">
-      <div>
-        <label class="{{ $labelClass }}">Main Headline (H1)</label>
-        <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.headline" class="{{ $inputClass }}"></textarea>
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Subheadline</label>
-        <textarea rows="2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.subheadline" class="{{ $inputClass }}"></textarea>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="{{ $labelClass }}">Primary Button</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_text" class="{{ $inputClass }}">
-        </div>
-        <div>
-          <label class="{{ $labelClass }}">Primary URL</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.primary_cta_href" class="{{ $inputClass }}">
-        </div>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="{{ $labelClass }}">Secondary Button</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.secondary_cta_text" class="{{ $inputClass }}">
-        </div>
-        <div>
-          <label class="{{ $labelClass }}">Secondary URL</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.secondary_cta_href" class="{{ $inputClass }}">
-        </div>
-      </div>
-    </div>
-
+    @php
+      $inspectorSlides = !empty($s['slides']) && is_array($s['slides'])
+          ? $s['slides']
+          : \App\Livewire\Builder\VisualPageBuilder::getDefaultHeroSlides($s);
+    @endphp
     <div class="{{ $cardClass }}">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-semibold text-white">Hero Slider Slides ({{ count($s['slides'] ?? []) }})</span>
-        <button type="button" wire:click="addRepeaterItem('slides')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add Slide</button>
+        <span class="text-xs font-semibold text-white">Hero Slider Slides ({{ count($inspectorSlides) }})</span>
+        <button type="button" wire:click="addRepeaterItem('slides')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold hover:bg-[#2c6846]">+ Add Slide</button>
       </div>
-      @foreach(($s['slides'] ?? []) as $i => $sl)
-        <div class="p-2.5 rounded bg-[#1a1d24] border border-[#282d37] space-y-1.5" wire:key="hslide-{{ $sIndex }}-{{ $i }}">
+      @foreach($inspectorSlides as $i => $sl)
+        <div class="p-2.5 rounded bg-[#1a1d24] border border-[#282d37] space-y-2" wire:key="hslide-{{ $sIndex }}-{{ $i }}">
           <div class="flex items-center justify-between text-[10px] text-gray-400">
             <span class="font-semibold text-gray-200">Slide #{{ $i + 1 }}</span>
             <div class="flex items-center gap-1">
@@ -147,55 +121,38 @@
               <button type="button" wire:click="removeRepeaterItem('slides', {{ $i }})" class="px-1 text-red-400 hover:text-red-300">✕</button>
             </div>
           </div>
-          <input type="text" placeholder="Eyebrow" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.eyebrow" class="{{ $inputClass }}">
-          <input type="text" placeholder="Headline" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.headline" class="{{ $inputClass }}">
-          <textarea rows="2" placeholder="Subheadline" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.subheadline" class="{{ $inputClass }}"></textarea>
+
+          @if(!empty($sl['image_url']))
+            <div class="relative rounded-lg overflow-hidden border border-[#282d37] h-20 bg-[#12141a]">
+              <img src="{{ $sl['image_url'] }}" class="w-full h-full object-cover">
+              <button type="button" wire:click="removeItemImage('slides', {{ $i }})" class="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-red-600 text-white text-[9px] font-semibold">Remove</button>
+            </div>
+          @endif
+          <input type="file" wire:click="setItemUploadTarget('slides', {{ $i }})" wire:model="uploadedItemImage" accept="image/*" class="block w-full text-[10px] text-gray-300 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-[#214E34] file:text-white">
+          <input type="text" placeholder="Slide Background Image URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.image_url" class="{{ $inputClass }}">
+
+          <div>
+            <label class="{{ $labelClass }}">Headline</label>
+            <input type="text" placeholder="Headline" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.headline" class="{{ $inputClass }}">
+          </div>
+          <div>
+            <label class="{{ $labelClass }}">Subheadline</label>
+            <textarea rows="2" placeholder="Subheadline" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.subheadline" class="{{ $inputClass }}"></textarea>
+          </div>
           <div class="grid grid-cols-2 gap-1.5">
-            <input type="text" placeholder="Primary CTA" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.cta_text" class="{{ $inputClass }}">
+            <input type="text" placeholder="Primary Button" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.cta_text" class="{{ $inputClass }}">
             <input type="text" placeholder="Primary URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.cta_href" class="{{ $inputClass }}">
           </div>
-          <input type="file" wire:click="setItemUploadTarget('slides', {{ $i }})" wire:model="uploadedItemImage" accept="image/*" class="block w-full text-[10px] text-gray-300 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-[#282d37] file:text-white">
-          <input type="text" placeholder="Slide Background Image URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.image_url" class="{{ $inputClass }}">
+          <div class="grid grid-cols-2 gap-1.5">
+            <input type="text" placeholder="Secondary Button" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.secondary_text" class="{{ $inputClass }}">
+            <input type="text" placeholder="Secondary URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.secondary_href" class="{{ $inputClass }}">
+          </div>
+          <div>
+            <label class="{{ $labelClass }}">Fallback Gradient / Color</label>
+            <input type="text" placeholder="linear-gradient(...)" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.bg" class="{{ $inputClass }}">
+          </div>
         </div>
       @endforeach
-    </div>
-
-    <div class="{{ $cardClass }}">
-      <span class="text-xs font-semibold text-white block">Arch Frame Photo & Featured Card</span>
-      @if(!empty($s['image_url']))
-        <div class="relative rounded-lg overflow-hidden border border-[#282d37] h-28 bg-[#12141a]">
-          <img src="{{ $s['image_url'] }}" class="w-full h-full object-cover">
-          <button type="button" wire:click="removeImage" class="absolute top-1.5 right-1.5 px-2 py-0.5 rounded bg-red-600 text-white text-[10px] font-semibold">Remove</button>
-        </div>
-      @endif
-      <div>
-        <label class="{{ $labelClass }}">Upload Arch Image</label>
-        <input type="file" wire:model="uploadedImage" accept="image/*" class="block w-full text-[11px] text-gray-300 file:mr-2 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-[11px] file:font-semibold file:bg-[#214E34] file:text-white hover:file:bg-[#2c6846]">
-      </div>
-      <div>
-        <label class="{{ $labelClass }}">Or Image URL</label>
-        <input type="text" placeholder="https://... or /storage/..." wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.image_url" class="{{ $inputClass }}">
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="{{ $labelClass }}">Featured Eyebrow</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.featured_eyebrow" class="{{ $inputClass }}">
-        </div>
-        <div>
-          <label class="{{ $labelClass }}">Featured Price</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.featured_price" class="{{ $inputClass }}">
-        </div>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="{{ $labelClass }}">Featured Title</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.featured_title" class="{{ $inputClass }}">
-        </div>
-        <div>
-          <label class="{{ $labelClass }}">Featured Link</label>
-          <input type="text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.featured_href" class="{{ $inputClass }}">
-        </div>
-      </div>
     </div>
 
     <div class="{{ $cardClass }}">

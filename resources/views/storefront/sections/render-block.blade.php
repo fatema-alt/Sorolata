@@ -158,52 +158,9 @@
     $accentColor = $s['accent_color'] ?? '#B8892F';
     $primaryBg = $s['primary_color'] ?? '#1F4D3A';
     $trustItems = $s['trust_items'] ?? [];
-    $heroSlides = !empty($s['slides']) && is_array($s['slides']) ? $s['slides'] : [
-        [
-            'eyebrow' => 'SONARGAON MUSLIN • 300-COUNT HANDLOOM',
-            'headline' => !empty($s['headline']) ? $s['headline'] : 'Handmade in Bangladesh. Passed down from parent to child.',
-            'subheadline' => !empty($s['subheadline']) ? $s['subheadline'] : 'Muslin, brass, clay and more. Every piece names its maker and the district it comes from.',
-            'cta_text' => $s['primary_cta_text'] ?? 'Shop Now →',
-            'cta_href' => $s['primary_cta_href'] ?? '/shop',
-            'secondary_text' => $s['secondary_cta_text'] ?? 'Shop by District',
-            'secondary_href' => $s['secondary_cta_href'] ?? '/districts',
-            'image_url' => !empty($s['image_url']) ? $s['image_url'] : 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1600&auto=format&fit=crop',
-            'bg' => 'linear-gradient(135deg,#1F4D3A 0%,#163829 60%,#3B2314 100%)',
-        ],
-        [
-            'eyebrow' => 'TANGAIL SILK & JAMDANI • WEAVING CLUSTERS',
-            'headline' => 'Woven on wooden pit looms, one thread at a time.',
-            'subheadline' => 'Heirloom sarees and scarves crafted by generational weavers who memorize every floral motif by heart.',
-            'cta_text' => 'Explore Cloth →',
-            'cta_href' => '/shop?category=cloth',
-            'secondary_text' => 'Meet Our Makers',
-            'secondary_href' => '/artisans',
-            'image_url' => 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=1600&auto=format&fit=crop',
-            'bg' => 'linear-gradient(135deg,#2C2240 0%,#1F4D3A 65%,#5E2618 100%)',
-        ],
-        [
-            'eyebrow' => 'BOGURA BRASS & BELL METAL • LOST-WAX CRAFT',
-            'headline' => 'Hand-hammered brass, ringing with generations of craft.',
-            'subheadline' => 'Kettles, plates, and bowls shaped in family foundries with zero machines and pure bell-metal resonance.',
-            'cta_text' => 'Shop Brassware →',
-            'cta_href' => '/shop?category=brass',
-            'secondary_text' => 'Explore Bogura',
-            'secondary_href' => '/districts',
-            'image_url' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1600&auto=format&fit=crop',
-            'bg' => 'linear-gradient(135deg,#4A3510 0%,#2B2118 65%,#163829 100%)',
-        ],
-        [
-            'eyebrow' => 'RANGPUR SHATRANJI & TERRACOTTA • NORTHERN PLAINS',
-            'headline' => 'Earthy patterns from the river basins of Bengal.',
-            'subheadline' => 'Thick hand-woven floor carpets and sun-baked clayware sent straight from the village workshop to your home.',
-            'cta_text' => 'View All Pieces →',
-            'cta_href' => '/shop',
-            'secondary_text' => 'Read Stories',
-            'secondary_href' => '/stories',
-            'image_url' => 'https://images.unsplash.com/photo-1590736969955-71cc94901144?q=80&w=1600&auto=format&fit=crop',
-            'bg' => 'linear-gradient(135deg,#5E2618 0%,#2B2118 60%,#1F4D3A 100%)',
-        ],
-    ];
+    $heroSlides = !empty($s['slides']) && is_array($s['slides'])
+        ? $s['slides']
+        : \App\Livewire\Builder\VisualPageBuilder::getDefaultHeroSlides($s);
     $sliderUid = 'soroHero_' . preg_replace('/[^a-zA-Z0-9_]/', '', (string) ($section['id'] ?? 'main'));
   @endphp
   <style>
@@ -234,13 +191,13 @@
       top: 50%;
       transform: translateY(-50%);
       z-index: 10;
-      width: 46px;
-      height: 46px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      border: 1.5px solid rgba(243, 220, 154, 0.7);
-      background: rgba(22, 56, 41, 0.65);
+      border: 1px solid rgba(243, 220, 154, 0.55);
+      background: rgba(22, 56, 41, 0.55);
       color: #FBF6EC;
-      font-size: 18px;
+      font-size: 13px;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -250,8 +207,8 @@
       transition: background 0.2s, transform 0.2s;
     }
     .{{ $sliderUid }}-arrow:hover { background: #1F4D3A; border-color: #F3DC9A; }
-    .{{ $sliderUid }}-prev { left: 20px; }
-    .{{ $sliderUid }}-next { right: 20px; }
+    .{{ $sliderUid }}-prev { left: 14px; }
+    .{{ $sliderUid }}-next { right: 14px; }
     @media (max-width: 767px) {
       .{{ $sliderUid }}-wrap { min-height: 540px; }
       .{{ $sliderUid }}-arrow { display: none; }
@@ -271,15 +228,8 @@
         <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; inset:0; pointer-events:none; opacity:0.22"><rect width="100%" height="100%" fill="url(#patJaliLight)"></rect></svg>
         <div aria-hidden="true" style="position:absolute; inset:0; background:linear-gradient(95deg, rgba(18,46,34,0.9) 0%, rgba(18,46,34,0.68) 48%, rgba(18,46,34,0.28) 100%)"></div>
 
-        <div style="position:relative; z-index:3; width:100%; max-width:1200px; margin:0 auto; padding:56px 24px 88px">
+        <div style="position:relative; z-index:3; width:100%; max-width:1200px; margin:0 auto; padding:56px 24px 80px">
           <div style="max-width:680px">
-            @if(!empty($sl['eyebrow']))
-              <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(251,246,236,0.12); border:1px solid rgba(243,220,154,0.45); color:#F3DC9A; border-radius:999px; padding:6px 14px; font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:18px; backdrop-filter:blur(4px)">
-                <span aria-hidden="true" style="width:6px; height:6px; background:#F3DC9A; transform:rotate(45deg)"></span>
-                <span>{{ $sl['eyebrow'] }}</span>
-              </div>
-            @endif
-
             <h1 style="margin:0 0 18px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(38px,5.4vw,72px); line-height:1.02; letter-spacing:-0.01em; color:#FBF6EC">
               {{ $sl['headline'] ?? '' }}
             </h1>
@@ -323,13 +273,13 @@
     @endif
 
     @if(count($heroSlides) > 1)
-      <div style="position:absolute; left:0; right:0; bottom:22px; z-index:10; display:flex; align-items:center; justify-content:center; gap:10px; padding:0 16px">
-        <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(22,56,41,0.72); border:1px solid rgba(243,220,154,0.45); border-radius:999px; padding:7px 14px; backdrop-filter:blur(6px)">
+      <div style="position:absolute; left:0; right:0; bottom:16px; z-index:10; display:flex; align-items:center; justify-content:center; gap:8px; padding:0 16px">
+        <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(22,56,41,0.68); border:1px solid rgba(243,220,154,0.4); border-radius:999px; padding:4px 10px; backdrop-filter:blur(6px)">
           @foreach($heroSlides as $sIdx => $sl)
             <button type="button" aria-label="Slide {{ $sIdx + 1 }}" data-hero-dot="{{ $sIdx }}"
-                    style="width:{{ $sIdx === 0 ? '26px' : '9px' }}; height:9px; border-radius:999px; border:0; background:{{ $sIdx === 0 ? '#F3DC9A' : 'rgba(251,246,236,0.45)' }}; padding:0; cursor:pointer; transition:all 0.25s"></button>
+                    style="width:{{ $sIdx === 0 ? '16px' : '6px' }}; height:6px; border-radius:999px; border:0; background:{{ $sIdx === 0 ? '#F3DC9A' : 'rgba(251,246,236,0.45)' }}; padding:0; cursor:pointer; transition:all 0.25s"></button>
           @endforeach
-          <span data-hero-counter style="font-size:11px; font-weight:700; letter-spacing:0.08em; color:#F3DC9A; margin-left:4px">01 / {{ str_pad((string) count($heroSlides), 2, '0', STR_PAD_LEFT) }}</span>
+          <span data-hero-counter style="font-size:10px; font-weight:700; letter-spacing:0.06em; color:#F3DC9A; margin-left:3px">01 / {{ str_pad((string) count($heroSlides), 2, '0', STR_PAD_LEFT) }}</span>
         </div>
       </div>
     @endif
@@ -350,7 +300,7 @@
           cur = (idx + total) % total;
           slides.forEach(function(el, i){ el.classList.toggle('is-active', i === cur); });
           dots.forEach(function(d, i){
-            d.style.width = (i === cur) ? '26px' : '9px';
+            d.style.width = (i === cur) ? '16px' : '6px';
             d.style.background = (i === cur) ? '#F3DC9A' : 'rgba(251,246,236,0.45)';
           });
           if (counter) {
