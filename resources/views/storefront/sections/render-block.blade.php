@@ -27,7 +27,7 @@
     }
   @endphp
   @if(($s['show_topbar'] ?? true))
-    <div style="background:{{ $topBarBg }}; color:{{ $topBarColor }}; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-align:center; padding:10px 16px">
+    <div class="soro-top-announce" style="background:{{ $topBarBg }}; color:{{ $topBarColor }}; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-align:center; padding:10px 16px">
       {{ $s['topbar_text'] ?? 'Free insured delivery to Bangladesh, USA, UK, Canada and Europe' }}
     </div>
   @endif
