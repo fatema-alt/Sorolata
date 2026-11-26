@@ -223,7 +223,7 @@
         @if(!empty($sl['image_url']))
           <img src="{{ $sl['image_url'] }}" alt="{{ $sl['headline'] ?? 'Sorolata Craft' }}"
                onerror="this.style.display='none'"
-               style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover">
+               style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:{{ $sl['image_position'] ?? 'center top' }}">
         @endif
         <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; inset:0; pointer-events:none; opacity:0.22"><rect width="100%" height="100%" fill="url(#patJaliLight)"></rect></svg>
         <div aria-hidden="true" style="position:absolute; inset:0; background:linear-gradient(95deg, rgba(18,46,34,0.9) 0%, rgba(18,46,34,0.68) 48%, rgba(18,46,34,0.28) 100%)"></div>
@@ -312,9 +312,13 @@
         if (prevBtn) prevBtn.addEventListener('click', function(){ show(cur - 1); resetTimer(); });
         if (nextBtn) nextBtn.addEventListener('click', function(){ show(cur + 1); resetTimer(); });
         dots.forEach(function(d, i){ d.addEventListener('click', function(){ show(i); resetTimer(); }); });
-        var timer = setInterval(function(){ show(cur + 1); }, 5500);
-        function resetTimer(){ clearInterval(timer); timer = setInterval(function(){ show(cur + 1); }, 5500); }
-        root.addEventListener('mouseenter', function(){ clearInterval(timer); });
+        var intervalMs = {{ (int) round(max(0, (float) ($s['slide_interval'] ?? 5.5)) * 1000) }};
+        var timer = intervalMs > 0 ? setInterval(function(){ show(cur + 1); }, intervalMs) : null;
+        function resetTimer(){
+          if (timer) clearInterval(timer);
+          if (intervalMs > 0) timer = setInterval(function(){ show(cur + 1); }, intervalMs);
+        }
+        root.addEventListener('mouseenter', function(){ if (timer) clearInterval(timer); });
         root.addEventListener('mouseleave', function(){ resetTimer(); });
       })();
     </script>

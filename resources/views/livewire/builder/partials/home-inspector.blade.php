@@ -107,6 +107,14 @@
           : \App\Livewire\Builder\VisualPageBuilder::getDefaultHeroSlides($s);
     @endphp
     <div class="{{ $cardClass }}">
+      <div>
+        <label class="{{ $labelClass }}">Auto-Slide Timer (seconds)</label>
+        <input type="number" step="0.5" min="0" max="60" placeholder="5.5" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slide_interval" class="{{ $inputClass }}">
+        <p class="text-[10px] text-gray-400 mt-1">Default: 5.5 seconds. Set to 0 to disable auto-sliding.</p>
+      </div>
+    </div>
+
+    <div class="{{ $cardClass }}">
       <div class="flex items-center justify-between">
         <span class="text-xs font-semibold text-white">Hero Slider Slides ({{ count($inspectorSlides) }})</span>
         <button type="button" wire:click="addRepeaterItem('slides')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold hover:bg-[#2c6846]">+ Add Slide</button>
@@ -130,6 +138,14 @@
           @endif
           <input type="file" wire:click="setItemUploadTarget('slides', {{ $i }})" wire:model="uploadedItemImage" accept="image/*" class="block w-full text-[10px] text-gray-300 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-[#214E34] file:text-white">
           <input type="text" placeholder="Slide Background Image URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.slides.{{ $i }}.image_url" class="{{ $inputClass }}">
+          <div>
+            <label class="{{ $labelClass }}">Photo Alignment</label>
+            <select wire:model.live="sections.{{ $sIndex }}.settings.slides.{{ $i }}.image_position" class="{{ $inputClass }}">
+              <option value="center top">Top (prevent upper crop)</option>
+              <option value="center center">Center</option>
+              <option value="center bottom">Bottom</option>
+            </select>
+          </div>
 
           <div>
             <label class="{{ $labelClass }}">Headline</label>

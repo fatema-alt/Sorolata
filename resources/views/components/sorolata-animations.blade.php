@@ -14,6 +14,7 @@
     }
     section#top [data-slide].is-active img {
       animation: soroKenBurns 6.5s ease-out forwards;
+      transform-origin: center top;
       will-change: transform;
     }
     section#top [data-slide].is-active h1 {
