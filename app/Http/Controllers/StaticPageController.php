@@ -24,11 +24,39 @@ class StaticPageController extends Controller
 
     public function about(): View
     {
+        $page = Page::where('slug', 'about')->where('status', 'published')->first();
+        $sections = $page && !empty($page->layout_json['sections'])
+            ? array_filter($page->layout_json['sections'], fn ($s) => $s['is_active'] ?? true)
+            : [];
+        $hasDynamicAbout = collect($sections)->contains(fn ($s) => ($s['type'] ?? '') === 'home_about_page');
+
+        if ($page && $hasDynamicAbout) {
+            return view('builder.landing', [
+                'page' => $page,
+                'sections' => $sections,
+                'parser' => $this->parser,
+            ]);
+        }
+
         return view('pages.about');
     }
 
     public function contact(): View
     {
+        $page = Page::where('slug', 'contact')->where('status', 'published')->first();
+        $sections = $page && !empty($page->layout_json['sections'])
+            ? array_filter($page->layout_json['sections'], fn ($s) => $s['is_active'] ?? true)
+            : [];
+        $hasDynamicContact = collect($sections)->contains(fn ($s) => ($s['type'] ?? '') === 'home_contact_page');
+
+        if ($page && $hasDynamicContact) {
+            return view('builder.landing', [
+                'page' => $page,
+                'sections' => $sections,
+                'parser' => $this->parser,
+            ]);
+        }
+
         return view('pages.contact');
     }
 

@@ -104,8 +104,10 @@ class VisualPageBuilder extends Component
             $hasHomeBlocks = !empty($this->sections) && collect($this->sections)->contains(
                 fn ($s) => is_array($s) && str_starts_with((string) ($s['type'] ?? ''), 'home_')
             );
+            $needsDedicatedAboutContact = ($this->slug === 'about' && !collect($this->sections)->contains(fn ($s) => ($s['type'] ?? '') === BlockType::HOME_ABOUT_PAGE->value))
+                || ($this->slug === 'contact' && !collect($this->sections)->contains(fn ($s) => ($s['type'] ?? '') === BlockType::HOME_CONTACT_PAGE->value));
 
-            if (empty($this->sections) || (($isHome || $isCoreIndividual) && !$hasHomeBlocks)) {
+            if (empty($this->sections) || (($isHome || $isCoreIndividual) && !$hasHomeBlocks) || $needsDedicatedAboutContact) {
                 $this->loadDefaultPageSections($page);
             } elseif ($isHome) {
                 $this->ensureBilingualSections();
@@ -603,6 +605,11 @@ class VisualPageBuilder extends Component
             'home_stories:items' => ['tag' => 'Craft', 'read' => '4 min read', 'title' => 'A new story from the weaving villages', 'photo_label' => 'Story photo', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#6E7FB8,#2A3A6B)', 'pattern' => 'patCloth', 'href' => '#stories'],
             'home_footer:shop_links', 'home_footer:help_links' => ['label' => 'New Link', 'href' => '#contact'],
             'home_footer:contact_lines' => ['text' => 'Email: hello@sorolata.com'],
+            'home_about_page:promises' => ['title' => 'New Promise', 'text' => 'Describe this Sorolata commitment.'],
+            'home_about_page:steps' => ['n' => (string) (count($items) + 1), 'title' => 'New Step', 'text' => 'Describe this step.'],
+            'home_about_page:workshop_photos' => ['image_url' => '', 'caption' => 'Workshop photo'],
+            'home_contact_page:delivery_cards' => ['title' => 'Region', 'text' => 'Delivery details and timeline.'],
+            'home_contact_page:faqs' => ['q' => 'New question?', 'a' => 'Write the answer here.'],
             default => ['text' => 'New item'],
         };
 
@@ -1683,75 +1690,88 @@ class VisualPageBuilder extends Component
         if ($slug === 'about') {
             return [
                 [
-                    'id' => 'sec_page_header_' . uniqid(),
-                    'type' => BlockType::HOME_PAGE_HEADER->value,
+                    'id' => 'sec_about_full_' . uniqid(),
+                    'type' => BlockType::HOME_ABOUT_PAGE->value,
                     'is_active' => true,
                     'settings' => [
-                        'bg_color' => '#F0E6D0',
-                        'text_color' => '#1F2A24',
-                        'show_pattern' => true,
-                        'show_band' => true,
-                        'breadcrumb' => 'About Us',
-                        'eyebrow' => 'Heritage Manifesto',
-                        'title' => 'Craft as a Sacred Living Continuum',
-                        'subtitle' => 'We believe that true luxury is not machine precision; it is the patient, deliberate human touch passed down from parent to child.',
+                        'hero_title' => 'About Sorolata',
+                        'hero_subtitle' => 'We help makers from the districts of Bangladesh sell their craft to the world, and we pay them fairly.',
+                        'hero_cta_text' => 'Shop Now',
+                        'hero_cta_href' => '/shop',
+                        'story_eyebrow' => 'Our story',
+                        'story_heading' => 'Why we started Sorolata',
+                        'story_p1' => 'Bangladesh has many beautiful crafts, but many makers cannot reach buyers directly. Some of these crafts are slowly disappearing as factory-made goods replace patient handwork.',
+                        'story_p2' => 'So we bring the maker and the buyer together. The money goes straight to the maker, so they can keep the craft alive and teach it to the next generation.',
+                        'image_url' => 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1000&auto=format&fit=crop',
+                        'promises_heading' => 'What we promise',
+                        'promises_subtitle' => 'Four things you can count on.',
+                        'promises' => [
+                            ['title' => 'Made by hand', 'text' => 'No factory copies. Each piece is made by one person or one family.'],
+                            ['title' => 'Fair pay', 'text' => 'Makers get paid directly. We keep only a small share to run the site.'],
+                            ['title' => 'True origin', 'text' => 'Each piece shows who made it and where. We say "GI certified" only when it is true.'],
+                            ['title' => 'Safe delivery', 'text' => 'Every parcel is packed by hand and insured, in Bangladesh and abroad.'],
+                        ],
+                        'steps_heading' => 'How it works',
+                        'steps' => [
+                            ['n' => '1', 'title' => 'We meet the maker', 'text' => 'We visit the workshop and see the work ourselves.'],
+                            ['n' => '2', 'title' => 'The maker sets the price', 'text' => 'We list the piece with a real photo and story.'],
+                            ['n' => '3', 'title' => 'You order', 'text' => 'Pay with bKash, Nagad, Visa or Mastercard.'],
+                            ['n' => '4', 'title' => 'We pack and send', 'text' => 'Insured delivery to your door.'],
+                        ],
+                        'makers_heading' => 'Our makers',
+                        'makers_subtitle' => 'The people behind each piece.',
+                        'workshops_heading' => 'Inside the workshops',
+                        'workshops_subtitle' => 'Real photos of hands, looms, clay and metalworking.',
+                        'workshop_photos' => [
+                            ['image_url' => 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=800&auto=format&fit=crop', 'caption' => 'Handloom weaving'],
+                            ['image_url' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=800&auto=format&fit=crop', 'caption' => 'Brass and clay workshop'],
+                            ['image_url' => 'https://images.unsplash.com/photo-1590736969955-71cc94901144?q=80&w=800&auto=format&fit=crop', 'caption' => 'Packing with natural cloth'],
+                        ],
+                        'cta_heading' => 'Have a question?',
+                        'cta_subtitle' => 'We reply in person, not with a robot.',
+                        'cta_button_text' => 'Contact Us',
+                        'cta_button_href' => '/contact',
                     ],
                 ],
-                [
-                    'id' => 'sec_rich_' . uniqid(),
-                    'type' => BlockType::HOME_RICH_TEXT->value,
-                    'is_active' => true,
-                    'settings' => [
-                        'bg_color' => '#F7F5F0',
-                        'text_color' => '#1F2A24',
-                        'eyebrow' => 'Our Mission',
-                        'heading' => 'Rescuing What Power Looms Erased',
-                        'body' => "Every piece at Sorolata names its maker and the district it comes from.\n\nFrom the humid morning river mist of Sonargaon to the bell-metal foundries of Bogura, we partner directly with master artisans so their craft—and their families—thrive.",
-                        'cta_text' => 'Meet Our Makers →',
-                        'cta_href' => '/artisans',
-                        'image_url' => '',
-                    ],
-                ],
-                array_merge($home[BlockType::HOME_STORY_TIMELINE->value], ['id' => 'sec_timeline_' . uniqid()]),
-                array_merge($home[BlockType::HOME_WHY->value], ['id' => 'sec_why_' . uniqid()]),
-                array_merge($home[BlockType::HOME_NEWSLETTER->value], ['id' => 'sec_newsletter_' . uniqid()]),
             ];
         }
 
         if ($slug === 'contact') {
             return [
                 [
-                    'id' => 'sec_page_header_' . uniqid(),
-                    'type' => BlockType::HOME_PAGE_HEADER->value,
+                    'id' => 'sec_contact_full_' . uniqid(),
+                    'type' => BlockType::HOME_CONTACT_PAGE->value,
                     'is_active' => true,
                     'settings' => [
-                        'bg_color' => '#F0E6D0',
-                        'text_color' => '#1F2A24',
-                        'show_pattern' => true,
-                        'show_band' => false,
-                        'breadcrumb' => 'Contact',
-                        'eyebrow' => 'Curator Concierge',
-                        'title' => 'Connect With Our Atelier',
-                        'subtitle' => 'Whether you wish to commission a family heirloom, verify a district piece, or arrange international delivery—our desk is at your service.',
+                        'hero_title' => 'Contact Us',
+                        'hero_subtitle' => 'Questions about an order, a gift or a delivery abroad? Talk to us. We are happy to help.',
+                        'form_heading' => 'Send us a message',
+                        'form_button_text' => 'Send on WhatsApp',
+                        'form_note' => 'This opens WhatsApp with your message ready to send.',
+                        'direct_heading' => 'Reach us directly',
+                        'whatsapp_number' => '+880 1711-000000',
+                        'whatsapp_link' => '8801711000000',
+                        'email_address' => 'hello@sorolata.com',
+                        'facebook_handle' => 'facebook.com/sorolatabangladesh',
+                        'facebook_url' => 'https://facebook.com/sorolatabangladesh',
+                        'hours_line' => 'Saturday to Thursday, 10 AM – 8 PM (BST)',
+                        'reply_line' => 'Under 2 hours on WhatsApp',
+                        'delivery_heading' => 'Delivery at a glance',
+                        'delivery_cards' => [
+                            ['title' => 'Inside Bangladesh', 'text' => 'Arrives in 2 to 4 days. Free over ৳ 5,000, or ৳ 80–120 standard courier.'],
+                            ['title' => 'Abroad', 'text' => 'USA, UK, Canada and Europe. Arrives in 7 to 10 days via tracked DHL/FedEx.'],
+                            ['title' => 'Packing and insurance', 'text' => 'Every parcel is packed by hand in breathable cloth or jute and fully insured.'],
+                        ],
+                        'faq_heading' => 'Common questions',
+                        'faqs' => [
+                            ['q' => 'How long does delivery take?', 'a' => 'Inside Bangladesh, orders arrive in 2 to 4 working days. International tracked parcels to the USA, UK, Canada, and Europe take 7 to 10 working days.'],
+                            ['q' => 'Can I return something?', 'a' => 'Yes. If a piece arrives damaged or is not what you expected, message us within 7 days of delivery for a free exchange or full refund.'],
+                            ['q' => 'How do I pay?', 'a' => 'Inside Bangladesh you can pay with bKash, Nagad, cards, or Cash on Delivery. International orders accept Visa, Mastercard, and online bank cards.'],
+                            ['q' => 'Can I send a gift to family in Bangladesh?', 'a' => 'Yes! Enter their Bangladesh address at checkout and add a personal note in your Collector Bag—we include complimentary botanical gift wrapping and a handwritten card.'],
+                            ['q' => 'Can I ask for a special piece?', 'a' => 'Of course. Message us on WhatsApp with the craft or district you have in mind, and we will check directly with our master makers.'],
+                        ],
                     ],
                 ],
-                [
-                    'id' => 'sec_rich_' . uniqid(),
-                    'type' => BlockType::HOME_RICH_TEXT->value,
-                    'is_active' => true,
-                    'settings' => [
-                        'bg_color' => '#F7F5F0',
-                        'text_color' => '#1F2A24',
-                        'eyebrow' => 'Dhaka & Worldwide',
-                        'heading' => 'Direct Support for Collectors',
-                        'body' => "Reach us on WhatsApp, phone, or email for custom weaving requests, wedding gifting, and insured courier tracking to Bangladesh, USA, UK, Canada, and Europe.",
-                        'cta_text' => 'Track Your Order →',
-                        'cta_href' => '/track-order',
-                        'image_url' => '',
-                    ],
-                ],
-                array_merge($home[BlockType::HOME_WHY->value], ['id' => 'sec_why_' . uniqid()]),
-                array_merge($home[BlockType::HOME_NEWSLETTER->value], ['id' => 'sec_newsletter_' . uniqid()]),
             ];
         }
 

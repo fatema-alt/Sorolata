@@ -1164,4 +1164,230 @@
   @if($s['show_band'] ?? true)
     <svg aria-hidden="true" width="100%" height="48" style="display:block; background:#FBF6EC"><rect width="100%" height="48" fill="url(#patBandGold)"></rect></svg>
   @endif
+
+@elseif($type === 'home_about_page')
+  @php
+    $aboutArtisans = \App\Models\Artisan::with('district')->where('is_verified', true)->orderBy('id')->take(4)->get();
+  @endphp
+  <section style="position:relative; overflow:hidden; background:#1F4D3A; color:#FBF6EC; border-bottom:3px solid #B8892F">
+    <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; inset:0; pointer-events:none; opacity:0.25"><rect width="100%" height="100%" fill="url(#patJaliLight)"></rect></svg>
+    <div style="position:relative; max-width:860px; margin:0 auto; padding:60px 24px; text-align:center">
+      <h1 style="margin:0 0 12px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(38px,4.5vw,56px); line-height:1.05; color:#fff">{{ $s['hero_title'] ?? 'About Sorolata' }}</h1>
+      <p style="margin:0 auto 24px; max-width:500px; font-size:15px; color:#E7EEE4; line-height:1.6">{{ $s['hero_subtitle'] ?? '' }}</p>
+      @if(!empty($s['hero_cta_text']))
+        <a href="{{ $linkHref($s['hero_cta_href'] ?? '/shop') }}" style="display:inline-block; background:#B8892F; color:#fff; font-weight:700; font-size:14px; padding:11px 28px; border-radius:999px; text-decoration:none">{{ $s['hero_cta_text'] }}</a>
+      @endif
+    </div>
+  </section>
+
+  <section style="background:#F7F5F0">
+    <div style="max-width:1060px; margin:0 auto; padding:68px 24px; display:flex; flex-wrap:wrap; gap:48px; align-items:center">
+      <div style="flex:1 1 340px; min-width:0">
+        <div style="border-radius:180px 180px 16px 16px; overflow:hidden; aspect-ratio:4/3; background:#B8553A; border:2px solid #D9C28A; box-shadow:0 16px 36px rgba(43,33,24,0.1)">
+          @if(!empty($s['image_url']))
+            <img src="{{ $s['image_url'] }}" alt="{{ $s['story_heading'] ?? 'Sorolata Story' }}" style="width:100%; height:100%; object-fit:cover; display:block">
+          @endif
+        </div>
+      </div>
+      <div style="flex:1.1 1 360px; min-width:0">
+        @if(!empty($s['story_eyebrow']))
+          <div style="font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#B8553A; margin-bottom:8px">✦ {{ $s['story_eyebrow'] }}</div>
+        @endif
+        <h2 style="margin:0 0 16px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:clamp(30px,3.6vw,42px); line-height:1.1; color:#1F2A24">{{ $s['story_heading'] ?? 'Why we started Sorolata' }}</h2>
+        @if(!empty($s['story_p1']))
+          <p style="margin:0 0 14px; font-size:15px; color:#5A5044; line-height:1.7">{{ $s['story_p1'] }}</p>
+        @endif
+        @if(!empty($s['story_p2']))
+          <p style="margin:0; font-size:15px; color:#5A5044; line-height:1.7">{{ $s['story_p2'] }}</p>
+        @endif
+      </div>
+    </div>
+  </section>
+
+  <svg aria-hidden="true" width="100%" height="18" style="display:block; background:#FBF6EC"><rect width="100%" height="18" fill="url(#patBandGold)"></rect></svg>
+
+  <section style="background:#F0E6D0">
+    <div style="max-width:1060px; margin:0 auto; padding:64px 24px">
+      <div style="text-align:center; margin-bottom:36px">
+        <h2 style="margin:0 0 6px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(30px,3.6vw,42px); color:#1F2A24">{{ $s['promises_heading'] ?? 'What we promise' }}</h2>
+        <p style="margin:0; font-size:14px; color:#5A5044">{{ $s['promises_subtitle'] ?? '' }}</p>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:18px">
+        @foreach(($s['promises'] ?? []) as $promise)
+          <div style="background:#fff; border:1px solid #D9C28A; border-radius:14px; padding:22px 20px">
+            <h3 style="margin:0 0 8px; font-family:'Cormorant Garamond',Georgia,serif; font-size:22px; font-weight:600; color:#1F4D3A">{{ $promise['title'] ?? '' }}</h3>
+            <p style="margin:0; font-size:13px; color:#5A5044; line-height:1.6">{{ $promise['text'] ?? '' }}</p>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#F7F5F0">
+    <div style="max-width:1060px; margin:0 auto; padding:64px 24px; text-align:center">
+      <h2 style="margin:0 0 38px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(30px,3.6vw,42px); color:#1F2A24">{{ $s['steps_heading'] ?? 'How it works' }}</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:28px">
+        @foreach(($s['steps'] ?? []) as $idx => $step)
+          <div>
+            <div style="width:44px; height:48px; border-radius:22px 22px 8px 8px; background:#1F4D3A; color:#F3DC9A; font-family:'Cormorant Garamond',Georgia,serif; font-size:22px; font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 14px">{{ $step['n'] ?? ($idx + 1) }}</div>
+            <h3 style="margin:0 0 6px; font-family:'Cormorant Garamond',Georgia,serif; font-size:21px; font-weight:600; color:#1F2A24">{{ $step['title'] ?? '' }}</h3>
+            <p style="margin:0; font-size:13px; color:#5A5044; line-height:1.55">{{ $step['text'] ?? '' }}</p>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#F0E6D0">
+    <div style="max-width:1060px; margin:0 auto; padding:64px 24px">
+      <div style="text-align:center; margin-bottom:36px">
+        <h2 style="margin:0 0 6px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(30px,3.6vw,42px); color:#1F2A24">{{ $s['makers_heading'] ?? 'Our makers' }}</h2>
+        <p style="margin:0; font-size:14px; color:#5A5044">{{ $s['makers_subtitle'] ?? '' }}</p>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:20px">
+        @foreach($aboutArtisans as $art)
+          <a href="{{ $linkHref(route('artisan.show', $art->slug ?? $art->uuid)) }}" style="background:#fff; border:1px solid #D9C28A; border-radius:16px; padding:12px 12px 18px; text-align:center; text-decoration:none; color:inherit; display:block">
+            <div style="border-radius:120px 120px 10px 10px; overflow:hidden; aspect-ratio:4/3; background:#1F4D3A; margin-bottom:12px">
+              <img src="{{ $art->portrait_url }}" alt="{{ $art->full_name }}" style="width:100%; height:100%; object-fit:cover; object-position:center top; display:block">
+            </div>
+            <h3 style="margin:0 0 4px; font-family:'Cormorant Garamond',Georgia,serif; font-size:22px; font-weight:600; color:#1F4D3A">{{ $art->full_name }}</h3>
+            <div style="font-size:12px; color:#5A5044">{{ $art->craft_type?->title() }} · {{ $art->district?->name_en }}</div>
+          </a>
+        @endforeach
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#F7F5F0">
+    <div style="max-width:1060px; margin:0 auto; padding:64px 24px">
+      <div style="text-align:center; margin-bottom:36px">
+        <h2 style="margin:0 0 6px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(30px,3.6vw,42px); color:#1F2A24">{{ $s['workshops_heading'] ?? 'Inside the workshops' }}</h2>
+        <p style="margin:0; font-size:14px; color:#5A5044">{{ $s['workshops_subtitle'] ?? '' }}</p>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px">
+        @foreach(($s['workshop_photos'] ?? []) as $wPhoto)
+          <div style="border:1.5px solid #B8892F; border-radius:16px; padding:6px; background:#FBF6EC">
+            <div style="border-radius:11px; overflow:hidden; aspect-ratio:4/3; background:#1F4D3A">
+              @if(!empty($wPhoto['image_url']))
+                <img src="{{ $wPhoto['image_url'] }}" alt="{{ $wPhoto['caption'] ?? 'Workshop' }}" style="width:100%; height:100%; object-fit:cover; display:block">
+              @endif
+            </div>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </section>
+
+  <section style="position:relative; overflow:hidden; background:#1F4D3A; color:#FBF6EC">
+    <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; inset:0; pointer-events:none; opacity:0.2"><rect width="100%" height="100%" fill="url(#patJaliLight)"></rect></svg>
+    <div style="position:relative; max-width:720px; margin:0 auto; padding:56px 24px; text-align:center">
+      <h2 style="margin:0 0 8px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(30px,3.6vw,42px); color:#fff">{{ $s['cta_heading'] ?? 'Have a question?' }}</h2>
+      <p style="margin:0 0 22px; font-size:14px; color:#E7EEE4">{{ $s['cta_subtitle'] ?? '' }}</p>
+      @if(!empty($s['cta_button_text']))
+        <a href="{{ $linkHref($s['cta_button_href'] ?? '/contact') }}" style="display:inline-block; background:#B8892F; color:#fff; font-weight:700; font-size:14px; padding:11px 28px; border-radius:999px; text-decoration:none">{{ $s['cta_button_text'] }}</a>
+      @endif
+    </div>
+  </section>
+
+@elseif($type === 'home_contact_page')
+  @php $waClean = preg_replace('/[^0-9]/', '', (string) ($s['whatsapp_link'] ?? '8801711000000')); @endphp
+  <section style="position:relative; overflow:hidden; background:#1F4D3A; color:#FBF6EC; border-bottom:3px solid #B8892F">
+    <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; inset:0; pointer-events:none; opacity:0.25"><rect width="100%" height="100%" fill="url(#patJaliLight)"></rect></svg>
+    <div style="position:relative; max-width:900px; margin:0 auto; padding:56px 24px; text-align:center">
+      <h1 style="margin:0 0 12px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(38px,4.5vw,56px); line-height:1.05; color:#fff">{{ $s['hero_title'] ?? 'Contact Us' }}</h1>
+      <p style="margin:0 auto; max-width:520px; font-size:15px; color:#E7EEE4; line-height:1.6">{{ $s['hero_subtitle'] ?? '' }}</p>
+    </div>
+  </section>
+
+  <section style="background:#F7F5F0">
+    <div style="max-width:1060px; margin:0 auto; padding:64px 24px; display:flex; flex-wrap:wrap; gap:40px; align-items:flex-start">
+      <div style="flex:1.15 1 360px; min-width:0; background:#fff; border:1.5px solid #D9C28A; border-radius:20px; padding:32px; box-shadow:0 10px 28px rgba(43,33,24,0.05)"
+           x-data="{ name: '', contact: '', topic: 'A question about an order', message: '', sendWhatsApp() { @if(!$isBuilder) const t = 'Hello Sorolata!%0AName: ' + encodeURIComponent(this.name || 'Guest') + '%0AContact: ' + encodeURIComponent(this.contact || '-') + '%0ATopic: ' + encodeURIComponent(this.topic) + '%0AMessage: ' + encodeURIComponent(this.message); window.open('https://wa.me/{{ $waClean }}?text=' + t, '_blank', 'noopener'); @endif } }">
+        <h2 style="margin:0 0 20px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:30px; color:#1F4D3A">{{ $s['form_heading'] ?? 'Send us a message' }}</h2>
+        <form @submit.prevent="sendWhatsApp()" style="display:flex; flex-direction:column; gap:14px">
+          <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:#5A5044; margin-bottom:5px">Your name</label>
+            <input type="text" x-model="name" required placeholder="Full name" style="width:100%; height:42px; border:1px solid #D9C28A; border-radius:10px; padding:0 14px; font-size:14px; background:#FBF6EC; color:#2B2118; box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:#5A5044; margin-bottom:5px">Your email or phone</label>
+            <input type="text" x-model="contact" required placeholder="Email or WhatsApp number" style="width:100%; height:42px; border:1px solid #D9C28A; border-radius:10px; padding:0 14px; font-size:14px; background:#FBF6EC; color:#2B2118; box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:#5A5044; margin-bottom:5px">What is it about?</label>
+            <select x-model="topic" style="width:100%; height:42px; border:1px solid #D9C28A; border-radius:10px; padding:0 12px; font-size:14px; background:#FBF6EC; color:#2B2118; box-sizing:border-box">
+              <option>A question about an order</option>
+              <option>Custom handloom or gift order</option>
+              <option>International delivery (USA, UK, EU, Canada)</option>
+              <option>Something else</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:#5A5044; margin-bottom:5px">Your message</label>
+            <textarea rows="4" x-model="message" required placeholder="Write your message here..." style="width:100%; border:1px solid #D9C28A; border-radius:12px; padding:12px 14px; font-size:14px; background:#FBF6EC; color:#2B2118; box-sizing:border-box"></textarea>
+          </div>
+          <div style="padding-top:4px">
+            <button type="submit" style="background:#B8892F; color:#fff; border:0; border-radius:999px; padding:12px 26px; font-size:14px; font-weight:700; cursor:pointer">{{ $s['form_button_text'] ?? 'Send on WhatsApp' }}</button>
+            @if(!empty($s['form_note']))
+              <div style="font-size:11px; color:#7A6E5E; margin-top:8px">{{ $s['form_note'] }}</div>
+            @endif
+          </div>
+        </form>
+      </div>
+
+      <div style="flex:1 1 320px; min-width:0; display:flex; flex-direction:column; gap:14px">
+        <h2 style="margin:0 0 6px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:30px; color:#1F4D3A">{{ $s['direct_heading'] ?? 'Reach us directly' }}</h2>
+        <a href="{{ $isBuilder ? 'javascript:void(0)' : 'https://wa.me/' . $waClean }}" @if(!$isBuilder) target="_blank" rel="noopener" @endif style="display:flex; align-items:center; gap:14px; background:#fff; border:1px solid #E3D8BC; border-radius:14px; padding:14px 18px; text-decoration:none; color:inherit">
+          <span style="width:40px; height:40px; border-radius:10px; background:#1F4D3A; color:#F3DC9A; display:flex; align-items:center; justify-content:center; flex-shrink:0">💬</span>
+          <div><div style="font-size:14px; font-weight:700; color:#1F2A24">WhatsApp</div><div style="font-size:13px; color:#5A5044">{{ $s['whatsapp_number'] ?? '+880 1711-000000' }}</div></div>
+        </a>
+        <a href="{{ $isBuilder ? 'javascript:void(0)' : 'mailto:' . ($s['email_address'] ?? 'hello@sorolata.com') }}" style="display:flex; align-items:center; gap:14px; background:#fff; border:1px solid #E3D8BC; border-radius:14px; padding:14px 18px; text-decoration:none; color:inherit">
+          <span style="width:40px; height:40px; border-radius:10px; background:#1F4D3A; color:#F3DC9A; display:flex; align-items:center; justify-content:center; flex-shrink:0">✉</span>
+          <div><div style="font-size:14px; font-weight:700; color:#1F2A24">Email</div><div style="font-size:13px; color:#5A5044">{{ $s['email_address'] ?? 'hello@sorolata.com' }}</div></div>
+        </a>
+        <a href="{{ $linkHref($s['facebook_url'] ?? 'https://facebook.com/sorolatabangladesh') }}" @if(!$isBuilder) target="_blank" rel="noopener" @endif style="display:flex; align-items:center; gap:14px; background:#fff; border:1px solid #E3D8BC; border-radius:14px; padding:14px 18px; text-decoration:none; color:inherit">
+          <span style="width:40px; height:40px; border-radius:10px; background:#1F4D3A; color:#F3DC9A; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:800; font-size:18px">f</span>
+          <div><div style="font-size:14px; font-weight:700; color:#1F2A24">Facebook</div><div style="font-size:13px; color:#5A5044">{{ $s['facebook_handle'] ?? 'facebook.com/sorolatabangladesh' }}</div></div>
+        </a>
+        <div style="background:#EAE0CC; border:1px solid #D9C28A; border-radius:12px; padding:14px 18px; font-size:13px; color:#4A4136; line-height:1.6">
+          <div><strong>Open:</strong> {{ $s['hours_line'] ?? '' }}</div>
+          <div><strong>We usually reply in:</strong> {{ $s['reply_line'] ?? '' }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <svg aria-hidden="true" width="100%" height="18" style="display:block; background:#FBF6EC"><rect width="100%" height="18" fill="url(#patBandGold)"></rect></svg>
+
+  <section style="background:#F0E6D0">
+    <div style="max-width:1060px; margin:0 auto; padding:64px 24px">
+      <h2 style="margin:0 0 32px; text-align:center; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(30px,3.6vw,42px); color:#1F2A24">{{ $s['delivery_heading'] ?? 'Delivery at a glance' }}</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px">
+        @foreach(($s['delivery_cards'] ?? []) as $dc)
+          <div style="background:#fff; border:1px solid #D9C28A; border-radius:14px; padding:22px 24px">
+            <h3 style="margin:0 0 6px; font-family:'Cormorant Garamond',Georgia,serif; font-size:22px; font-weight:600; color:#1F4D3A">{{ $dc['title'] ?? '' }}</h3>
+            <p style="margin:0; font-size:13px; color:#5A5044; line-height:1.6">{{ $dc['text'] ?? '' }}</p>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#F7F5F0">
+    <div style="max-width:740px; margin:0 auto; padding:64px 24px" x-data="{ open: null }">
+      <h2 style="margin:0 0 32px; text-align:center; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(30px,3.6vw,42px); color:#1F2A24">{{ $s['faq_heading'] ?? 'Common questions' }}</h2>
+      <div style="border-top:1px solid #D9C28A">
+        @foreach(($s['faqs'] ?? []) as $idx => $faq)
+          <div style="border-bottom:1px solid #D9C28A">
+            <button type="button" @if(!$isBuilder) @click="open = (open === {{ $idx }} ? null : {{ $idx }})" @endif
+                    style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 4px; background:none; border:0; text-align:left; font-family:'Cormorant Garamond',Georgia,serif; font-size:21px; font-weight:600; color:#1F4D3A; cursor:pointer">
+              <span>{{ $faq['q'] ?? '' }}</span>
+              <span style="font-family:'Manrope',sans-serif; font-size:18px; color:#8F3F26" x-text="open === {{ $idx }} ? '−' : '+'">+</span>
+            </button>
+            <div x-show="open === {{ $idx }}" x-cloak style="padding:0 4px 18px; font-size:14px; color:#5A5044; line-height:1.65">{{ $faq['a'] ?? '' }}</div>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </section>
 @endif

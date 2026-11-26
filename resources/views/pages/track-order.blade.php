@@ -202,7 +202,11 @@
             </div>
 
             <!-- Payment Check In Progress Banner -->
-            @if(!empty($order->transaction_id) && !$isPaid)
+            @php
+                $isCancelled = ($order->status === \App\Enums\OrderStatus::CANCELLED || (is_object($order->status) && $order->status->value === 'cancelled') || $order->status === 'cancelled');
+            @endphp
+
+            @if(!$isCancelled && !empty($order->transaction_id) && !$isPaid)
                 <div style="background: #EEF4FB; border: 1px solid #D5E3F5; border-radius: 1rem; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
                     <div style="width: 2rem; height: 2rem; border-radius: 9999px; background: #DBEAFE; color: #2563EB; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                         <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -214,7 +218,7 @@
                         </div>
                     </div>
                 </div>
-            @elseif(!$isPaid && empty($order->transaction_id))
+            @elseif(!$isCancelled && !$isPaid && empty($order->transaction_id))
                 <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 1rem; padding: 1rem 1.25rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem;">
                     <div>
                         <div style="font-weight: 700; color: #92400E; font-size: 0.8rem;">{{ __('Payment required to confirm dispatch') }}</div>
@@ -240,12 +244,21 @@
                 </div>
             @endif
 
-            <!-- 3. Order Progress Stepper (Always Visible 5 Steps) -->
+            <!-- 3. Order Progress Stepper (or Cancelled Notice) -->
             <div style="border-top: 1px solid #F3F4F6; padding-top: 1.25rem; margin-bottom: 1.5rem;">
                 <h3 style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #111; margin-bottom: 1rem;">
                     {{ __('Order progress') }}
                 </h3>
 
+                @if($isCancelled)
+                    <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 1rem; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="width: 2rem; height: 2rem; border-radius: 9999px; background: #FEE2E2; color: #B91C1C; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">✕</span>
+                        <div>
+                            <div style="font-weight: 700; color: #991B1B; font-size: 0.85rem;">{{ __('Order Cancelled') }}</div>
+                            <div style="color: #B91C1C; font-size: 0.75rem; margin-top: 0.15rem;">{{ __('This order has been cancelled. No further payment or delivery action is required.') }}</div>
+                        </div>
+                    </div>
+                @else
                 <div class="order-stepper-container">
                     <div class="order-stepper-line"></div>
 
@@ -296,6 +309,7 @@
                         <div style="font-size: 0.65rem; color: #6B7280; margin-top: 0.15rem;">{{ __('In your hands') }}</div>
                     </div>
                 </div>
+                @endif
             </div>
 
             <!-- 4. Lower Section: Items & Ledger -->

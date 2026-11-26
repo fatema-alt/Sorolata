@@ -889,6 +889,152 @@
         </div>
       @endforeach
     </div>
+
+  {{-- 17. ABOUT US FULL PAGE --}}
+  @elseif($type === 'home_about_page')
+    <div class="{{ $cardClass }}">
+      <span class="text-xs font-semibold text-white block">Top Banner</span>
+      <input type="text" placeholder="Title" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.hero_title" class="{{ $inputClass }}">
+      <textarea rows="2" placeholder="Subtitle" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.hero_subtitle" class="{{ $inputClass }}"></textarea>
+      <div class="grid grid-cols-2 gap-2">
+        <input type="text" placeholder="Button Text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.hero_cta_text" class="{{ $inputClass }}">
+        <input type="text" placeholder="Button URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.hero_cta_href" class="{{ $inputClass }}">
+      </div>
+    </div>
+
+    <div class="{{ $cardClass }}">
+      <span class="text-xs font-semibold text-white block">Our Story & Arch Photo</span>
+      @if(!empty($s['image_url']))
+        <div class="relative rounded-lg overflow-hidden border border-[#282d37] h-24 bg-[#12141a]">
+          <img src="{{ $s['image_url'] }}" class="w-full h-full object-cover">
+          <button type="button" wire:click="removeImage" class="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-red-600 text-white text-[9px] font-semibold">Remove</button>
+        </div>
+      @endif
+      <input type="file" wire:model="uploadedImage" accept="image/*" class="block w-full text-[10px] text-gray-300 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-[#214E34] file:text-white">
+      <input type="text" placeholder="Story Photo URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.image_url" class="{{ $inputClass }}">
+      <input type="text" placeholder="Eyebrow" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.story_eyebrow" class="{{ $inputClass }}">
+      <input type="text" placeholder="Heading" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.story_heading" class="{{ $inputClass }}">
+      <textarea rows="3" placeholder="Paragraph 1" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.story_p1" class="{{ $inputClass }}"></textarea>
+      <textarea rows="3" placeholder="Paragraph 2" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.story_p2" class="{{ $inputClass }}"></textarea>
+    </div>
+
+    <div class="{{ $cardClass }}">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white">What We Promise</span>
+        <button type="button" wire:click="addRepeaterItem('promises')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add</button>
+      </div>
+      <input type="text" placeholder="Heading" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.promises_heading" class="{{ $inputClass }}">
+      <input type="text" placeholder="Subtitle" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.promises_subtitle" class="{{ $inputClass }}">
+      @foreach(($s['promises'] ?? []) as $i => $pr)
+        <div class="p-2 rounded bg-[#12141a] border border-[#282d37] space-y-1.5" wire:key="aprom-{{ $sIndex }}-{{ $i }}">
+          <div class="flex justify-between text-[10px] text-gray-400"><span>Promise #{{ $i+1 }}</span><button type="button" wire:click="removeRepeaterItem('promises', {{ $i }})" class="text-red-400">✕</button></div>
+          <input type="text" placeholder="Title" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.promises.{{ $i }}.title" class="{{ $inputClass }}">
+          <textarea rows="2" placeholder="Description" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.promises.{{ $i }}.text" class="{{ $inputClass }}"></textarea>
+        </div>
+      @endforeach
+    </div>
+
+    <div class="{{ $cardClass }}">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white">How It Works Steps</span>
+        <button type="button" wire:click="addRepeaterItem('steps')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add</button>
+      </div>
+      <input type="text" placeholder="Heading" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.steps_heading" class="{{ $inputClass }}">
+      @foreach(($s['steps'] ?? []) as $i => $st)
+        <div class="p-2 rounded bg-[#12141a] border border-[#282d37] space-y-1.5" wire:key="astep-{{ $sIndex }}-{{ $i }}">
+          <div class="flex justify-between text-[10px] text-gray-400"><span>Step #{{ $i+1 }}</span><button type="button" wire:click="removeRepeaterItem('steps', {{ $i }})" class="text-red-400">✕</button></div>
+          <div class="grid grid-cols-4 gap-1.5">
+            <input type="text" placeholder="#" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.steps.{{ $i }}.n" class="{{ $inputClass }}">
+            <input type="text" placeholder="Title" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.steps.{{ $i }}.title" class="{{ $inputClass }} col-span-3">
+          </div>
+          <input type="text" placeholder="Description" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.steps.{{ $i }}.text" class="{{ $inputClass }}">
+        </div>
+      @endforeach
+    </div>
+
+    <div class="{{ $cardClass }}">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white">Workshop Photos</span>
+        <button type="button" wire:click="addRepeaterItem('workshop_photos')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add</button>
+      </div>
+      <input type="text" placeholder="Makers Heading" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.makers_heading" class="{{ $inputClass }}">
+      <input type="text" placeholder="Workshops Heading" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.workshops_heading" class="{{ $inputClass }}">
+      @foreach(($s['workshop_photos'] ?? []) as $i => $wp)
+        <div class="p-2 rounded bg-[#12141a] border border-[#282d37] space-y-1.5" wire:key="awp-{{ $sIndex }}-{{ $i }}">
+          <div class="flex justify-between text-[10px] text-gray-400"><span>Photo #{{ $i+1 }}</span><button type="button" wire:click="removeRepeaterItem('workshop_photos', {{ $i }})" class="text-red-400">✕</button></div>
+          <input type="file" wire:click="setItemUploadTarget('workshop_photos', {{ $i }})" wire:model="uploadedItemImage" accept="image/*" class="block w-full text-[10px] text-gray-300 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-[#214E34] file:text-white">
+          <input type="text" placeholder="Image URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.workshop_photos.{{ $i }}.image_url" class="{{ $inputClass }}">
+          <input type="text" placeholder="Caption" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.workshop_photos.{{ $i }}.caption" class="{{ $inputClass }}">
+        </div>
+      @endforeach
+    </div>
+
+    <div class="{{ $cardClass }}">
+      <span class="text-xs font-semibold text-white block">Bottom Question Banner</span>
+      <input type="text" placeholder="Heading" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.cta_heading" class="{{ $inputClass }}">
+      <input type="text" placeholder="Subtitle" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.cta_subtitle" class="{{ $inputClass }}">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="text" placeholder="Button Text" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.cta_button_text" class="{{ $inputClass }}">
+        <input type="text" placeholder="Button URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.cta_button_href" class="{{ $inputClass }}">
+      </div>
+    </div>
+
+  {{-- 18. CONTACT US FULL PAGE --}}
+  @elseif($type === 'home_contact_page')
+    <div class="{{ $cardClass }}">
+      <span class="text-xs font-semibold text-white block">Top Banner & Form</span>
+      <input type="text" placeholder="Title" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.hero_title" class="{{ $inputClass }}">
+      <textarea rows="2" placeholder="Subtitle" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.hero_subtitle" class="{{ $inputClass }}"></textarea>
+      <input type="text" placeholder="Form Heading" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.form_heading" class="{{ $inputClass }}">
+      <input type="text" placeholder="Form Button" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.form_button_text" class="{{ $inputClass }}">
+      <input type="text" placeholder="Form Helper Note" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.form_note" class="{{ $inputClass }}">
+    </div>
+
+    <div class="{{ $cardClass }}">
+      <span class="text-xs font-semibold text-white block">Direct Contact Channels</span>
+      <input type="text" placeholder="Section Heading" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.direct_heading" class="{{ $inputClass }}">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="text" placeholder="WhatsApp Display" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.whatsapp_number" class="{{ $inputClass }}">
+        <input type="text" placeholder="WhatsApp Digits" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.whatsapp_link" class="{{ $inputClass }}">
+      </div>
+      <input type="text" placeholder="Email Address" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.email_address" class="{{ $inputClass }}">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="text" placeholder="Facebook Handle" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.facebook_handle" class="{{ $inputClass }}">
+        <input type="text" placeholder="Facebook URL" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.facebook_url" class="{{ $inputClass }}">
+      </div>
+      <input type="text" placeholder="Open Hours" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.hours_line" class="{{ $inputClass }}">
+      <input type="text" placeholder="Reply Time" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.reply_line" class="{{ $inputClass }}">
+    </div>
+
+    <div class="{{ $cardClass }}">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white">Delivery at a Glance</span>
+        <button type="button" wire:click="addRepeaterItem('delivery_cards')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add</button>
+      </div>
+      <input type="text" placeholder="Heading" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.delivery_heading" class="{{ $inputClass }}">
+      @foreach(($s['delivery_cards'] ?? []) as $i => $dc)
+        <div class="p-2 rounded bg-[#12141a] border border-[#282d37] space-y-1.5" wire:key="cdc-{{ $sIndex }}-{{ $i }}">
+          <div class="flex justify-between text-[10px] text-gray-400"><span>Card #{{ $i+1 }}</span><button type="button" wire:click="removeRepeaterItem('delivery_cards', {{ $i }})" class="text-red-400">✕</button></div>
+          <input type="text" placeholder="Title" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.delivery_cards.{{ $i }}.title" class="{{ $inputClass }}">
+          <textarea rows="2" placeholder="Description" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.delivery_cards.{{ $i }}.text" class="{{ $inputClass }}"></textarea>
+        </div>
+      @endforeach
+    </div>
+
+    <div class="{{ $cardClass }}">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white">Common Questions (FAQ)</span>
+        <button type="button" wire:click="addRepeaterItem('faqs')" class="px-2 py-1 rounded bg-[#214E34] text-white text-[10px] font-semibold">+ Add</button>
+      </div>
+      <input type="text" placeholder="FAQ Heading" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.faq_heading" class="{{ $inputClass }}">
+      @foreach(($s['faqs'] ?? []) as $i => $fq)
+        <div class="p-2 rounded bg-[#12141a] border border-[#282d37] space-y-1.5" wire:key="cfaq-{{ $sIndex }}-{{ $i }}">
+          <div class="flex justify-between text-[10px] text-gray-400"><span>FAQ #{{ $i+1 }}</span><button type="button" wire:click="removeRepeaterItem('faqs', {{ $i }})" class="text-red-400">✕</button></div>
+          <input type="text" placeholder="Question" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.faqs.{{ $i }}.q" class="{{ $inputClass }}">
+          <textarea rows="2" placeholder="Answer" wire:model.live.debounce.300ms="sections.{{ $sIndex }}.settings.faqs.{{ $i }}.a" class="{{ $inputClass }}"></textarea>
+        </div>
+      @endforeach
+    </div>
   @endif
 
 @elseif($inspectorTab === 'style')
