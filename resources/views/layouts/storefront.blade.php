@@ -213,7 +213,7 @@
             <script>document.addEventListener('click',function(){var m=document.getElementById('soro-mob-acct-menu');if(m)m.style.display='none';});</script>
         </div>
         @if($hs['show_stitch_border'] ?? true)
-            <svg aria-hidden="true" width="100%" height="10" style="display:block"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
+            <svg aria-hidden="true" width="100%" height="10" style="position:absolute; left:0; right:0; bottom:-5px; z-index:41; pointer-events:none; display:block"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
         @endif
     </header>
 
