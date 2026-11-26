@@ -105,11 +105,11 @@
                 </div>
 
                 <!-- Products Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     @forelse($products as $product)
                         <x-product-card :product="$product" />
                     @empty
-                        <div class="col-span-3 text-center py-20 space-y-4">
+                        <div class="col-span-full text-center py-20 space-y-4">
                             <x-icon name="sparkles" class="w-10 h-10 text-[#C96A3D] mx-auto" />
                             <h3 class="font-editorial-heading text-2xl text-[#1D1D1D]">{{ __('No pieces match your selected filters') }}</h3>
                             <p class="text-sm text-[#888888]">{{ __('Try resetting your filter facets or exploring our flagship collections.') }}</p>

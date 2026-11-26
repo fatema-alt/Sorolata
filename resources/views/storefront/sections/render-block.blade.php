@@ -1045,21 +1045,94 @@
           @endif
 
           @if(!$isOutOfStock)
-            <form @if(!$isBuilder && $pObj) action="{{ route('cart.store') }}" method="POST" @else onsubmit="event.preventDefault();" @endif style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:20px" x-data="{ qty: 1 }">
-              @if(!$isBuilder) @csrf @endif
-              @if($pObj)<input type="hidden" name="product_id" value="{{ $pObj->id }}">@endif
-              <input type="hidden" name="quantity" :value="qty">
+            <div x-data="{
+                qty: 1,
+                adding: false,
+                addedMsg: '',
+                async addToBag(e) {
+                  @if($isBuilder || !$pObj)
+                    return;
+                  @else
+                    if (this.adding) return;
+                    this.adding = true;
+                    const form = e.target;
+                    const btn = form.querySelector('button[type=submit]');
+                    const thumbSrc = '{{ addslashes($galleryImages[0]['url'] ?? '') }}';
 
-              <div style="display:inline-flex; align-items:center; border:1.5px solid #D9C28A; border-radius:999px; background:#fff; padding:4px">
-                <button type="button" @click="if(qty > 1) qty--" style="width:38px; height:38px; border:0; background:none; color:#1F4D3A; font-size:18px; font-weight:700">−</button>
-                <span x-text="qty" style="min-width:32px; text-align:center; font-weight:700; font-size:15px; color:#2B2118">1</span>
-                <button type="button" @click="qty++" style="width:38px; height:38px; border:0; background:none; color:#1F4D3A; font-size:18px; font-weight:700">+</button>
+                    try {
+                      const res = await fetch(form.action, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                        body: new FormData(form)
+                      });
+                      const data = await res.json();
+
+                      // Flying parcel animation toward navbar bag
+                      const bagEl = document.getElementById('soro-nav-bag') || document.querySelector('a[aria-label=Cart]');
+                      if (btn && bagEl) {
+                        const bRect = btn.getBoundingClientRect();
+                        const tRect = bagEl.getBoundingClientRect();
+                        const flyer = document.createElement('div');
+                        flyer.style.cssText = 'position:fixed;z-index:9999;width:54px;height:54px;border-radius:14px;border:2px solid #B8892F;background:#FBF6EC;overflow:hidden;box-shadow:0 12px 28px rgba(31,77,58,0.28);pointer-events:none;transition:all 0.72s cubic-bezier(0.22,1,0.36,1);left:' + (bRect.left + bRect.width/2 - 27) + 'px;top:' + (bRect.top + bRect.height/2 - 27) + 'px;';
+                        if (thumbSrc) {
+                          flyer.innerHTML = '<img src=\"' + thumbSrc + '\" style=\"width:100%;height:100%;object-fit:cover;display:block\">';
+                        }
+                        document.body.appendChild(flyer);
+                        requestAnimationFrame(() => {
+                          flyer.style.left = (tRect.left + tRect.width/2 - 14) + 'px';
+                          flyer.style.top = (tRect.top + tRect.height/2 - 14) + 'px';
+                          flyer.style.width = '28px';
+                          flyer.style.height = '28px';
+                          flyer.style.opacity = '0.25';
+                          flyer.style.transform = 'scale(0.5) rotate(12deg)';
+                        });
+                        setTimeout(() => {
+                          flyer.remove();
+                          bagEl.style.transform = 'scale(1.22)';
+                          setTimeout(() => { bagEl.style.transform = 'scale(1)'; }, 220);
+                        }, 730);
+                      }
+
+                      // Update live bag counter
+                      const badge = document.getElementById('soro-nav-bag-count');
+                      if (badge && data.cart_count !== undefined) {
+                        badge.textContent = data.cart_count;
+                        badge.style.display = data.cart_count > 0 ? 'flex' : 'none';
+                      }
+
+                      this.addedMsg = '✦ Wrapped & reserved for your home — added to your Collector Bag!';
+                    } catch (err) {
+                      form.submit();
+                    } finally {
+                      this.adding = false;
+                    }
+                  @endif
+                }
+            }">
+              <form @if(!$isBuilder && $pObj) action="{{ route('cart.store') }}" method="POST" @submit.prevent="addToBag($event)" @else onsubmit="event.preventDefault();" @endif style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:14px">
+                @if(!$isBuilder) @csrf @endif
+                @if($pObj)<input type="hidden" name="product_id" value="{{ $pObj->id }}">@endif
+                <input type="hidden" name="quantity" :value="qty">
+
+                <div style="display:inline-flex; align-items:center; border:1.5px solid #D9C28A; border-radius:999px; background:#fff; padding:4px">
+                  <button type="button" @click="if(qty > 1) qty--" style="width:38px; height:38px; border:0; background:none; color:#1F4D3A; font-size:18px; font-weight:700; cursor:pointer">−</button>
+                  <span x-text="qty" style="min-width:32px; text-align:center; font-weight:700; font-size:15px; color:#2B2118">1</span>
+                  <button type="button" @click="qty++" style="width:38px; height:38px; border:0; background:none; color:#1F4D3A; font-size:18px; font-weight:700; cursor:pointer">+</button>
+                </div>
+
+                <button type="submit" :disabled="adding" style="flex:1 1 200px; background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:15px 30px; font-size:16px; font-weight:600; min-height:50px; cursor:pointer">
+                  <span x-text="adding ? 'Packing...' : '{{ (empty($s['add_to_cart_text']) || $s['add_to_cart_text'] === 'Add to Cart') ? 'Bring it home' : addslashes($s['add_to_cart_text']) }}'">
+                    {{ (empty($s['add_to_cart_text']) || $s['add_to_cart_text'] === 'Add to Cart') ? 'Bring it home' : $s['add_to_cart_text'] }}
+                  </span>
+                </button>
+              </form>
+
+              <div x-show="addedMsg" x-cloak x-transition
+                   style="margin-bottom:18px; padding:12px 16px; border-radius:14px; background:#E7EEE4; border:1.5px solid #B8892F; color:#1F4D3A; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+                <span x-text="addedMsg"></span>
+                <a href="{{ route('cart.index') }}" style="background:#1F4D3A; color:#FBF6EC; padding:6px 14px; border-radius:999px; font-size:12px; font-weight:700; text-decoration:none; white-space:nowrap">View Bag →</a>
               </div>
-
-              <button type="submit" style="flex:1 1 200px; background:#1F4D3A; color:#FBF6EC; border:0; border-radius:999px; padding:15px 30px; font-size:16px; font-weight:600; min-height:50px">
-                {{ (empty($s['add_to_cart_text']) || $s['add_to_cart_text'] === 'Add to Cart') ? 'Bring it home' : $s['add_to_cart_text'] }}
-              </button>
-            </form>
+            </div>
           @else
             <form @if(!$isBuilder && $pObj) action="{{ route('products.notify-restock', $pObj->slug) }}" method="POST" @else onsubmit="event.preventDefault();" @endif style="background:#FBF6EC; border:1px solid #D9C28A; border-radius:18px; padding:18px; margin-bottom:20px">
               @if(!$isBuilder) @csrf @endif

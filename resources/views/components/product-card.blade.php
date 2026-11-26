@@ -15,7 +15,7 @@
 <article {{ $attributes->merge(['class' => 'group relative bg-white border border-[#E3D8BC] rounded-[18px] overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between']) }}>
     
     <!-- Top Visual Stage -->
-    <div class="relative w-full aspect-[4/5] overflow-hidden bg-[#F0E6D0]">
+    <div class="relative w-full aspect-square overflow-hidden bg-[#F0E6D0]">
         <a href="{{ route('products.show', $product->slug) }}" class="block w-full h-full">
             <img 
                 src="{{ $imageUrl }}" 
@@ -60,31 +60,31 @@
     <svg aria-hidden="true" width="100%" height="10" style="display:block"><rect width="100%" height="10" fill="url(#patStitchGold)"></rect></svg>
 
     <!-- Product Meta Info -->
-    <div class="p-5 flex flex-col gap-1.5 flex-1 justify-between">
-        <div class="space-y-1.5">
-            <div class="text-[11px] font-bold tracking-[0.1em] uppercase text-[#5A5044]">
+    <div class="p-3.5 flex flex-col gap-1 flex-1 justify-between">
+        <div class="space-y-1">
+            <div class="text-[10px] font-bold tracking-[0.1em] uppercase text-[#5A5044] truncate">
                 {{ $districtName }}
             </div>
 
-            <h3 class="font-editorial-heading text-2xl font-semibold leading-tight text-[#1F4D3A] group-hover:text-[#8F3F26] transition-colors line-clamp-1">
+            <h3 class="font-editorial-heading text-lg font-semibold leading-snug text-[#1F4D3A] group-hover:text-[#8F3F26] transition-colors line-clamp-1">
                 <a href="{{ route('products.show', $product->slug) }}">
                     {{ $product->getLocalized('title') }}
                 </a>
             </h3>
 
-            <p class="text-sm text-[#5A5044]">
+            <p class="text-xs text-[#5A5044] truncate">
                 {{ __('Made by') }} {{ $product->artisan?->getLocalized('full_name') ?? __('Master Artisan Guild') }}
             </p>
         </div>
 
-        <div class="pt-3 space-y-3">
+        <div class="pt-2 space-y-2">
             <x-price 
                 :price="$product->price" 
                 :compareAtPrice="$product->compare_at_price" 
                 :currency="$product->currency->value"
-                size="md"
+                size="sm"
             />
-            <a href="{{ route('products.show', $product->slug) }}" class="w-full inline-flex items-center justify-center rounded-full bg-[#1F4D3A] hover:bg-[#163829] text-[#FBF6EC] font-semibold text-sm py-3 px-5 transition-colors">
+            <a href="{{ route('products.show', $product->slug) }}" class="w-full inline-flex items-center justify-center rounded-full bg-[#1F4D3A] hover:bg-[#163829] text-[#FBF6EC] font-semibold text-xs py-2 px-4 transition-colors">
                 {{ __('View Piece →') }}
             </a>
         </div>

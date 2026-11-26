@@ -398,7 +398,8 @@
         </div>
 
         <!-- Cancellation Modal -->
-        <div x-show="showCancelModal" x-cloak style="position: fixed; inset: 0; z-index: 50; overflow-y: auto; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 1rem;">
+        <div x-show="showCancelModal" x-cloak style="position: fixed; inset: 0; z-index: 9999; overflow-y: auto; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
+          <div style="min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 1rem;">
             <div @click.away="showCancelModal = false" style="background: #fff; border-radius: 1.5rem; max-width: 440px; width: 100%; padding: 1.5rem; border: 1px solid #E5E7EB; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
                 <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid #F3F4F6;">
                     <h3 style="font-weight: 700; color: #111; font-size: 0.875rem; margin: 0;">{{ __('Request Cancellation or Change') }}</h3>
@@ -434,6 +435,7 @@
                     </div>
                 </form>
             </div>
+          </div>
         </div>
 
     @else
