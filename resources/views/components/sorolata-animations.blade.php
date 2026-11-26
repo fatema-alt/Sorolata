@@ -3,18 +3,6 @@
     /* Smooth scroll & crisp GPU-only transitions */
     html { scroll-behavior: smooth; }
 
-    /* Top announcement bar & navbar entrance from top */
-    @keyframes soroSlideDown {
-      from { opacity: 0; transform: translateY(-24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .soro-top-announce {
-      animation: soroSlideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-    header {
-      animation: soroSlideDown 0.58s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
-    }
-
     /* Hero slide Ken Burns & content glide */
     @keyframes soroKenBurns {
       from { transform: scale(1); }

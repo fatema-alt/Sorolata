@@ -85,7 +85,7 @@
 
     <!-- Top Announcement Bar (Homepage Essence) -->
     @if($hs['show_topbar'] ?? true)
-        <div class="soro-top-announce" style="background:{{ $hs['topbar_bg'] ?? '#1F4D3A' }}; color:{{ $hs['topbar_color'] ?? '#FBF6EC' }}; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-align:center; padding:10px 16px">
+        <div style="background:{{ $hs['topbar_bg'] ?? '#1F4D3A' }}; color:{{ $hs['topbar_color'] ?? '#FBF6EC' }}; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-align:center; padding:10px 16px">
             {{ $hs['topbar_text'] ?? 'Free insured delivery to Bangladesh, USA, UK, Canada and Europe' }}
         </div>
     @endif
