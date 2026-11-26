@@ -823,7 +823,21 @@
         <h3 style="margin:0 0 12px; font-size:13px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#E3C26F">{{ $s['col3_title'] ?? 'Talk to us' }}</h3>
         <div style="display:flex; flex-direction:column; gap:8px; font-size:15px">
           @foreach($contactLines as $c)
-            <span>{{ $c['text'] ?? $c }}</span>
+            @php
+              $cText = is_array($c) ? ($c['text'] ?? '') : (string) $c;
+              $cHref = is_array($c) ? ($c['href'] ?? '') : '';
+              if (empty($cHref)) {
+                  if (str_contains(strtolower($cText), 'facebook')) {
+                      $cHref = 'https://facebook.com/sorolatabangladesh';
+                  } elseif (str_contains(strtolower($cText), 'email') || str_contains($cText, '@')) {
+                      $cHref = 'mailto:hello@sorolata.com';
+                  } else {
+                      $cHref = '/contact';
+                  }
+              }
+              $isExt = str_starts_with($cHref, 'http');
+            @endphp
+            <a href="{{ $linkHref($cHref) }}" @if($isExt && !$isBuilder) target="_blank" rel="noopener" @endif style="color:#F3EDDF; text-decoration:none; padding:2px 0">{{ $cText }}</a>
           @endforeach
         </div>
       </div>

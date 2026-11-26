@@ -261,23 +261,24 @@
             ['label' => 'Home', 'href' => '/'],
             ['label' => 'All products', 'href' => '/shop'],
             ['label' => 'By district', 'href' => '/districts'],
-            ['label' => 'By craft', 'href' => '/shop'],
-            ['label' => 'Gifts', 'href' => '/shop'],
+            ['label' => 'Our makers', 'href' => '/artisans'],
+            ['label' => 'Stories', 'href' => '/stories'],
+            ['label' => 'Wishlist', 'href' => '/wishlist'],
         ];
         if (!collect($shopLinks)->contains(fn($l) => ($l['href'] ?? '') === '/' || strtolower((string) ($l['label'] ?? '')) === 'home')) {
             array_unshift($shopLinks, ['label' => 'Home', 'href' => '/']);
         }
         $helpLinks = $fs['help_links'] ?? [
             ['label' => 'Track your order', 'href' => '/track-order'],
+            ['label' => 'My account', 'href' => '/account'],
             ['label' => 'Delivery and returns', 'href' => '/contact'],
-            ['label' => 'FAQ', 'href' => '/about'],
-            ['label' => 'Privacy', 'href' => '/about'],
-            ['label' => 'Terms', 'href' => '/about'],
+            ['label' => 'FAQ & About', 'href' => '/about'],
+            ['label' => 'Contact us', 'href' => '/contact'],
         ];
         $contactLines = $fs['contact_lines'] ?? [
-            ['text' => 'WhatsApp: [your real number]'],
-            ['text' => 'Phone: [your real number]'],
-            ['text' => 'Facebook: facebook.com/sorolatabangladesh'],
+            ['text' => 'WhatsApp: Chat with Sorolata', 'href' => '/contact'],
+            ['text' => 'Email: hello@sorolata.com', 'href' => 'mailto:hello@sorolata.com'],
+            ['text' => 'Facebook: /sorolatabangladesh', 'href' => 'https://facebook.com/sorolatabangladesh'],
         ];
     @endphp
     <footer id="contact" style="background:{{ $fs['bg_color'] ?? '#163829' }}; color:#F3EDDF; position:relative; overflow:hidden; margin-top:64px">
@@ -314,7 +315,21 @@
                 <h3 style="margin:0 0 12px; font-size:13px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#E3C26F">{{ $fs['col3_title'] ?? 'Talk to us' }}</h3>
                 <div style="display:flex; flex-direction:column; gap:8px; font-size:15px">
                     @foreach($contactLines as $c)
-                        <span>{{ $c['text'] ?? $c }}</span>
+                        @php
+                            $cText = is_array($c) ? ($c['text'] ?? '') : (string) $c;
+                            $cHref = is_array($c) ? ($c['href'] ?? '') : '';
+                            if (empty($cHref)) {
+                                if (str_contains(strtolower($cText), 'facebook')) {
+                                    $cHref = 'https://facebook.com/sorolatabangladesh';
+                                } elseif (str_contains(strtolower($cText), 'email') || str_contains($cText, '@')) {
+                                    $cHref = 'mailto:hello@sorolata.com';
+                                } else {
+                                    $cHref = '/contact';
+                                }
+                            }
+                            $isExt = str_starts_with($cHref, 'http');
+                        @endphp
+                        <a href="{{ $resolveUrl($cHref) }}" @if($isExt) target="_blank" rel="noopener" @endif style="color:#F3EDDF; text-decoration:none; padding:2px 0">{{ $cText }}</a>
                     @endforeach
                 </div>
             </div>
