@@ -298,34 +298,10 @@
                 </div>
             </div>
 
-            <!-- 4. Two-Column Lower Grid: Left = Order History, Right = Items & Ledger -->
-            <div class="track-lower-grid">
-                
-                <!-- Left Column: Order History -->
-                <div>
-                    <h3 style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #111; margin-bottom: 1rem;">
-                        {{ __('Order history') }}
-                    </h3>
+            <!-- 4. Lower Section: Items & Ledger -->
+            <div style="padding-top: 1.5rem; border-top: 1px solid #F3F4F6;">
 
-                    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-                        @forelse($order->timelines as $timeline)
-                            <div style="display: flex; gap: 0.875rem; align-items: flex-start;">
-                                <div style="width: 10px; height: 10px; border-radius: 9999px; background: {{ $loop->first ? '#214E34' : '#D1D5DB' }}; margin-top: 0.25rem; flex-shrink: 0; box-shadow: 0 0 0 3px #F9FAFB;"></div>
-                                <div style="flex-grow: 1;">
-                                    <div style="font-weight: 700; color: #111; font-size: 0.8rem; line-height: 1.3;">{{ $timeline->localizedStatus() }}</div>
-                                    <div style="color: #4B5563; font-size: 0.725rem; margin-top: 0.2rem; line-height: 1.4;">{{ $timeline->localizedNote() }}</div>
-                                    <div style="color: #9CA3AF; font-size: 0.675rem; margin-top: 0.2rem;">
-                                        {{ $timeline->created_at->format('M d, Y, h:i A') }} • {{ __('By :actor', ['actor' => __($timeline->actor_type)]) }}
-                                    </div>
-                                </div>
-                            </div>
-                        @empty
-                            <p style="font-size: 0.75rem; color: #6B7280;">{{ __('Order registered.') }}</p>
-                        @endforelse
-                    </div>
-                </div>
-
-                <!-- Right Column: Items in this order & Financial Ledger -->
+                <!-- Items in this order & Financial Ledger -->
                 <div>
                     <h3 style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #111; margin-bottom: 1rem;">
                         {{ __('Items in this order') }}
