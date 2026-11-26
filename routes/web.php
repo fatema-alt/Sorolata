@@ -97,6 +97,7 @@ Route::post('/product/{slug}/notify-restock', [ProductController::class, 'notify
 // Cart & Frictionless Checkout Flow
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'store'])->name('cart.store');
+Route::post('/cart/update/{productId}', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove/{productId}', [CartController::class, 'remove'])->name('cart.remove');
 
 Route::get('/checkout', [CheckoutPageController::class, 'index'])->name('checkout.index');

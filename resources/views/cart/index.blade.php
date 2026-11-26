@@ -18,25 +18,47 @@
                 <div class="lg:col-span-8 space-y-6">
                     <div class="bg-white rounded-[32px] p-6 sm:p-8 border border-[#E8E8E8] shadow-soft-xs divide-y divide-[#E8E8E8]">
                         @foreach($items as $item)
+                            @php
+                                $itemImg = $item['product']->media->first()?->file_path
+                                    ? url($item['product']->media->first()->file_path)
+                                    : 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=300';
+                            @endphp
                             <div class="py-6 first:pt-0 last:pb-0 flex flex-col sm:flex-row items-center gap-6">
-                                <img 
-                                    src="{{ $item['product']->media->first()?->file_path ?? 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=300' }}" 
-                                    alt="{{ $item['product']->title }}" 
-                                    class="w-24 h-24 rounded-[18px] object-cover bg-[#F8F6F2]"
-                                >
+                                <a href="{{ route('products.show', $item['product']->slug) }}" class="shrink-0">
+                                    <img 
+                                        src="{{ $itemImg }}" 
+                                        alt="{{ $item['product']->title }}" 
+                                        onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=300';"
+                                        class="w-24 h-24 rounded-[18px] object-cover bg-[#F8F6F2]"
+                                    >
+                                </a>
                                 <div class="flex-grow space-y-1 text-center sm:text-left">
                                     <span class="text-[10px] uppercase tracking-widest text-[#214E34] font-bold">
                                         {{ $item['product']->district?->name_en ?? __('Heritage Origin') }}
                                     </span>
                                     <h3 class="font-editorial-heading text-xl text-[#1D1D1D]">
-                                        {{ $item['product']->title }}
+                                        <a href="{{ route('products.show', $item['product']->slug) }}" class="hover:text-[#1F4D3A]">
+                                            {{ $item['product']->title }}
+                                        </a>
                                     </h3>
                                     <p class="text-xs text-[#888888]">{{ __('By') }} {{ $item['product']->artisan?->full_name }}</p>
                                 </div>
-                                <div class="text-center sm:text-right space-y-2">
+                                <div class="flex flex-col items-center sm:items-end gap-2.5">
                                     <x-price :price="$item['subtotal']" size="md" />
-                                    <div class="text-xs text-[#888888]">{{ __('Qty: :qty', ['qty' => $item['quantity']]) }}</div>
-                                    <form action="{{ route('cart.remove', $item['product']->id) }}" method="POST">
+                                    <div style="display:inline-flex; align-items:center; border:1.5px solid #D9C28A; border-radius:999px; background:#FBF6EC; padding:2px 4px; gap:4px">
+                                        <form action="{{ route('cart.update', $item['product']->id) }}" method="POST" style="margin:0">
+                                            @csrf
+                                            <input type="hidden" name="quantity" value="{{ max(0, $item['quantity'] - 1) }}">
+                                            <button type="submit" aria-label="{{ __('Decrease quantity') }}" style="width:28px; height:28px; border:0; background:none; color:#1F4D3A; font-size:16px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center">−</button>
+                                        </form>
+                                        <span style="min-width:24px; text-align:center; font-size:13px; font-weight:700; color:#2B2118">{{ $item['quantity'] }}</span>
+                                        <form action="{{ route('cart.update', $item['product']->id) }}" method="POST" style="margin:0">
+                                            @csrf
+                                            <input type="hidden" name="quantity" value="{{ $item['quantity'] + 1 }}">
+                                            <button type="submit" aria-label="{{ __('Increase quantity') }}" style="width:28px; height:28px; border:0; background:none; color:#1F4D3A; font-size:16px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center">+</button>
+                                        </form>
+                                    </div>
+                                    <form action="{{ route('cart.remove', $item['product']->id) }}" method="POST" style="margin:0">
                                         @csrf
                                         <button type="submit" class="text-xs text-[#B91C1C] hover:underline cursor-pointer">{{ __('Remove') }}</button>
                                     </form>

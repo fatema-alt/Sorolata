@@ -91,6 +91,27 @@ class CartController extends Controller
         return back()->with('success', __('Added :quantity × :title to your Collector Bag.', ['quantity' => $quantity, 'title' => $product->title]));
     }
 
+    public function update(Request $request, int $productId): RedirectResponse
+    {
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:0|max:99',
+        ]);
+
+        $cart = session()->get('sorolata_collector_bag', []);
+        $qty = (int) $validated['quantity'];
+
+        if ($qty <= 0) {
+            unset($cart[$productId]);
+            session()->put('sorolata_collector_bag', $cart);
+            return back()->with('success', __('Item removed from your Collector Bag.'));
+        }
+
+        $cart[$productId] = $qty;
+        session()->put('sorolata_collector_bag', $cart);
+
+        return back()->with('success', __('Collector Bag quantity updated.'));
+    }
+
     public function remove(int $productId): RedirectResponse
     {
         $cart = session()->get('sorolata_collector_bag', []);
