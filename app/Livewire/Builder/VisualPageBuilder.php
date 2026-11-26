@@ -580,6 +580,17 @@ class VisualPageBuilder extends Component
 
         $newItem = match ($type . ':' . $listKey) {
             'home_header:nav_links' => ['label' => 'New Link', 'href' => '#products'],
+            'home_hero:slides' => [
+                'eyebrow' => 'BENGAL HERITAGE CRAFT',
+                'headline' => 'Handcrafted with patience in Bangladesh.',
+                'subheadline' => 'Every piece names its maker and the district it comes from.',
+                'cta_text' => 'Shop Now →',
+                'cta_href' => '/shop',
+                'secondary_text' => 'Shop by District',
+                'secondary_href' => '/districts',
+                'image_url' => '',
+                'bg' => 'linear-gradient(135deg,#1F4D3A 0%,#163829 60%,#3B2314 100%)',
+            ],
             'home_hero:trust_items', 'home_product_showcase:trust_items' => ['text' => 'Authentic handmade craft'],
             'home_districts:items' => ['n' => (string) (count($items) + 1), 'name' => 'New District', 'bn' => 'নতুন জেলা', 'craft' => 'Traditional craft', 'href' => '#products', 'cta_text' => 'See products →'],
             'home_crafts:items' => ['name' => 'New Craft', 'line' => 'Handcrafted heritage', 'photo_label' => 'Photo: craft', 'image_url' => '', 'bg' => 'linear-gradient(160deg,#5B6FAE,#26356A)', 'pattern' => 'patCloth', 'href' => '#products'],

@@ -154,75 +154,221 @@
 
 @elseif($type === 'home_hero')
   @php
-    $bgColor = $s['bg_color'] ?? '#F7F5F0';
+    $bgColor = $s['bg_color'] ?? '#163829';
     $accentColor = $s['accent_color'] ?? '#B8892F';
     $primaryBg = $s['primary_color'] ?? '#1F4D3A';
     $trustItems = $s['trust_items'] ?? [];
+    $heroSlides = !empty($s['slides']) && is_array($s['slides']) ? $s['slides'] : [
+        [
+            'eyebrow' => 'SONARGAON MUSLIN • 300-COUNT HANDLOOM',
+            'headline' => !empty($s['headline']) ? $s['headline'] : 'Handmade in Bangladesh. Passed down from parent to child.',
+            'subheadline' => !empty($s['subheadline']) ? $s['subheadline'] : 'Muslin, brass, clay and more. Every piece names its maker and the district it comes from.',
+            'cta_text' => $s['primary_cta_text'] ?? 'Shop Now →',
+            'cta_href' => $s['primary_cta_href'] ?? '/shop',
+            'secondary_text' => $s['secondary_cta_text'] ?? 'Shop by District',
+            'secondary_href' => $s['secondary_cta_href'] ?? '/districts',
+            'image_url' => !empty($s['image_url']) ? $s['image_url'] : 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1600&auto=format&fit=crop',
+            'bg' => 'linear-gradient(135deg,#1F4D3A 0%,#163829 60%,#3B2314 100%)',
+        ],
+        [
+            'eyebrow' => 'TANGAIL SILK & JAMDANI • WEAVING CLUSTERS',
+            'headline' => 'Woven on wooden pit looms, one thread at a time.',
+            'subheadline' => 'Heirloom sarees and scarves crafted by generational weavers who memorize every floral motif by heart.',
+            'cta_text' => 'Explore Cloth →',
+            'cta_href' => '/shop?category=cloth',
+            'secondary_text' => 'Meet Our Makers',
+            'secondary_href' => '/artisans',
+            'image_url' => 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=1600&auto=format&fit=crop',
+            'bg' => 'linear-gradient(135deg,#2C2240 0%,#1F4D3A 65%,#5E2618 100%)',
+        ],
+        [
+            'eyebrow' => 'BOGURA BRASS & BELL METAL • LOST-WAX CRAFT',
+            'headline' => 'Hand-hammered brass, ringing with generations of craft.',
+            'subheadline' => 'Kettles, plates, and bowls shaped in family foundries with zero machines and pure bell-metal resonance.',
+            'cta_text' => 'Shop Brassware →',
+            'cta_href' => '/shop?category=brass',
+            'secondary_text' => 'Explore Bogura',
+            'secondary_href' => '/districts',
+            'image_url' => 'https://images.unsplash.com/photo-1606744888344-498238f01761?q=80&w=1600&auto=format&fit=crop',
+            'bg' => 'linear-gradient(135deg,#4A3510 0%,#2B2118 65%,#163829 100%)',
+        ],
+        [
+            'eyebrow' => 'RANGPUR SHATRANJI & TERRACOTTA • NORTHERN PLAINS',
+            'headline' => 'Earthy patterns from the river basins of Bengal.',
+            'subheadline' => 'Thick hand-woven floor carpets and sun-baked clayware sent straight from the village workshop to your home.',
+            'cta_text' => 'View All Pieces →',
+            'cta_href' => '/shop',
+            'secondary_text' => 'Read Stories',
+            'secondary_href' => '/stories',
+            'image_url' => 'https://images.unsplash.com/photo-1590736969955-71cc94901144?q=80&w=1600&auto=format&fit=crop',
+            'bg' => 'linear-gradient(135deg,#5E2618 0%,#2B2118 60%,#1F4D3A 100%)',
+        ],
+    ];
+    $sliderUid = 'soroHero_' . preg_replace('/[^a-zA-Z0-9_]/', '', (string) ($section['id'] ?? 'main'));
   @endphp
-  <section id="top" style="position:relative; overflow:hidden; background:{{ $bgColor }}">
-    @if($s['show_pattern'] ?? true)
-      <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; left:0; top:0"><rect width="100%" height="100%" fill="url(#patJaliDark)"></rect></svg>
-    @endif
-    <div style="position:relative; max-width:1200px; margin:0 auto; padding:64px 24px 72px; display:flex; flex-wrap:wrap; align-items:center; gap:48px">
-      <div style="flex:1 1 420px; min-width:0">
-        <h1 style="margin:0 0 22px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(46px,5.8vw,80px); line-height:1.0; letter-spacing:-0.01em; color:{{ $s['text_color'] ?? '#1F2A24' }}">{{ $s['headline'] ?? '' }}</h1>
-        <p style="margin:0 0 32px; font-size:18px; color:#5A5044; max-width:500px">{{ $s['subheadline'] ?? '' }}</p>
-        <style>
-          @media (max-width: 767px) {
-            .soro-hero-btns { gap: 10px !important; flex-wrap: nowrap !important; }
-            .soro-hero-btns a { padding: 12px 16px !important; font-size: 14px !important; white-space: nowrap; }
-          }
-        </style>
-        <div class="soro-hero-btns" style="display:flex; flex-wrap:wrap; gap:14px; margin-bottom:36px">
-          @if(!empty($s['primary_cta_text']))
-            <a href="{{ $linkHref($s['primary_cta_href'] ?? '#products') }}" style="background:{{ $primaryBg }}; color:#fff; font-weight:600; padding:16px 30px; border-radius:999px; text-decoration:none; font-size:16px">{{ $s['primary_cta_text'] }}</a>
-          @endif
-          @if(!empty($s['secondary_cta_text']))
-            <a href="{{ $linkHref($s['secondary_cta_href'] ?? '#districts') }}" style="border:1.5px solid {{ $primaryBg }}; color:{{ $primaryBg }}; font-weight:600; padding:14.5px 28px; border-radius:999px; text-decoration:none; font-size:16px; background:#fff">{{ $s['secondary_cta_text'] }}</a>
-          @endif
-        </div>
-        @if(count($trustItems) > 0)
-          <div style="display:flex; flex-wrap:wrap; gap:14px 30px; font-size:14px; font-weight:600; color:#2B2118">
-            @foreach($trustItems as $t)
-              <span style="display:flex; align-items:center; gap:8px"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 48 48" style="color:{{ $accentColor }}"><use href="#rosetteArt"></use></svg>{{ $t['text'] ?? $t }}</span>
-            @endforeach
-          </div>
+  <style>
+    .{{ $sliderUid }}-wrap {
+      position: relative;
+      overflow: hidden;
+      min-height: clamp(540px, 84vh, 760px);
+      background: {{ $bgColor }};
+      display: flex;
+      align-items: center;
+    }
+    .{{ $sliderUid }}-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.75s ease;
+      display: flex;
+      align-items: center;
+    }
+    .{{ $sliderUid }}-slide.is-active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 2;
+    }
+    .{{ $sliderUid }}-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(243, 220, 154, 0.7);
+      background: rgba(22, 56, 41, 0.65);
+      color: #FBF6EC;
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .{{ $sliderUid }}-arrow:hover { background: #1F4D3A; border-color: #F3DC9A; }
+    .{{ $sliderUid }}-prev { left: 20px; }
+    .{{ $sliderUid }}-next { right: 20px; }
+    @media (max-width: 767px) {
+      .{{ $sliderUid }}-wrap { min-height: 540px; }
+      .{{ $sliderUid }}-arrow { display: none; }
+      .soro-hero-btns { gap: 10px !important; flex-wrap: nowrap !important; }
+      .soro-hero-btns a { padding: 12px 16px !important; font-size: 14px !important; white-space: nowrap; }
+    }
+  </style>
+  <section id="top" class="{{ $sliderUid }}-wrap">
+    @foreach($heroSlides as $sIdx => $sl)
+      <div class="{{ $sliderUid }}-slide {{ $sIdx === 0 ? 'is-active' : '' }}" data-slide="{{ $sIdx }}"
+           style="background:{{ $sl['bg'] ?? 'linear-gradient(135deg,#1F4D3A 0%,#163829 60%,#3B2314 100%)' }}">
+        @if(!empty($sl['image_url']))
+          <img src="{{ $sl['image_url'] }}" alt="{{ $sl['headline'] ?? 'Sorolata Craft' }}"
+               onerror="this.style.display='none'"
+               style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover">
         @endif
-      </div>
+        <svg aria-hidden="true" width="100%" height="100%" style="position:absolute; inset:0; pointer-events:none; opacity:0.22"><rect width="100%" height="100%" fill="url(#patJaliLight)"></rect></svg>
+        <div aria-hidden="true" style="position:absolute; inset:0; background:linear-gradient(95deg, rgba(18,46,34,0.9) 0%, rgba(18,46,34,0.68) 48%, rgba(18,46,34,0.28) 100%)"></div>
 
-      <!-- Arch frame -->
-      <div style="flex:1 1 380px; min-width:0; display:flex; justify-content:center">
-        <div style="width:100%; max-width:460px; border:2px solid {{ $accentColor }}; border-radius:999px 999px 20px 20px; padding:10px; background:#FBF6EC; box-sizing:border-box">
-          <div style="border:1px solid {{ $accentColor }}; border-radius:999px 999px 14px 14px; padding:8px; box-sizing:border-box">
-            <div style="position:relative; min-height:560px; border-radius:999px 999px 10px 10px; overflow:hidden; background:linear-gradient(170deg,#E09A6E 0%,#B8553A 48%,#5E2618 100%)">
-              @if(!empty($s['image_url']))
-                <img src="{{ $s['image_url'] }}" alt="{{ $s['featured_title'] ?? 'Featured craft' }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover">
-              @else
-                <svg aria-hidden="true" width="100%" height="100%" viewBox="0 0 400 560" preserveAspectRatio="xMidYMid slice" style="position:absolute; left:0; top:0">
-                  <rect width="400" height="560" fill="url(#patCloth)" opacity="0.5"></rect>
-                  <g stroke="#FFE9C2" stroke-opacity="0.35" stroke-width="1.2" fill="none">
-                    <path d="M200 560L-364 356M200 560L-260 174M200 560L-100 40M200 560L96 -31M200 560L200 -40M200 560L304 -31M200 560L500 40M200 560L660 174M200 560L764 356"></path>
-                    <path d="M40 560A160 160 0 0 1 360 560"></path>
-                    <path d="M-20 560A220 220 0 0 1 420 560"></path>
-                    <path d="M-80 560A280 280 0 0 1 480 560" stroke-dasharray="2 5"></path>
-                  </g>
-                  <circle cx="200" cy="330" r="46" fill="#FFE9C2" fill-opacity="0.18" stroke="#FFE9C2" stroke-opacity="0.6" stroke-width="1.5"></circle>
-                  <circle cx="200" cy="330" r="30" fill="none" stroke="#FFE9C2" stroke-opacity="0.6" stroke-width="1.2" stroke-dasharray="2 4"></circle>
-                </svg>
+        <div style="position:relative; z-index:3; width:100%; max-width:1200px; margin:0 auto; padding:56px 24px 88px">
+          <div style="max-width:680px">
+            @if(!empty($sl['eyebrow']))
+              <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(251,246,236,0.12); border:1px solid rgba(243,220,154,0.45); color:#F3DC9A; border-radius:999px; padding:6px 14px; font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:18px; backdrop-filter:blur(4px)">
+                <span aria-hidden="true" style="width:6px; height:6px; background:#F3DC9A; transform:rotate(45deg)"></span>
+                <span>{{ $sl['eyebrow'] }}</span>
+              </div>
+            @endif
+
+            <h1 style="margin:0 0 18px; font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; font-size:clamp(38px,5.4vw,72px); line-height:1.02; letter-spacing:-0.01em; color:#FBF6EC">
+              {{ $sl['headline'] ?? '' }}
+            </h1>
+
+            @if(!empty($sl['subheadline']))
+              <p style="margin:0 0 28px; font-size:clamp(16px,1.5vw,19px); color:#E8E0CF; max-width:540px; line-height:1.6">
+                {{ $sl['subheadline'] }}
+              </p>
+            @endif
+
+            <div class="soro-hero-btns" style="display:flex; flex-wrap:wrap; gap:14px; margin-bottom:30px">
+              @if(!empty($sl['cta_text']))
+                <a href="{{ $linkHref($sl['cta_href'] ?? '/shop') }}"
+                   style="background:#B8892F; color:#FBF6EC; font-weight:700; padding:15px 30px; border-radius:999px; text-decoration:none; font-size:15px; box-shadow:0 8px 22px rgba(0,0,0,0.22)">
+                  {{ $sl['cta_text'] }}
+                </a>
               @endif
-              <a href="{{ $linkHref($s['featured_href'] ?? '#products') }}" style="position:absolute; left:16px; right:16px; bottom:16px; background:#FBF6EC; border-radius:16px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; border:1px solid #D9C28A; text-decoration:none">
-                <div>
-                  <div style="font-size:12px; color:#5A5044; letter-spacing:0.06em; text-transform:uppercase">{{ $s['featured_eyebrow'] ?? '' }}</div>
-                  <div style="font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:21px; color:#1F4D3A">{{ $s['featured_title'] ?? '' }}</div>
-                </div>
-                <div style="font-weight:700; font-size:17px; color:#8F3F26">{{ $s['featured_price'] ?? '' }}</div>
-              </a>
+              @if(!empty($sl['secondary_text']))
+                <a href="{{ $linkHref($sl['secondary_href'] ?? '/districts') }}"
+                   style="border:1.5px solid rgba(251,246,236,0.7); color:#FBF6EC; font-weight:600; padding:13.5px 28px; border-radius:999px; text-decoration:none; font-size:15px; background:rgba(251,246,236,0.08); backdrop-filter:blur(4px)">
+                  {{ $sl['secondary_text'] }}
+                </a>
+              @endif
             </div>
+
+            @if(count($trustItems) > 0)
+              <div style="display:flex; flex-wrap:wrap; gap:12px 26px; font-size:13px; font-weight:600; color:#F3EDDF">
+                @foreach($trustItems as $t)
+                  <span style="display:flex; align-items:center; gap:7px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 48 48" style="color:#F3DC9A"><use href="#rosetteArt"></use></svg>{{ $t['text'] ?? $t }}</span>
+                @endforeach
+              </div>
+            @endif
           </div>
         </div>
       </div>
-    </div>
+    @endforeach
+
+    @if(count($heroSlides) > 1 && !$isBuilder)
+      <button type="button" aria-label="Previous slide" class="{{ $sliderUid }}-arrow {{ $sliderUid }}-prev" data-hero-prev="1">←</button>
+      <button type="button" aria-label="Next slide" class="{{ $sliderUid }}-arrow {{ $sliderUid }}-next" data-hero-next="1">→</button>
+    @endif
+
+    @if(count($heroSlides) > 1)
+      <div style="position:absolute; left:0; right:0; bottom:22px; z-index:10; display:flex; align-items:center; justify-content:center; gap:10px; padding:0 16px">
+        <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(22,56,41,0.72); border:1px solid rgba(243,220,154,0.45); border-radius:999px; padding:7px 14px; backdrop-filter:blur(6px)">
+          @foreach($heroSlides as $sIdx => $sl)
+            <button type="button" aria-label="Slide {{ $sIdx + 1 }}" data-hero-dot="{{ $sIdx }}"
+                    style="width:{{ $sIdx === 0 ? '26px' : '9px' }}; height:9px; border-radius:999px; border:0; background:{{ $sIdx === 0 ? '#F3DC9A' : 'rgba(251,246,236,0.45)' }}; padding:0; cursor:pointer; transition:all 0.25s"></button>
+          @endforeach
+          <span data-hero-counter style="font-size:11px; font-weight:700; letter-spacing:0.08em; color:#F3DC9A; margin-left:4px">01 / {{ str_pad((string) count($heroSlides), 2, '0', STR_PAD_LEFT) }}</span>
+        </div>
+      </div>
+    @endif
   </section>
+  <svg aria-hidden="true" width="100%" height="18" style="display:block; background:#FBF6EC"><rect width="100%" height="18" fill="url(#patBandGold)"></rect></svg>
+
+  @if(count($heroSlides) > 1 && !$isBuilder)
+    <script>
+      (function(){
+        var root = document.querySelector('.{{ $sliderUid }}-wrap');
+        if (!root) return;
+        var slides = Array.from(root.querySelectorAll('.{{ $sliderUid }}-slide'));
+        var dots = Array.from(root.querySelectorAll('[data-hero-dot]'));
+        var counter = root.querySelector('[data-hero-counter]');
+        var cur = 0;
+        var total = slides.length;
+        function show(idx) {
+          cur = (idx + total) % total;
+          slides.forEach(function(el, i){ el.classList.toggle('is-active', i === cur); });
+          dots.forEach(function(d, i){
+            d.style.width = (i === cur) ? '26px' : '9px';
+            d.style.background = (i === cur) ? '#F3DC9A' : 'rgba(251,246,236,0.45)';
+          });
+          if (counter) {
+            counter.textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+          }
+        }
+        var prevBtn = root.querySelector('[data-hero-prev]');
+        var nextBtn = root.querySelector('[data-hero-next]');
+        if (prevBtn) prevBtn.addEventListener('click', function(){ show(cur - 1); resetTimer(); });
+        if (nextBtn) nextBtn.addEventListener('click', function(){ show(cur + 1); resetTimer(); });
+        dots.forEach(function(d, i){ d.addEventListener('click', function(){ show(i); resetTimer(); }); });
+        var timer = setInterval(function(){ show(cur + 1); }, 5500);
+        function resetTimer(){ clearInterval(timer); timer = setInterval(function(){ show(cur + 1); }, 5500); }
+        root.addEventListener('mouseenter', function(){ clearInterval(timer); });
+        root.addEventListener('mouseleave', function(){ resetTimer(); });
+      })();
+    </script>
+  @endif
   @if($s['show_band'] ?? true)
     <svg aria-hidden="true" width="100%" height="48" style="display:block; background:#FBF6EC"><rect width="100%" height="48" fill="url(#patBandGold)"></rect></svg>
   @endif
