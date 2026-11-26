@@ -3,6 +3,27 @@
     /* Smooth scroll & crisp GPU-only transitions */
     html { scroll-behavior: smooth; }
 
+    /* Infinite top announcement marquee */
+    @keyframes soroMarquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .soro-marquee-wrap {
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+    }
+    .soro-marquee-track {
+      display: inline-flex;
+      align-items: center;
+      width: max-content;
+      animation: soroMarquee 28s linear infinite;
+      will-change: transform;
+    }
+    .soro-marquee-wrap:hover .soro-marquee-track {
+      animation-play-state: paused;
+    }
+
     /* Hero slide Ken Burns & content glide */
     @keyframes soroKenBurns {
       from { transform: scale(1); }

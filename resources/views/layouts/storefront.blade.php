@@ -85,8 +85,18 @@
 
     <!-- Top Announcement Bar (Homepage Essence) -->
     @if($hs['show_topbar'] ?? true)
-        <div style="background:{{ $hs['topbar_bg'] ?? '#1F4D3A' }}; color:{{ $hs['topbar_color'] ?? '#FBF6EC' }}; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-align:center; padding:10px 16px">
-            {{ $hs['topbar_text'] ?? 'Free insured delivery to Bangladesh, USA, UK, Canada and Europe' }}
+        @php $topbarText = $hs['topbar_text'] ?? 'Free insured delivery to Bangladesh, USA, UK, Canada and Europe'; @endphp
+        <div class="soro-marquee-wrap" style="background:{{ $hs['topbar_bg'] ?? '#1F4D3A' }}; color:{{ $hs['topbar_color'] ?? '#FBF6EC' }}; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:10px 0">
+            <div class="soro-marquee-track">
+                @for($mGroup = 0; $mGroup < 2; $mGroup++)
+                    <div aria-hidden="{{ $mGroup === 1 ? 'true' : 'false' }}" style="display:inline-flex; align-items:center">
+                        @for($mRep = 0; $mRep < 4; $mRep++)
+                            <span style="padding:0 28px">{{ $topbarText }}</span>
+                            <span aria-hidden="true" style="color:#E3C26F; font-size:10px">◆</span>
+                        @endfor
+                    </div>
+                @endfor
+            </div>
         </div>
     @endif
 
